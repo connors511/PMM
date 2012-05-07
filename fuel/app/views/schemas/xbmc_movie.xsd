@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="movie">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="title" minOccurs="1" maxOccurs="1" type="xs:string"/>
+				<xs:element name="originaltitle" minOccurs="0" maxOccurs="1" type="xs:string"/>
+				<xs:element name="sorttitle" minOccurs="0" maxOccurs="1" type="xs:string"/>
+				<xs:element name="set" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+				<xs:element name="rating" minOccurs="0" maxOccurs="1" type="xs:decimal"/>
+				<xs:element name="released" minOccurs="0" maxOccurs="1" type="xs:integer"/>
+				<xs:element name="top250" minOccurs="0" maxOccurs="1" type="xs:integer"/>
+				<xs:element name="votes" minOccurs="0" maxOccurs="1" type="xs:integer"/>
+				<xs:element name="outline" minOccurs="0" maxOccurs="1" type="xs:string"/>
+				<xs:element name="plot" minOccurs="0" maxOccurs="1" type="xs:string"/>
+				<xs:element name="tagline" minOccurs="0" maxOccurs="1" type="xs:string"/>
+				<xs:element name="runtime" minOccurs="0" maxOccurs="1" type="xs:integer"/>
+				<xs:element name="thumb" minOccurs="0" maxOccurs="1">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:pattern value="(http|https|ftp)://\S*\.\S*\.(png|jpg)"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="mpaa" minOccurs="0" maxOccurs="1" type="xs:string"/>
+				<xs:element name="playcount" minOccurs="0" maxOccurs="1" type="xs:integer"/>
+				<xs:element name="watched" minOccurs="0" maxOccurs="1" type="xs:boolean"/>
+				<xs:element name="id" minOccurs="0" maxOccurs="1" type="xs:string"/>
+				<xs:element name="filenameandpath" minOccurs="0" maxOccurs="1" type="xs:string"/>
+				<xs:element name="trailer" minOccurs="0" maxOccurs="1" type="xs:string"/>
+				<xs:element name="genre" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+				<xs:element name="credits" minOccurs="0" maxOccurs="1" type="xs:string"/>
+				<xs:element name="fileinfo" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="streamdetails" minOccurs="0" maxOccurs="1">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="video" minOccurs="0" maxOccurs="1">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="codec" minOccurs="0" maxOccurs="1" type="xs:string"/>
+													<xs:element name="aspect" minOccurs="0" maxOccurs="1" type="xs:decimal"/>
+													<xs:element name="width" minOccurs="0" maxOccurs="1" type="xs:integer"/>
+													<xs:element name="height" minOccurs="0" maxOccurs="1" type="xs:integer"/>
+													<xs:element name="scantype" minOccurs="0" maxOccurs="1">
+														<xs:simpleType>
+															<xs:restriction base="xs:string">
+																<xs:enumeration value="Progressive"/>
+																<xs:enumeration value="Interlaced"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="audio" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="codec" minOccurs="0" maxOccurs="1" type="xs:string"/>
+													<xs:element name="language" minOccurs="0" maxOccurs="1" type="xs:string"/>
+													<xs:element name="channels" minOccurs="0" maxOccurs="1" type="xs:integer"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="subtitle" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="language" minOccurs="1" maxOccurs="1" type="xs:string"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="director" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+				<xs:element name="actor" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="name" minOccurs="1" maxOccurs="1" type="xs:string"/>
+							<xs:element name="role" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+							<xs:element name="thumb" minOccurs="0" maxOccurs="1" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

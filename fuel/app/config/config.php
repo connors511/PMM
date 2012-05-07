@@ -43,7 +43,7 @@ return array(
 	 */
 	'index_file'  => 'index.php',
 
-	'profiling'  => false,
+	'profiling'  => true,
 
 	/**
 	 * Default location for the file cache
@@ -140,6 +140,7 @@ return array(
 			'Fuel\\Core\\Response',
 			'Fuel\\Core\\View',
 			'Fuel\\Core\\ViewModel',
+			'Fuel\Core\Validation',
 			'Closure',
 		)
 	),
@@ -210,7 +211,8 @@ return array(
 		 * );
 		 */
 		'packages'  => array(
-			//'orm',
+			'orm',
+			'auth'	
 		),
 
 		/**
