@@ -44,7 +44,7 @@
 	<?php echo $movie->trailer_url; ?></p>
 <p>
 	<strong>File:</strong>
-	<?php echo $movie->file_id; ?></p>
+	<?php echo $movie->file->path; ?></p>
 
 <?php echo Html::anchor('admin/movies/edit/'.$movie->id, 'Edit'); ?> |
 <?php echo Html::anchor('admin/movies', 'Back'); ?>

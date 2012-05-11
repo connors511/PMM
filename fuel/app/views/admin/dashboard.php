@@ -20,5 +20,9 @@
 		<p>Files: <?php echo $files; ?></p>
 		<p>Images: <?php echo $images; ?></p>
 		<p>Movies: <?php echo $movies; ?></p>
+		<p>Subtitles: <?php echo $subtitles; ?></p>
+		<p>People: <?php echo $people; ?></p>
+		<p>Directors: <?php echo $directors; ?></p>
+		<p>Actors: <?php echo $actors; ?></p>
 	</div>
 </div>
