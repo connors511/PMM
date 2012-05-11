@@ -27,3 +27,7 @@ The above command is the same as running:
 You can also shorten the last two commands to one:
 
     git submodule update --init
+
+Set the DB config, and run the following command to create the tables and an admin user with 'admin' as username and password
+
+    oil refine migrate:current
