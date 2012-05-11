@@ -12,7 +12,7 @@
 		<tbody>
 			<?php foreach ($files as $file): ?>		<tr>
 
-					<td><?php echo $file->path; ?></td>
+					<td><?php echo str_replace($file->source->path,'',$file->path); ?></td>
 					<td><?php echo $file->source->path; ?></td>
 					<td>
 						<?php echo Html::anchor('admin/files/view/' . $file->id, 'View'); ?> |
