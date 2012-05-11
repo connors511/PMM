@@ -13,8 +13,8 @@
 	<tbody>
 <?php foreach ($actors as $actor): ?>		<tr>
 
-			<td><?php echo $actor->person->name; ?></td>
-			<td><?php echo $actor->movie->title; ?></td>
+			<td><?php echo Html::anchor('admin/people/view/'.$actor->person->id,$actor->person->name); ?></td>
+			<td><?php echo Html::anchor('admin/movies/view/'.$actor->movie->id,$actor->movie->title); ?></td>
 			<td><?php echo $actor->role; ?></td>
 			<td>
 				<?php echo Html::anchor('admin/actors/view/'.$actor->id, 'View'); ?> |
