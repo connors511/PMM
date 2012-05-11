@@ -46,6 +46,8 @@ class Scanner_Movie implements IScanner
 	public function scan()
 	{
 		$this->scan_dir($this->_source->path);
+		
+		Debug::dump($this->_inserts);
 	}
 
 	public function scan_dir($dir, $parent = "", $fullpath = "")
@@ -185,18 +187,19 @@ class Scanner_Movie implements IScanner
 	public function parse_movie($dir, $files, $fullpath)
 	{
 		$matches = array();
-		$inserts = array('movie', 'fanart' => 0, 'subtitles' => 0);
+		$inserts = array('movie' => 0, 'fanart' => 0, 'subtitles' => 0);
 
 		// Is the structure <movie name>/<files>
 		if (preg_match('/(?P<title>.+) \((?P<year>\d+)\)/', $dir, $matches))
 		{
 			// Using <title> (<year>)/<movie> structure
 			$movie_file = self::get_movie($files);
-			if ($movie_file == false) {
+			if ($movie_file == false)
+			{
 				// Somehow, we've got a non-movie file :/
 				return;
 			}
-			$movie = Model_Movie::find('first',array(
+			$movie = Model_Movie::find('all', array(
 				    'related' => array(
 					'file' => array(
 					    'where' => array(
@@ -207,10 +210,13 @@ class Scanner_Movie implements IScanner
 					)
 				    )
 				));
-			
-			if (count($movie) == 1) {
+
+			if (count($movie) == 1)
+			{
 				$movie = current($movie);
-			} else if (count($movie) > 1) {
+			}
+			else if (count($movie) > 1)
+			{
 				return;
 			}
 
@@ -255,6 +261,8 @@ class Scanner_Movie implements IScanner
 			}
 			else
 			{
+				Model_Scrapergroup_Movie::parse_movie($movie, false);
+				//Debug::dump(array($movie->title, $movie->released), $matches);
 				// Uhm.. Path is registred to a movie. Update missing fields?
 				if ($movie->title != $matches['title'] or $movie->released != $matches['year'])
 				{
@@ -275,7 +283,7 @@ class Scanner_Movie implements IScanner
 						continue;
 					}
 					// FIXME: Can we assume that the file isnt registred instead of checking for missing link?
-					$im = Model_Image::find('first', array(
+					$im = Model_Image::find('all', array(
 						    'related' => array(
 							'file' => array(
 							    'where' => array(
@@ -287,6 +295,18 @@ class Scanner_Movie implements IScanner
 							'movie'
 						    )
 						));
+
+					if (count($im) == 1)
+					{
+						$im = current($im);
+					}
+					else if (count($im) > 1)
+					{
+						// That is just fucked up
+						Debug::dump($im);
+						continue;
+					}
+
 					if ($im == null || $im->movie == null)
 					{
 						$im = new Model_Image();
@@ -333,7 +353,7 @@ class Scanner_Movie implements IScanner
 				foreach ($subtitles as $sub)
 				{
 					// FIXME: Can we assume that the file isnt registred instead of checking for missing link?
-					$su = Model_Subtitle::find('first', array(
+					$su = Model_Subtitle::find('all', array(
 						    'related' => array(
 							'file' => array(
 							    'where' => array(
@@ -345,6 +365,16 @@ class Scanner_Movie implements IScanner
 							'movie'
 						    )
 						));
+
+					if (count($su) == 1)
+					{
+						$su = current($su);
+					}
+					else if (count($su) > 1)
+					{
+						// Wtf?
+						return;
+					}
 
 					$matches = array();
 					preg_match(self::$regex_subtitles_lang, $sub, $matches);
@@ -370,9 +400,12 @@ class Scanner_Movie implements IScanner
 
 			$movie->save();
 		}
-		// Or one folder with all movies?
+		else
+		{
+			// Or one folder with all movies?
+		}
 
-		if (!empty($inserts))
+		if (!empty($inserts) && $inserts['movie'] != 0)
 		{
 			$this->_inserts[] = $inserts;
 		}

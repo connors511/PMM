@@ -53,10 +53,10 @@ class Model_Scrapergroup_Movie extends \Orm\Model
 		return $val;
 	}
 	
-	public static function parse_movie(Model_Movie $movie)
+	public static function parse_movie(Model_Movie $movie, $all_fields = true)
 	{
 		$scraper = new Scraper_Imdb($movie);
-		$scraper->search_imdb();
+		$scraper->search_imdb($all_fields);
 	}
 
 }
