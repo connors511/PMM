@@ -29,6 +29,8 @@ class Scraper_Imdb extends Scraper
 	    'votes',
 	    //'releasedate',
 	    'runtime',
+	    'producers',
+	    'actors'
 		//'mpaa',
 		//'writers',
 		//'poster'
@@ -206,7 +208,7 @@ class Scraper_Imdb extends Scraper
 		$matches = array();
 		if (preg_match_all('#Directed [bB]y (?<director>.*?)\.#', $page, $matches))
 		{
-			$directors = $matches['director'];
+			$directors = explode(',',$matches['director'][0]);
 			$res = array();
 			/* foreach($directors as $d)
 			  {
@@ -391,6 +393,85 @@ class Scraper_Imdb extends Scraper
 			
 		}
 		return $this->_movie->runtime;
+	}
+
+	public function scrape_producers()
+	{
+		return $this->_movie->producers;
+	}
+
+	public function scrape_actors()
+	{
+		$page = $this->download_url_param($this->_urls['cast'], $this->_id);
+		$matches = array();
+		if (preg_match_all('#>(?<name>.{0,40}?)</a></td><td class="ddd"> ... </td><td class="char">(?<role>.*?)</td>#', $page, $matches))
+		{
+			$actors = array();
+			foreach ($matches['role'] as $k => $role)
+			{
+				if (strpos($role, 'uncredited') === FALSE)
+				{
+					// Only take uncredited into account
+					// TODO: Config option
+					$role = strip_tags($role);
+
+					$actor = Model_Actor::find('all', array(
+						    'related' => array(
+							'person' => array(
+							    'where' => array(
+								array(
+								    'name', '=', $matches['name'][$k]
+								)
+							    )
+							)
+						    ),
+						    'where' => array(
+							array(
+							    'role' => $role
+							)
+						    )
+						));
+
+					if (count($actor) == 1)
+					{
+						$actor = current($actor);
+					}
+					else if (count($actor) > 1)
+					{
+						// Wtf?
+						continue;
+					}
+
+					if ($actor == null)
+					{
+						$person = Model_Person::find('first', array(
+							    'where' => array(
+								array('name', '=', $matches['name'][$k])
+							    )
+							));
+						if ($person == null)
+						{
+							$person = new Model_Person();
+							$person->name = $matches['name'][$k];
+						}
+						$actor = new Model_Actor();
+						$actor->person = $person;
+						$actor->role = $role;
+						$actors[] = $actor;
+					}
+				}
+			}
+			
+			if (!empty($actors))
+			{
+				return $actors;
+			}
+		}
+		else
+		{
+			
+		}
+		return $this->_movie->actors;
 	}
 
 	/* public function scrape_top250()

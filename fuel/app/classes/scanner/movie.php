@@ -373,7 +373,7 @@ class Scanner_Movie implements IScanner
 					else if (count($su) > 1)
 					{
 						// Wtf?
-						return;
+						continue;
 					}
 
 					$matches = array();

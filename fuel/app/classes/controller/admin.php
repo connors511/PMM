@@ -82,6 +82,18 @@ class Controller_Admin extends Controller_Base {
 		$files = Model_File::find()->count();
 		View::set_global('files',$files);
 		
+		$subtitles = Model_Subtitle::find()->count();
+		View::set_global('subtitles',$subtitles);
+		
+		$people = Model_Person::find()->count();
+		View::set_global('people',$people);
+		
+		$actors = Model_Actor::find()->count();
+		View::set_global('actors',$actors);
+		
+		$directors = Model_Director::find()->count();
+		View::set_global('directors',$directors);
+		
 		$this->template->title = 'Dashboard';
 		$this->template->content = View::forge('admin/dashboard');
 	}
