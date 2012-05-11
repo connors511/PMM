@@ -4,6 +4,7 @@
 <table class="zebra-striped">
 	<thead>
 		<tr>
+			<th>Poster</th>
 			<th>Title</th>
 			<th>Tagline</th>
 			<th>Rating</th>
@@ -16,6 +17,11 @@
 	<tbody>
 <?php foreach ($movies as $movie): ?>		<tr>
 
+			<td>
+				<?php if (!empty($movie->poster)) {
+					echo Html::img($movie->poster, array('width' => '90', 'height' => '120'));
+				} ?>
+			</td>
 			<td><?php echo $movie->title; ?></td>
 			<td><?php echo $movie->tagline; ?></td>
 			<td><?php echo $movie->rating; ?></td>

@@ -43,6 +43,10 @@
 	<strong>Trailer url:</strong>
 	<?php echo $movie->trailer_url; ?></p>
 <p>
+	<strong>Poster url:</strong>
+	<?php echo $movie->poster.'<br>'; 
+echo Html::img($movie->poster, array('width' => '90', 'height' => '120')); ?></p>
+<p>
 	<strong>File:</strong>
 	<?php echo $movie->file->path; ?></p>
 

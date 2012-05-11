@@ -55,7 +55,8 @@ class Model_Scrapergroup_Movie extends \Orm\Model
 	
 	public static function parse_movie(Model_Movie $movie, $all_fields = true)
 	{
-		$scraper = new Scraper_Imdb($movie);
+		$scraper = new Scraper_Imdb();
+		$scraper->set_movie($movie);
 		$scraper->search_imdb($all_fields);
 	}
 

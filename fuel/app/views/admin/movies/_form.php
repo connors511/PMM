@@ -114,6 +114,14 @@
 			</div>
 		</div>
 		<div class="clearfix">
+			<?php echo Form::label('Poster url', 'poster'); ?>
+
+			<div class="input">
+				<?php echo Form::textarea('poster', Input::post('poster', isset($movie) ? $movie->poster : ''), array('class' => 'span10', 'rows' => 8)); ?>
+
+			</div>
+		</div>
+		<div class="clearfix">
 			<?php echo Form::label('File', 'file_id'); ?>
 
 			<div class="input">

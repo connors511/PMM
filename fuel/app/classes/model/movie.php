@@ -22,6 +22,7 @@ class Model_Movie extends \Orm\Model
 	    'created_at',
 	    'updated_at',
 	    'file_id',
+	    'poster'
 	);
 	protected static $_has_many = array(
 	    'actors',
@@ -60,6 +61,7 @@ class Model_Movie extends \Orm\Model
 		$val->add_field('originaltitle', 'Originaltitle', 'required|max_length[255]');
 		$val->add_field('thumb', 'Thumb', 'required|valid_string[numeric]');
 		$val->add_field('fanart', 'Fanart', 'required|valid_string[numeric]');
+		$val->add_field('poster', 'Poster', 'valid_string');
 		//$val->add_field('trailer_url', 'Trailer Url', 'required');
 
 		return $val;

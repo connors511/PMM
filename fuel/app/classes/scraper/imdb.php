@@ -30,7 +30,8 @@ class Scraper_Imdb extends Scraper
 	    //'releasedate',
 	    'runtime',
 	    'producers',
-	    'actors'
+	    'actors',
+	    'poster',
 		//'mpaa',
 		//'writers',
 		//'poster'
@@ -63,7 +64,12 @@ class Scraper_Imdb extends Scraper
 		return "0.1";
 	}
 
-	public function __construct(Model_Movie &$movie)
+	public function __construct()
+	{
+		
+	}
+
+	public function set_movie(Model_Movie &$movie)
 	{
 		$this->_movie = $movie;
 	}
@@ -208,7 +214,7 @@ class Scraper_Imdb extends Scraper
 		$matches = array();
 		if (preg_match_all('#Directed [bB]y (?<director>.*?)\.#', $page, $matches))
 		{
-			$directors = explode(',',$matches['director'][0]);
+			$directors = explode(',', $matches['director'][0]);
 			$res = array();
 			/* foreach($directors as $d)
 			  {
@@ -461,7 +467,7 @@ class Scraper_Imdb extends Scraper
 					}
 				}
 			}
-			
+
 			if (!empty($actors))
 			{
 				return $actors;
@@ -472,6 +478,36 @@ class Scraper_Imdb extends Scraper
 			
 		}
 		return $this->_movie->actors;
+	}
+
+	public function scrape_poster()
+	{
+		foreach (array('poster', 'product') as $type)
+		{
+			$page = $this->download_url(sprintf('http://www.imdb.com/title/%s/mediaindex?refine=%s', $this->_id, $type));
+			$matches = array();
+			if (preg_match_all('#(?<url>/rg/mediaindex/unknown-thumbnail/media/rm\d{10}/tt\d{7})#', $page, $matches))
+			{
+				foreach ($matches['url'] as $m)
+				{
+					$p = $this->download_url('http://www.imdb.com' . $m);
+					if (preg_match('#src="(?<url>http://ia\.media-imdb\.com/images/M/(?<str>[A-Za-z0-9_]+?)@@\._V1\._SX(?<width>\d{3})_SY(?<height>\d{3})_\.jpg)"#', $p, $match))
+					{
+						// Just return the first match.
+						// TODO: Config to ask for a selection on poster, or download all of them?
+						if (intval($match['height']) >= 300)
+						{
+							return $match['url'];
+						}
+					}
+				}
+			}
+			else
+			{
+				
+			}
+		}
+		return $this->_movie->thumb;
 	}
 
 	/* public function scrape_top250()
