@@ -4,7 +4,12 @@ class Controller_Admin_Producers extends Controller_Admin
 
 	public function action_index()
 	{
-		$data['producers'] = Model_Producer::find('all');
+		$data['producers'] = Model_Producer::find('all', array(
+			    'related' => array(
+				'person',
+				'movie'
+			    )
+			));
 		$this->template->title = "Producers";
 		$this->template->content = View::forge('admin/producers/index', $data);
 
@@ -22,7 +27,7 @@ class Controller_Admin_Producers extends Controller_Admin
 	public function action_create()
 	{
                 $view = View::forge('admin/producers/create');
-            
+		
 		if (Input::method() == 'POST')
 		{
 			$val = Model_Producer::validate('create');

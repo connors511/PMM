@@ -1,13 +1,18 @@
 <?php
-class Controller_Admin_Subtitles extends Controller_Admin 
+
+class Controller_Admin_Subtitles extends Controller_Admin
 {
 
 	public function action_index()
 	{
-		$data['subtitles'] = Model_Subtitle::find('all');
+		$data['subtitles'] = Model_Subtitle::find('all', array(
+			    'related' => array(
+				'file',
+				'movie'
+			    )
+			));
 		$this->template->title = "Subtitles";
 		$this->template->content = View::forge('admin/subtitles/index', $data);
-
 	}
 
 	public function action_view($id = null)
@@ -16,7 +21,6 @@ class Controller_Admin_Subtitles extends Controller_Admin
 
 		$this->template->title = "Subtitle";
 		$this->template->content = View::forge('admin/subtitles/view', $data);
-
 	}
 
 	public function action_create()
@@ -24,22 +28,21 @@ class Controller_Admin_Subtitles extends Controller_Admin
 		if (Input::method() == 'POST')
 		{
 			$val = Model_Subtitle::validate('create');
-			
+
 			if ($val->run())
 			{
 				$subtitle = Model_Subtitle::forge(array(
-					'file_id' => Input::post('file_id'),
-					'language' => Input::post('language'),
-					'movie_id' => Input::post('movie_id'),
-				));
+					    'file_id' => Input::post('file_id'),
+					    'language' => Input::post('language'),
+					    'movie_id' => Input::post('movie_id'),
+					));
 
 				if ($subtitle and $subtitle->save())
 				{
-					Session::set_flash('success', 'Added subtitle #'.$subtitle->id.'.');
+					Session::set_flash('success', 'Added subtitle #' . $subtitle->id . '.');
 
 					Response::redirect('admin/subtitles');
 				}
-
 				else
 				{
 					Session::set_flash('error', 'Could not save subtitle.');
@@ -53,7 +56,6 @@ class Controller_Admin_Subtitles extends Controller_Admin
 
 		$this->template->title = "Subtitles";
 		$this->template->content = View::forge('admin/subtitles/create');
-
 	}
 
 	public function action_edit($id = null)
@@ -73,13 +75,11 @@ class Controller_Admin_Subtitles extends Controller_Admin
 
 				Response::redirect('admin/subtitles');
 			}
-
 			else
 			{
 				Session::set_flash('error', 'Could not update subtitle #' . $id);
 			}
 		}
-
 		else
 		{
 			if (Input::method() == 'POST')
@@ -90,13 +90,12 @@ class Controller_Admin_Subtitles extends Controller_Admin
 
 				Session::set_flash('error', $val->show_errors());
 			}
-			
+
 			$this->template->set_global('subtitle', $subtitle, false);
 		}
 
 		$this->template->title = "Subtitles";
 		$this->template->content = View::forge('admin/subtitles/edit');
-
 	}
 
 	public function action_delete($id = null)
@@ -105,17 +104,14 @@ class Controller_Admin_Subtitles extends Controller_Admin
 		{
 			$subtitle->delete();
 
-			Session::set_flash('success', 'Deleted subtitle #'.$id);
+			Session::set_flash('success', 'Deleted subtitle #' . $id);
 		}
-
 		else
 		{
-			Session::set_flash('error', 'Could not delete subtitle #'.$id);
+			Session::set_flash('error', 'Could not delete subtitle #' . $id);
 		}
 
 		Response::redirect('admin/subtitles');
-
 	}
-
 
 }

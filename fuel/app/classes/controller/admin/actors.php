@@ -4,7 +4,12 @@ class Controller_Admin_Actors extends Controller_Admin
 
 	public function action_index()
 	{
-		$data['actors'] = Model_Actor::find('all');
+		$data['actors'] = Model_Actor::find('all', array(
+			    'related' => array(
+				'person',
+				'movie'
+			    )
+			));
 		$this->template->title = "Actors";
 		$this->template->content = View::forge('admin/actors/index', $data);
 

@@ -4,7 +4,12 @@ class Controller_Admin_Directors extends Controller_Admin
 
 	public function action_index()
 	{
-		$data['directors'] = Model_Director::find('all');
+		$data['directors'] = Model_Director::find('all', array(
+			    'related' => array(
+				'person',
+				'movie'
+			    )
+			));
 		$this->template->title = "Directors";
 		$this->template->content = View::forge('admin/directors/index', $data);
 
