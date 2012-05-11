@@ -21,7 +21,7 @@ class Scraper_Imdb extends Scraper
 	    'contentrating',
 	    //'country',
 	    //'language',
-	    //'genre',
+	    'genres',
 	    //'cast',
 	    'tagline',
 	    //'top250',
@@ -351,9 +351,36 @@ class Scraper_Imdb extends Scraper
 		return $this->_movie->contentrating;
 	}
 
-	public function scrape_genre()
+	public function scrape_genres()
 	{
-		
+		$page = $this->download_url_param($this->_urls['main'], $this->_id);
+		$matches = array();
+		if (preg_match_all('#<a href=\"/Sections/Genres/(?<genre>[a-zA-Z-]*)(/\">|\">)#', $page, $matches))
+		{
+			$genres = array();
+			foreach($matches['genre'] as $g)
+			{
+				$genre = Model_Genre::find('first', array(
+				    'where' => array(
+					array(
+					    'name', '=', $g
+					)
+				    )
+				));
+				if ($genre == null)
+				{
+					$genre = new Model_Genre();
+					$genre->name = $g;
+				}
+				$genres[] = $genre;
+			}
+			return $genres;
+		}
+		else
+		{
+			
+		}
+		return $this->_movie->genres;
 	}
 
 	public function scrape_tagline()

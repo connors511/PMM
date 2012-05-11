@@ -5,6 +5,7 @@
 	<thead>
 		<tr>
 			<th>Name</th>
+			<th>Movies</th>
 			<th></th>
 		</tr>
 	</thead>
@@ -12,6 +13,7 @@
 <?php foreach ($genres as $genre): ?>		<tr>
 
 			<td><?php echo $genre->name; ?></td>
+			<td><?php echo count($genre->movies); ?></td>
 			<td>
 				<?php echo Html::anchor('admin/genres/view/'.$genre->id, 'View'); ?> |
 				<?php echo Html::anchor('admin/genres/edit/'.$genre->id, 'Edit'); ?> |

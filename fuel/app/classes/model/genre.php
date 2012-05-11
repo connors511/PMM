@@ -8,8 +8,8 @@ class Model_Genre extends \Orm\Model
 		'updated_at',
 	);
         
-        protected static $_belongs_to = array(
-            'movie'
+        protected static $_many_many = array(
+            'movies'
         );
 
 	protected static $_observers = array(

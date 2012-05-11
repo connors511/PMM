@@ -13,7 +13,6 @@ class Controller_Admin_Genres extends Controller_Admin
 	public function action_view($id = null)
 	{
 		$data['genre'] = Model_Genre::find($id);
-
 		$this->template->title = "Genre";
 		$this->template->content = View::forge('admin/genres/view', $data);
 

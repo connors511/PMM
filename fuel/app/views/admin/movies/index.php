@@ -7,6 +7,7 @@
 			<th>Poster</th>
 			<th>Title</th>
 			<th>Tagline</th>
+			<th>Genres</th>
 			<th>Rating</th>
 			<th>Votes</th>
 			<th>Released</th>
@@ -24,6 +25,23 @@
 			</td>
 			<td><?php echo $movie->title; ?></td>
 			<td><?php echo $movie->tagline; ?></td>
+			<td>
+				<?php 
+				if (empty($movie->genres)) 
+				{
+					echo 'None';
+				} 
+				else 
+				{
+					echo '<ul>';
+					foreach(Arr::assoc_to_keyval($movie->genres,'id','name') as $id=>$g) 
+					{
+						echo '<li>'.Html::anchor('admin/genres/view/'.$id,$g).'</li>';
+					}
+					echo '</ul>';
+				}
+				?>
+			</td>
 			<td><?php echo $movie->rating; ?></td>
 			<td><?php echo number_format($movie->votes); ?></td>
 			<td><?php echo $movie->released; ?></td>
