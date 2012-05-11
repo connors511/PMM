@@ -9,10 +9,10 @@ class Create_subtitles
 		\DBUtil::create_table('subtitles', array(
 			'id' => array('constraint' => 11, 'type' => 'int', 'auto_increment' => true),
 			'file_id' => array('constraint' => 11, 'type' => 'int'),
-			'language' => array('constraint' => 255, 'type' => 'varchar'),
+			'language' => array('constraint' => 255, 'type' => 'varchar', 'null'=>true),
 			'created_at' => array('constraint' => 11, 'type' => 'int'),
 			'updated_at' => array('constraint' => 11, 'type' => 'int'),
-			'file_id' => array('constraint' => 11, 'type' => 'int'),
+			'movie_id' => array('constraint' => 11, 'type' => 'int'),
 		), array('id'));
 	}
 
