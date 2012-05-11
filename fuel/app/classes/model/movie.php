@@ -65,6 +65,7 @@ class Model_Movie extends \Orm\Model
 		$val->add_field('thumb', 'Thumb', 'required|valid_string[numeric]');
 		$val->add_field('fanart', 'Fanart', 'required|valid_string[numeric]');
 		$val->add_field('poster', 'Poster', 'valid_string');
+		$val->add_field('file_id', 'File', 'required|valid_string[numeric]');
 		//$val->add_field('trailer_url', 'Trailer Url', 'required');
 
 		return $val;

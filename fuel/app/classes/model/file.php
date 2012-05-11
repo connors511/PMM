@@ -34,7 +34,7 @@ class Model_File extends \Orm\Model
 	{
 		$val = Validation::forge($factory);
 		$val->add_field('path', 'Path', 'required');
-		$val->add_field('source', 'Source', 'required');
+		$val->add_field('source_id', 'Source', 'required');
 
 		return $val;
 	}

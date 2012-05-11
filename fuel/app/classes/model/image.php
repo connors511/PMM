@@ -30,10 +30,10 @@ class Model_Image extends \Orm\Model
 	public static function validate($factory)
 	{
 		$val = Validation::forge($factory);
-		$val->add_field('file', 'File', 'required|valid_string[numeric]');
+		$val->add_field('file_id', 'File', 'required|valid_string[numeric]');
 		$val->add_field('height', 'Height', 'required|valid_string[numeric]');
 		$val->add_field('width', 'Width', 'required|valid_string[numeric]');
-		$val->add_field('movie', 'Movie', 'required|valid_string[numeric]');
+		$val->add_field('movie_id', 'Movie', 'required|valid_string[numeric]');
 
 		return $val;
 	}

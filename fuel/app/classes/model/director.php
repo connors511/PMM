@@ -28,8 +28,8 @@ class Model_Director extends \Orm\Model
 	public static function validate($factory)
 	{
 		$val = Validation::forge($factory);
-		$val->add_field('person', 'Person', 'required|valid_string[numeric]');
-		$val->add_field('movie', 'Movie', 'required|valid_string[numeric]');
+		$val->add_field('person_id', 'Person', 'required|valid_string[numeric]');
+		$val->add_field('movie_id', 'Movie', 'required|valid_string[numeric]');
 
 		return $val;
 	}
