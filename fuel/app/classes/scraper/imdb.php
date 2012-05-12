@@ -13,6 +13,7 @@ class Scraper_Imdb extends Scraper
 	);
 	protected $_fields = array(
 	    'title',
+	    'originaltitle',
 	    'released',
 	    'rating',
 	    'directors',
@@ -178,9 +179,91 @@ class Scraper_Imdb extends Scraper
 
 	public function scrape_title()
 	{
+		// TODO: Config option to overwrite with original title?
+		$title = $this->_scrape_title_helper('title');
+		if ($title)
+		{
+			return $title;
+		}
+		return $this->_movie->title;
+	}
+
+	public function scrape_originaltitle()
+	{
+		$title = $this->_scrape_title_helper('original');
+		if ($title)
+		{
+			return $title;
+		}
+		return $this->_movie->title;
+	}
+
+	/**
+	 * Gets titles from imdb page
+	 * @param string $get 'title', 'original' or 'alts'
+	 * @return array|string|bool returns array on alts, otherwise string. returns false or empty array on failure
+	 */
+	public function _scrape_title_helper($get = false)
+	{
+		// TODO: Cache this?
 		$html = $this->download_url_param($this->_urls['main'], $this->_id);
 		$releaseInfoHtml = $this->download_url_param($this->_urls['releaseinfo'], $this->_id);
-		return $this->_movie->title;
+		$matches = array();
+		$title = false;
+		$title_alts = array();
+		$title_orig = false;
+
+		if (preg_match('#(<title>)(?<title>.*)( [(].*</title>)#', $html, $matches))
+		{
+			$title = $matches['title'];
+		}
+		if (preg_match('#\(AKA\)</a></h5>\s<table border="0" cellpadding="2">(?<html>.+?)</table>#s', $releaseInfoHtml, $alt_html))
+		{
+			if (preg_match_all('#<td>(?<name>.*?)</td>\s+?<td>(?<details>.*?)</td>#s', $alt_html['html'], $m_titles))
+			{
+				foreach ($m_titles['name'] as $k => $t)
+				{
+					if (strpos($t, 'imax') === FALSE and strpos($t, 'working ') === FALSE and strpos($t, 'fake ') === FALSE)
+					{
+						$title_alts[] = array(
+						    'title' => $t,
+						    'detail' => $m_titles['details'][$k]
+						);
+					}
+				}
+			}
+		}
+		if (strpos($html, 'title-extra') !== FALSE)
+		{
+			if (preg_match('#class="title-extra">(?<title>.*?) <i>\(original title\)</i>#s', $html, $m_orig))
+			{
+				if (!empty($m_orig['title']) and strlen(trim($m_orig['title'])) > 0)
+				{
+					$title_orig = trim($m_orig['title']);
+				}
+			}
+		}
+
+		if ($title)
+		{
+			$title = preg_replace('#\(\d{4}\)#', '', $title);
+		}
+		if ($title_orig)
+		{
+			$title_orig = preg_replace('#\(\d{4}\)#', '', $title_orig);
+		}
+
+		$titles = array(
+		    'title' => $title,
+		    'original' => $title_orig,
+		    'alts' => $title_alts
+		);
+
+		if ($get and isset($titles[$get]))
+		{
+			return $titles[$get];
+		}
+		return $titles;
 	}
 
 	public function scrape_released()
@@ -189,10 +272,33 @@ class Scraper_Imdb extends Scraper
 
 		$matches = array();
 		// TODO fix regex
-		if (preg_match_all("#\((?<released1>\d{4})/.*?\)|\((?<released2>\d{4})\)#", $page, $matches))
+		if (preg_match("#\((?<released1>\d{4})/.*?\)|\((?<released2>\d{4})\)#", $page, $matches))
 		{
-			
+			if ($matches['released1'] != "")
+			{
+				return $matches['released1'];
+			}
+			if ($matches['released2'] != "")
+			{
+				return $matches['released2'];
+			}
 		}
+		$page = $this->download_url_param($this->_urls['releaseinfo'], $this->_id);
+		if (preg_match_all('#\?region=[A-Z]+?">(?<country>[a-zA-Z ]*?)</a>(.*?)/year/(?<released>\d{4})#s', $page, $matches))
+		{
+			$releases = array_combine($matches['country'], $matches['released']);
+			// TODO Config option to select year, or promt for it
+			if (isset($releases['USA']))
+			{
+				return $releases['USA'];
+			}
+			if (isset($releases['UK']))
+			{
+				return $releases['UK'];
+			}
+			return current($releases);
+		}
+
 		// return original if not found
 		return $this->_movie->released;
 	}
@@ -216,10 +322,6 @@ class Scraper_Imdb extends Scraper
 		{
 			$directors = explode(',', $matches['director'][0]);
 			$res = array();
-			/* foreach($directors as $d)
-			  {
-			  $res
-			  } */
 			$res = Model_Person::find('all', array(
 				    'where' => array(
 					array('name', 'in', $directors)
@@ -358,15 +460,15 @@ class Scraper_Imdb extends Scraper
 		if (preg_match_all('#<a href=\"/Sections/Genres/(?<genre>[a-zA-Z-]*)(/\">|\">)#', $page, $matches))
 		{
 			$genres = array();
-			foreach($matches['genre'] as $g)
+			foreach ($matches['genre'] as $g)
 			{
 				$genre = Model_Genre::find('first', array(
-				    'where' => array(
-					array(
-					    'name', '=', $g
-					)
-				    )
-				));
+					    'where' => array(
+						array(
+						    'name', '=', $g
+						)
+					    )
+					));
 				if ($genre == null)
 				{
 					$genre = new Model_Genre();
@@ -417,9 +519,9 @@ class Scraper_Imdb extends Scraper
 	{
 		$page = $this->download_url_param($this->_urls['main'], $this->_id);
 		$matches = array();
-		if (preg_match_all('#Runtime:</h5><div class="info-content">.*?(?<runtime>\d*?) min#', $page, $matches))
+		if (preg_match('#Runtime:</h5><div class="info-content">.*?(?<runtime>\d*?) min#', $page, $matches))
 		{
-			return $matches['runtime'][0];
+			return $matches['runtime'];
 		}
 		else
 		{
@@ -430,6 +532,25 @@ class Scraper_Imdb extends Scraper
 
 	public function scrape_producers()
 	{
+		$page = $this->download_url_param($this->_urls['cast'], $this->_id);
+		$matches = array();
+		if (preg_match_all('#<a href="(?:.*?)/(?<id>nm[0-9]{7})/">(?<name>.{0,40}?)</a></td><td valign="top" nowrap="1"> .... </td><td valign="top"><a href="(?:.*?)">(?<role>(?:.*?)producer(?:.*?))<#', $page, $matches))
+		{
+			$producers = array();
+			foreach ($matches['name'] as $k => $name)
+			{
+				$producers[] = array(
+				    'name' => $name,
+				    'role' => trim($matches['role'][$k])
+				);
+			}
+
+			return $producers;
+		}
+		else
+		{
+			
+		}
 		return $this->_movie->producers;
 	}
 
@@ -535,6 +656,30 @@ class Scraper_Imdb extends Scraper
 			}
 		}
 		return $this->_movie->thumb;
+	}
+
+	public function scrape_writers()
+	{
+		$this->scrape_producers();
+		$page = $this->download_url_param($this->_urls['main'], $this->_id);
+		$matches = array();
+		if (preg_match_all('#writerlist/(.*?)">(?<name>.*?)</a>(?<role>.*?)<br#', $page, $matches))
+		{
+			$writers = array();
+			foreach ($matches['name'] as $k => $role)
+			{
+				$writers[] = array(
+				    'name' => $matches['name'],
+				    'role' => trim($matches['role'])
+				);
+			}
+			return $writers;
+		}
+		else
+		{
+			
+		}
+		return $this->_movie->writers;
 	}
 
 	/* public function scrape_top250()

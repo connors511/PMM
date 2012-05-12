@@ -38,7 +38,11 @@ abstract class Scraper
 					//CURLOPT_FILE => $img,
 					CURLOPT_HEADER => 1,
 					CURLOPT_MAXREDIRS => 2,
-					CURLOPT_FOLLOWLOCATION => 1)
+					CURLOPT_FOLLOWLOCATION => 1,
+					CURLOPT_HTTPHEADER => array(
+					    "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6 (.NET CLR 3.5.30729)",
+					    "Accept-Language: en-us,en"
+				    ))
 				))->execute()->response();
 			echo 'downloaded ' . $url . '<br>';
 			if ($cache)
