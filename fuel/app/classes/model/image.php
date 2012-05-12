@@ -46,13 +46,13 @@ class Model_Image extends \Orm\Model
 		}
 
 		// Is it already saved as a thumb?
-		if ($url = Asset::find_file($this->id . '_thumb.jpg', 'img/cache'))
+		if (($url = \Asset::get_file($this->id . '_thumb.jpg', 'img','cache')))
 		{
 			return $url;
 		}
 
 		$this->generate_images();
-		return Asset::find_file($this->id . '_thumb.jpg', 'img/cache');
+		return Asset::get_file($this->id . '_thumb.jpg', 'img','cache');
 	}
 
 	public function generate_images()
