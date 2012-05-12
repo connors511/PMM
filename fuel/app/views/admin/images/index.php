@@ -12,9 +12,9 @@
     	</tr>
         </thead>
         <tbody>
-	    <?php foreach ($images as $image): ?>		<tr>
-		    <?php // TODO: Fix this url.. ?>
-		    <td><img src="<?php echo Uri::base(false) . $image->get_thumb_url(); ?>" onmouseout="hiddenPic();" onmousemove="showPic(this.src);" /></td>
+	    <?php foreach ($images as $image): ?>		
+		<tr>
+		    <td><img src="<?php echo $image->get_thumb_url(); ?>" onmouseout="hiddenPic();" onmousemove="showPic(this.src);" /></td>
 		    <td><?php echo ($image->movie == null) ? 'None' : $image->movie->title; ?></td>		
 		    <td><?php echo $image->height; ?></td>
 		    <td><?php echo $image->width; ?></td>
@@ -25,7 +25,8 @@
 
 		    </td>
 		</tr>
-	    <?php endforeach; ?>	</tbody>
+	    <?php endforeach; ?>	
+	</tbody>
     </table>
 
 <?php else: ?>
