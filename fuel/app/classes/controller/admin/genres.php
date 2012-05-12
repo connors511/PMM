@@ -4,7 +4,11 @@ class Controller_Admin_Genres extends Controller_Admin
 
 	public function action_index()
 	{
-		$data['genres'] = Model_Genre::find('all');
+		$data['genres'] = Model_Genre::find('all', array(
+		    'related' => array(
+			'movies'
+		    )
+		));
 		$this->template->title = "Genres";
 		$this->template->content = View::forge('admin/genres/index', $data);
 

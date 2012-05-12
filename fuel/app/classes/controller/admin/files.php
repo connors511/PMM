@@ -16,6 +16,9 @@ class Controller_Admin_Files extends Controller_Admin
 		    ),
 		));
 		$data['files'] = Model_File::find('all', array(
+		    'related' => array(
+			'source'
+		    ),
 			    'limit' => \Fuel\Core\Pagination::$per_page,
 			    'offset' => \Fuel\Core\Pagination::$offset
 			));

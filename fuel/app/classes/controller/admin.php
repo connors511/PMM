@@ -120,7 +120,8 @@ class Controller_Admin extends Controller_Base {
 		\DBUtil::truncate_table('actors');
 		\DBUtil::truncate_table('directors');
 		\DBUtil::truncate_table('files');
-		
+		\DBUtil::truncate_table('genres');
+		\DBUtil::truncate_table('genres_movies');
 		\DBUtil::truncate_table('images');
 		
 		\DBUtil::truncate_table('movies');

@@ -4,7 +4,11 @@ class Controller_Admin_Movies extends Controller_Admin
 
 	public function action_index()
 	{
-		$data['movies'] = Model_Movie::find('all');
+		$data['movies'] = Model_Movie::find('all', array(
+		    'related' => array(
+			'genres'
+		    )
+		));
 		$this->template->title = "Movies";
 		$this->template->content = View::forge('admin/movies/index', $data);
 
