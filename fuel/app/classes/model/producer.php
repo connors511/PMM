@@ -9,6 +9,7 @@ class Model_Producer extends \Orm\Model
 	    'movie_id',
 	    'created_at',
 	    'updated_at',
+	    'role'
 	);
 	protected static $_belongs_to = array(
 	    'person',
@@ -30,6 +31,7 @@ class Model_Producer extends \Orm\Model
 		$val = Validation::forge($factory);
 		$val->add_field('person_id', 'Person', 'required|valid_string[numeric]');
 		$val->add_field('movie_id', 'Movie', 'required|valid_string[numeric]');
+		$val->add_field('role', 'Role', 'required|valid_string');
 
 		return $val;
 	}

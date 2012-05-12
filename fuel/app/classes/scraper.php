@@ -28,7 +28,7 @@ abstract class Scraper
 		try
 		{
 			$page = Cache::get(sha1($url));
-			echo 'got cache for ' . $url . '<br>';
+			//echo 'got cache for ' . $url . '<br>';
 		}
 		catch (\CacheNotFoundException $e)
 		{
@@ -44,7 +44,7 @@ abstract class Scraper
 					    "Accept-Language: en-us,en"
 				    ))
 				))->execute()->response();
-			echo 'downloaded ' . $url . '<br>';
+			//echo 'downloaded ' . $url . '<br>';
 			if ($cache)
 			{
 				Cache::set(sha1($url), $page);

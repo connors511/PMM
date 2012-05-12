@@ -17,6 +17,13 @@
                                 
 			</div>
 		</div>
+		<div class="clearfix">
+			<?php echo Form::label('Role', 'role'); ?>
+
+			<div class="input">
+				<?php echo Form::input('role', Input::post('role', isset($producer) ? $producer->role : ''), array('class' => 'span6')); ?>
+			</div>
+		</div>
 		<div class="actions">
 			<?php echo Form::submit('submit', 'Save', array('class' => 'btn primary')); ?>
 

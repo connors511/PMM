@@ -6,6 +6,7 @@
 		<tr>
 			<th>Person</th>
 			<th>Movie</th>
+			<th>Role</th>
 			<th></th>
 		</tr>
 	</thead>
@@ -14,6 +15,7 @@
 
 			<td><?php echo Html::anchor('admin/people/view/'.$producer->person->id,$producer->person->name); ?></td>
 			<td><?php echo Html::anchor('admin/movies/view/'.$producer->movie->id,$producer->movie->title); ?></td>
+			<td><?php echo $producer->role; ?></td>
 			<td>
 				<?php echo Html::anchor('admin/producers/view/'.$producer->id, 'View'); ?> |
 				<?php echo Html::anchor('admin/producers/edit/'.$producer->id, 'Edit'); ?> |

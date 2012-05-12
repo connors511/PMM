@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Some methods might fail due to pcre.backtrack_limit when using preg_match_all
+ */
 class Scraper_Imdb extends Scraper
 {
 
@@ -534,22 +537,70 @@ class Scraper_Imdb extends Scraper
 	{
 		$page = $this->download_url_param($this->_urls['cast'], $this->_id);
 		$matches = array();
-		if (preg_match_all('#<a href="(?:.*?)/(?<id>nm[0-9]{7})/">(?<name>.{0,40}?)</a></td><td valign="top" nowrap="1"> .... </td><td valign="top"><a href="(?:.*?)">(?<role>(?:.*?)producer(?:.*?))<#', $page, $matches))
+		if (preg_match('#(<table.*?Produced by.*?</table>)#', $page, $match))
 		{
-			$producers = array();
-			foreach ($matches['name'] as $k => $name)
+			$page = $match[0];
+			if (preg_match_all('#<a href="(?:.*?)/(?<id>nm[0-9]{7})/">(?<name>.{0,40})</a></td><td valign="top" nowrap="1"> .... </td><td valign="top"><a href="(?:.*?)">(?<role>.*?producer.*?)</a>#', $page, $matches))
 			{
-				$producers[] = array(
-				    'name' => $name,
-				    'role' => trim($matches['role'][$k])
-				);
-			}
+				echo "* joy for $this->_id<br>";
+				$producers = array();
+				foreach ($matches['name'] as $k => $name)
+				{
+					$role = trim($matches['role'][$k]);
+					$producer = Model_Producer::find('all', array(
+						    'related' => array(
+							'person' => array(
+							    'where' => array(
+								array(
+								    'name', '=', $name
+								)
+							    )
+							)
+						    ),
+						    'where' => array(
+							array(
+							    'role' => $role
+							)
+						    )
+						));
 
-			return $producers;
-		}
-		else
-		{
-			
+					if (count($producer) == 1)
+					{
+						$producer = current($producer);
+					}
+					else if (count($producer) > 1)
+					{
+						// Wtf?
+						continue;
+					}
+
+					if ($producer == null)
+					{
+						$person = Model_Person::find('first', array(
+							    'where' => array(
+								array('name', '=', $name)
+							    )
+							));
+						if ($person == null)
+						{
+							$person = new Model_Person();
+							$person->name = $name;
+						}
+						$producer = new Model_Producer();
+						$producer->person = $person;
+						$producer->role = $role;
+						$producers[] = $producer;
+					}
+				}
+				if (!empty($producers))
+				{
+					return $producers;
+				}
+			}
+			else
+			{
+				
+			}
 		}
 		return $this->_movie->producers;
 	}
@@ -569,49 +620,54 @@ class Scraper_Imdb extends Scraper
 					// TODO: Config option
 					$role = strip_tags($role);
 
-					$actor = Model_Actor::find('all', array(
-						    'related' => array(
-							'person' => array(
+					$roles = explode('/', $role);
+					foreach ($roles as $r)
+					{
+						$r = trim($r);
+						$actor = Model_Actor::find('all', array(
+							    'related' => array(
+								'person' => array(
+								    'where' => array(
+									array(
+									    'name', '=', $matches['name'][$k]
+									)
+								    )
+								)
+							    ),
 							    'where' => array(
 								array(
-								    'name', '=', $matches['name'][$k]
+								    'role' => $r
 								)
 							    )
-							)
-						    ),
-						    'where' => array(
-							array(
-							    'role' => $role
-							)
-						    )
-						));
-
-					if (count($actor) == 1)
-					{
-						$actor = current($actor);
-					}
-					else if (count($actor) > 1)
-					{
-						// Wtf?
-						continue;
-					}
-
-					if ($actor == null)
-					{
-						$person = Model_Person::find('first', array(
-							    'where' => array(
-								array('name', '=', $matches['name'][$k])
-							    )
 							));
-						if ($person == null)
+
+						if (count($actor) == 1)
 						{
-							$person = new Model_Person();
-							$person->name = $matches['name'][$k];
+							$actor = current($actor);
 						}
-						$actor = new Model_Actor();
-						$actor->person = $person;
-						$actor->role = $role;
-						$actors[] = $actor;
+						else if (count($actor) > 1)
+						{
+							// Wtf?
+							continue;
+						}
+
+						if ($actor == null)
+						{
+							$person = Model_Person::find('first', array(
+								    'where' => array(
+									array('name', '=', $matches['name'][$k])
+								    )
+								));
+							if ($person == null)
+							{
+								$person = new Model_Person();
+								$person->name = $matches['name'][$k];
+							}
+							$actor = new Model_Actor();
+							$actor->person = $person;
+							$actor->role = $r;
+							$actors[] = $actor;
+						}
 					}
 				}
 			}
@@ -666,14 +722,58 @@ class Scraper_Imdb extends Scraper
 		if (preg_match_all('#writerlist/(.*?)">(?<name>.*?)</a>(?<role>.*?)<br#', $page, $matches))
 		{
 			$writers = array();
-			foreach ($matches['name'] as $k => $role)
+			foreach ($matches['name'] as $k => $name)
 			{
-				$writers[] = array(
-				    'name' => $matches['name'],
-				    'role' => trim($matches['role'])
-				);
+				$role = trim($matches['role'][$k]);
+				$writer = Model_Writer::find('all', array(
+					    'related' => array(
+						'person' => array(
+						    'where' => array(
+							array(
+							    'name', '=', $name
+							)
+						    )
+						)
+					    ),
+					    'where' => array(
+						array(
+						    'role' => $role
+						)
+					    )
+					));
+
+				if (count($writer) == 1)
+				{
+					$writer = current($writer);
+				}
+				else if (count($writer) > 1)
+				{
+					// Wtf?
+					continue;
+				}
+
+				if ($writer == null)
+				{
+					$person = Model_Person::find('first', array(
+						    'where' => array(
+							array('name', '=', $name)
+						    )
+						));
+					if ($person == null)
+					{
+						$person = new Model_Person();
+						$person->name = $name;
+					}
+					$writer = new Model_Producer();
+					$writer->person = $person;
+					$writer->role = $role;
+					$writers[] = $writer;
+				}
 			}
-			return $writers;
+			if (!empty($writers))
+			{
+				return $writers;
+			}
 		}
 		else
 		{
