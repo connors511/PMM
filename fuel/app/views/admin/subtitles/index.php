@@ -15,7 +15,7 @@
 
 			<td><?php echo $subtitle->file->path; ?></td>
 			<td><?php echo $subtitle->language; ?></td>
-			<td><?php echo $subtitle->movie->title; ?></td>
+			<td><?php echo Html::anchor('admin/movies/view/'.$subtitle->movie->id,$subtitle->movie->title); ?></td>
 			<td>
 				<?php echo Html::anchor('admin/subtitles/view/'.$subtitle->id, 'View'); ?> |
 				<?php echo Html::anchor('admin/subtitles/edit/'.$subtitle->id, 'Edit'); ?> |
