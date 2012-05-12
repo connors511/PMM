@@ -94,6 +94,9 @@ class Controller_Admin extends Controller_Base {
 		$directors = Model_Director::find()->count();
 		View::set_global('directors',$directors);
 		
+		$producers = Model_Producer::find()->count();
+		View::set_global('producers',$producers);
+		
 		$this->template->title = 'Dashboard';
 		$this->template->content = View::forge('admin/dashboard');
 	}

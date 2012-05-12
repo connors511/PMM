@@ -24,5 +24,6 @@
 		<p>People: <?php echo $people; ?></p>
 		<p>Directors: <?php echo $directors; ?></p>
 		<p>Actors: <?php echo $actors; ?></p>
+		<p>Producers: <?php echo $producers; ?></p>
 	</div>
 </div>
