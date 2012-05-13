@@ -142,13 +142,13 @@
 		    <hr>
 		    <?php if (Session::get_flash('success')): ?>
     		    <div class="alert alert-success">
-			<a class="close" data-dismiss="alert" href="#">×</a>
+			<a class="close" data-dismiss="alert" href="#">&times;</a>
     			<?php echo implode('', e((array) Session::get_flash('success'))); ?>
     		    </div>
 		    <?php endif; ?>
 		    <?php if (Session::get_flash('error')): ?>
     		    <div class="alert alert-error">
-			    <a class="close" data-dismiss="alert" href="#">×</a>
+			    <a class="close" data-dismiss="alert" href="#">&times;</a>
 			    <?php echo implode('', (array) Session::get_flash('error')); ?>
     		    </div>
 		    <?php endif; ?>
