@@ -72,6 +72,7 @@ class Controller_Admin_Images extends Controller_Admin
 			}
 		}
 
+		$this->template->set_global('movies', Arr::assoc_to_keyval(Model_Movie::find('all'), 'id', 'title'));
 		$this->template->title = "Images";
 		$this->template->content = View::forge('admin/images/create');
 	}
@@ -114,6 +115,7 @@ class Controller_Admin_Images extends Controller_Admin
 			$this->template->set_global('image', $image, false);
 		}
 
+		$this->template->set_global('movies', Arr::assoc_to_keyval(Model_Movie::find('all'), 'id', 'title'));
 		$this->template->title = "Images";
 		$this->template->content = View::forge('admin/images/edit');
 	}

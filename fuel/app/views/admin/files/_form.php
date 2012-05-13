@@ -13,8 +13,8 @@
 			<?php echo Form::label('Source', 'source_id'); ?>
 
 			<div class="input">
-				<?php echo Form::input('source_id', Input::post('source_id', isset($file) ? $file->source_id : ''), array('class' => 'span6')); ?>
-
+				<?php echo Form::select('source_id', Input::post('source_id', isset($file) ? $file->source_id : ''), empty($sources)?array():$sources, array('class' => 'span6')); ?>
+                             
 			</div>
 		</div>
 		<div class="actions">

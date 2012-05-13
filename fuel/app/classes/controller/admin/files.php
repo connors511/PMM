@@ -56,6 +56,7 @@ class Controller_Admin_Files extends Controller_Admin
 			}
 		}
 
+		$this->template->set_global('sources', Arr::assoc_to_keyval(Model_Source::find('all'), 'id', 'path'));
 		$this->template->title = "Files";
 		$this->template->content = View::forge('admin/files/create');
 	}
@@ -94,6 +95,7 @@ class Controller_Admin_Files extends Controller_Admin
 			$this->template->set_global('file', $file, false);
 		}
 
+		$this->template->set_global('sources', Arr::assoc_to_keyval(Model_Source::find('all'), 'id', 'path'));
 		$this->template->title = "Files";
 		$this->template->content = View::forge('admin/files/edit');
 	}

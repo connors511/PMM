@@ -29,8 +29,8 @@
 			<?php echo Form::label('Movie', 'movie_id'); ?>
 
 			<div class="input">
-				<?php echo Form::input('movie_id', Input::post('movie_id', isset($image) ? $image->movie_id : ''), array('class' => 'span6')); ?>
-
+				<?php echo Form::select('movie_id', Input::post('movie_id', isset($image) ? $image->movie_id : ''), empty($movies)?array():$movies, array('class' => 'span6')); ?>
+                             
 			</div>
 		</div>
 		<div class="actions">
