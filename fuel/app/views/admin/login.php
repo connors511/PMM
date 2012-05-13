@@ -23,7 +23,7 @@
 	<div class="control-group<?php if ($val->error('password')) echo ' error'; ?>">
 		<label class="control-label" for="password">Password:</label>
 		<div class="controls">
-		    <?php echo Form::input('password', Input::post('password')); ?>
+		    <?php echo Form::password('password', Input::post('password')); ?>
 
 		    <?php if ($val->error('password')): ?>
 			    <span class="help-inline"><?php echo $val->error('password')->get_message(':label cannot be blank'); ?></span>
