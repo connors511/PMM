@@ -1,7 +1,7 @@
 <h2>Listing Sources</h2>
 <br>
 <?php if ($sources): ?>
-<table class="zebra-striped">
+<table class="table table-striped table-bordered">
 	<thead>
 		<tr>
 			<th>Path</th>
@@ -28,7 +28,7 @@
 <p>No Paths.</p>
 
 <?php endif; ?><p>
-	<?php echo Html::anchor('admin/sources/create', 'Add new Path', array('class' => 'btn success')); ?>
+	<?php echo Html::anchor('admin/sources/create', 'Add new Path', array('class' => 'btn btn-success')); ?>
 
 <ul class="pager">
 	<li class="previous">

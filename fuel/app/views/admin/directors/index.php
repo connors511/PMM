@@ -1,7 +1,7 @@
 <h2>Listing Directors</h2>
 <br>
 <?php if ($directors): ?>
-<table class="zebra-striped">
+<table class="table table-striped table-bordered">
 	<thead>
 		<tr>
 			<th>Person</th>
@@ -28,7 +28,7 @@
 <p>No Directors.</p>
 
 <?php endif; ?><p>
-	<?php echo Html::anchor('admin/directors/create', 'Add new Director', array('class' => 'btn success')); ?>
+	<?php echo Html::anchor('admin/directors/create', 'Add new Director', array('class' => 'btn btn-success')); ?>
 
 <ul class="pager">
 	<li class="previous">

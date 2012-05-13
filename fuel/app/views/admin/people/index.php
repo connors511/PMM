@@ -1,7 +1,7 @@
 <h2>Listing People</h2>
 <br>
 <?php if ($people): ?>
-<table class="zebra-striped">
+<table class="table table-striped table-bordered">
 	<thead>
 		<tr>
 			<th>Name</th>
@@ -36,7 +36,7 @@
 <p>No People.</p>
 
 <?php endif; ?><p>
-	<?php echo Html::anchor('admin/people/create', 'Add new Person', array('class' => 'btn success')); ?>
+	<?php echo Html::anchor('admin/people/create', 'Add new Person', array('class' => 'btn btn-success')); ?>
 
 <ul class="pager">
 	<li class="previous">

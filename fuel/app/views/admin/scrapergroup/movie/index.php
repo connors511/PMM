@@ -1,7 +1,7 @@
 <h2>Listing Scrapergroup_movies</h2>
 <br>
 <?php if ($scrapergroup_movies): ?>
-<table class="zebra-striped">
+<table class="table table-striped table-bordered">
 	<thead>
 		<tr>
 			<th>Name</th>
@@ -48,6 +48,6 @@
 <p>No Scrapergroup_movies.</p>
 
 <?php endif; ?><p>
-	<?php echo Html::anchor('admin/scrapergroup/movie/create', 'Add new Scrapergroup movie', array('class' => 'btn success')); ?>
+	<?php echo Html::anchor('admin/scrapergroup/movie/create', 'Add new Scrapergroup movie', array('class' => 'btn btn-success')); ?>
 
 </p>

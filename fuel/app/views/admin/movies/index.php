@@ -1,7 +1,7 @@
 <h2>Listing Movies</h2>
 <br>
 <?php if ($movies): ?>
-<table class="zebra-striped">
+<table class="table table-striped table-bordered">
 	<thead>
 		<tr>
 			<th>Poster</th>
@@ -60,7 +60,7 @@
 <p>No Movies.</p>
 
 <?php endif; ?><p>
-	<?php echo Html::anchor('admin/movies/create', 'Add new Movie', array('class' => 'btn success')); ?>
+	<?php echo Html::anchor('admin/movies/create', 'Add new Movie', array('class' => 'btn btn-success')); ?>
 
 <ul class="pager">
 	<li class="previous">

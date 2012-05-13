@@ -1,7 +1,7 @@
 <h2>Listing Images</h2>
 <br>
 <?php if ($images): ?>
-    <table class="zebra-striped">
+    <table class="table table-striped table-bordered">
         <thead>
     	<tr>
     	    <th>Image</th>
@@ -33,7 +33,7 @@
     <p>No Images.</p>
 
 <?php endif; ?><p>
-    <?php echo Html::anchor('admin/images/create', 'Add new Image', array('class' => 'btn success')); ?>
+    <?php echo Html::anchor('admin/images/create', 'Add new Image', array('class' => 'btn btn-success')); ?>
 <ul class="pager">
 	<li class="previous">
 		<?php echo \Fuel\Core\Pagination::prev_link('Previous'); ?>

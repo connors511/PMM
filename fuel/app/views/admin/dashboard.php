@@ -5,17 +5,17 @@
 	<p><a class="btn primary large" href="http://docs.fuelphp.com">Read the Docs</a></p>
 </div>
 <div class="row">
-	<div class="span-one-third">
+	<div class="span4">
 		<h2>Truncation</h2>
 		<p>Press <a href="admin/truncate">here</a> to truncate the tables.</p>
 	</div>
-	<div class="span-one-third">
+	<div class="span4">
 		<h2>Scan</h2>
 		<?php foreach($sources as $p) : ?>
 		<p><?php echo Html::anchor('admin/scan/'.$p->id, $p->path); ?></p>
 		<?php endforeach; ?>
 	</div>
-	<div class="span-one-third">
+	<div class="span4">
 		<h2>Stats</h2>
 		<p>Files: <?php echo $files; ?></p>
 		<p>Images: <?php echo $images; ?></p>

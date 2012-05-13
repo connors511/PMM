@@ -1,7 +1,7 @@
 <h2>Listing Scrapers</h2>
 <br>
 <?php if ($scrapers): ?>
-<table class="zebra-striped">
+<table class="table table-striped table-bordered">
 	<thead>
 		<tr>
 			<th>Name</th>
@@ -34,8 +34,8 @@
 <p>No Scrapers.</p>
 
 <?php endif; ?><p>
-	<?php echo Html::anchor('admin/scrapers/create', 'Add new Scraper', array('class' => 'btn success')); ?>
-	<?php echo Html::anchor('admin/scrapers/scanscrapers', 'Scan for Scrapers', array('class' => 'btn primary')); ?>
+	<?php echo Html::anchor('admin/scrapers/create', 'Add new Scraper', array('class' => 'btn btn-success')); ?>
+	<?php echo Html::anchor('admin/scrapers/scanscrapers', 'Scan for Scrapers', array('class' => 'btn btn-primary')); ?>
 
 <ul class="pager">
 	<li class="previous">

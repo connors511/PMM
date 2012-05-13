@@ -1,7 +1,7 @@
 <h2>Listing Genres</h2>
 <br>
 <?php if ($genres): ?>
-<table class="zebra-striped">
+<table class="table table-striped table-bordered">
 	<thead>
 		<tr>
 			<th>Name</th>
@@ -28,7 +28,7 @@
 <p>No Genres.</p>
 
 <?php endif; ?><p>
-	<?php echo Html::anchor('admin/genres/create', 'Add new Genre', array('class' => 'btn success')); ?>
+	<?php echo Html::anchor('admin/genres/create', 'Add new Genre', array('class' => 'btn btn-success')); ?>
 
 <ul class="pager">
 	<li class="previous">

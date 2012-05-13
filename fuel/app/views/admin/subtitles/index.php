@@ -1,7 +1,7 @@
 <h2>Listing Subtitles</h2>
 <br>
 <?php if ($subtitles): ?>
-<table class="zebra-striped">
+<table class="table table-striped table-bordered">
 	<thead>
 		<tr>
 			<th>File</th>
@@ -30,7 +30,7 @@
 <p>No Subtitles.</p>
 
 <?php endif; ?><p>
-	<?php echo Html::anchor('admin/subtitles/create', 'Add new Subtitle', array('class' => 'btn success')); ?>
+	<?php echo Html::anchor('admin/subtitles/create', 'Add new Subtitle', array('class' => 'btn btn-success')); ?>
 
 <ul class="pager">
 	<li class="previous">

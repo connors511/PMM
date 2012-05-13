@@ -1,7 +1,7 @@
 <h2>Listing Producers</h2>
 <br>
 <?php if ($producers): ?>
-<table class="zebra-striped">
+<table class="table table-striped table-bordered">
 	<thead>
 		<tr>
 			<th>Person</th>
@@ -30,7 +30,7 @@
 <p>No Producers.</p>
 
 <?php endif; ?><p>
-	<?php echo Html::anchor('admin/producers/create', 'Add new Producer', array('class' => 'btn success')); ?>
+	<?php echo Html::anchor('admin/producers/create', 'Add new Producer', array('class' => 'btn btn-success')); ?>
 
 <ul class="pager">
 	<li class="previous">

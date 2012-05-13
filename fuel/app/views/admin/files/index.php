@@ -1,7 +1,7 @@
 <h2>Listing Files</h2>
 <br>
 <?php if ($files): ?>
-	<table class="zebra-striped">
+	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
 				<th>Path</th>
@@ -27,7 +27,7 @@
 	<p>No Files.</p>
 
 <?php endif; ?><p>
-	<?php echo Html::anchor('admin/files/create', 'Add new File', array('class' => 'btn success')); ?>
+	<?php echo Html::anchor('admin/files/create', 'Add new File', array('class' => 'btn btn-success')); ?>
 
 <ul class="pager">
 	<li class="previous">

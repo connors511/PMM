@@ -1,7 +1,7 @@
 <h2>Listing Actors</h2>
 <br>
 <?php if ($actors): ?>
-<table class="zebra-striped">
+<table class="table table-striped table-bordered">
 	<thead>
 		<tr>
 			<th>Person</th>
@@ -30,7 +30,7 @@
 <p>No Actors.</p>
 
 <?php endif; ?><p>
-	<?php echo Html::anchor('admin/actors/create', 'Add new Actor', array('class' => 'btn success')); ?>
+	<?php echo Html::anchor('admin/actors/create', 'Add new Actor', array('class' => 'btn btn-success')); ?>
 
 <ul class="pager">
 	<li class="previous">
