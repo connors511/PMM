@@ -1,18 +1,21 @@
 <?php
-class Controller_Admin_Producers extends Controller_Admin 
+
+class Controller_Admin_Producers extends Controller_Admin
 {
 
 	public function action_index()
 	{
+		$this->set_pagination(Uri::create('admin/producers'), 3, Model_Producer::find()->count());
 		$data['producers'] = Model_Producer::find('all', array(
 			    'related' => array(
 				'person',
 				'movie'
-			    )
+			    ),
+			    'limit' => \Fuel\Core\Pagination::$per_page,
+			    'offset' => \Fuel\Core\Pagination::$offset
 			));
 		$this->template->title = "Producers";
 		$this->template->content = View::forge('admin/producers/index', $data);
-
 	}
 
 	public function action_view($id = null)
@@ -21,31 +24,29 @@ class Controller_Admin_Producers extends Controller_Admin
 
 		$this->template->title = "Producers";
 		$this->template->content = View::forge('admin/producers/view', $data);
-
 	}
 
 	public function action_create()
 	{
-                $view = View::forge('admin/producers/create');
-		
+		$view = View::forge('admin/producers/create');
+
 		if (Input::method() == 'POST')
 		{
 			$val = Model_Producer::validate('create');
-			
+
 			if ($val->run())
 			{
 				$producer = Model_Producer::forge(array(
-					'person_id' => Input::post('person_id'),
-					'movie_id' => Input::post('movie_id'),
-				));
+					    'person_id' => Input::post('person_id'),
+					    'movie_id' => Input::post('movie_id'),
+					));
 
 				if ($producer and $producer->save())
 				{
-					Session::set_flash('success', 'Added producer #'.$producer->id.'.');
+					Session::set_flash('success', 'Added producer #' . $producer->id . '.');
 
 					Response::redirect('admin/producers');
 				}
-
 				else
 				{
 					Session::set_flash('error', 'Could not save producer.');
@@ -57,18 +58,17 @@ class Controller_Admin_Producers extends Controller_Admin
 			}
 		}
 
-                $view->set_global('people', Arr::assoc_to_keyval(Model_Person::find('all'), 'id', 'name'));
-                $view->set_global('movies', Arr::assoc_to_keyval(Model_Movie::find('all'), 'id', 'title'));
-                
+		$view->set_global('people', Arr::assoc_to_keyval(Model_Person::find('all'), 'id', 'name'));
+		$view->set_global('movies', Arr::assoc_to_keyval(Model_Movie::find('all'), 'id', 'title'));
+
 		$this->template->title = "Producers";
 		$this->template->content = View::forge('admin/producers/create');
-
 	}
 
 	public function action_edit($id = null)
 	{
-                $view = View::forge('admin/producers/edit');
-                
+		$view = View::forge('admin/producers/edit');
+
 		$producer = Model_Producer::find($id);
 		$val = Model_Producer::validate('edit');
 
@@ -83,13 +83,11 @@ class Controller_Admin_Producers extends Controller_Admin
 
 				Response::redirect('admin/producers');
 			}
-
 			else
 			{
 				Session::set_flash('error', 'Could not update producer #' . $id);
 			}
 		}
-
 		else
 		{
 			if (Input::method() == 'POST')
@@ -99,16 +97,15 @@ class Controller_Admin_Producers extends Controller_Admin
 
 				Session::set_flash('error', $val->show_errors());
 			}
-			
+
 			$this->template->set_global('producer', $producer, false);
 		}
-                
-                $view->set_global('people', Arr::assoc_to_keyval(Model_Person::find('all'), 'id', 'name'));
-                $view->set_global('movies', Arr::assoc_to_keyval(Model_Movie::find('all'), 'id', 'title'));
-                
+
+		$view->set_global('people', Arr::assoc_to_keyval(Model_Person::find('all'), 'id', 'name'));
+		$view->set_global('movies', Arr::assoc_to_keyval(Model_Movie::find('all'), 'id', 'title'));
+
 		$this->template->title = "Producers";
 		$this->template->content = View::forge('admin/producers/edit');
-
 	}
 
 	public function action_delete($id = null)
@@ -117,17 +114,14 @@ class Controller_Admin_Producers extends Controller_Admin
 		{
 			$producer->delete();
 
-			Session::set_flash('success', 'Deleted producer #'.$id);
+			Session::set_flash('success', 'Deleted producer #' . $id);
 		}
-
 		else
 		{
-			Session::set_flash('error', 'Could not delete producer #'.$id);
+			Session::set_flash('error', 'Could not delete producer #' . $id);
 		}
 
 		Response::redirect('admin/producers');
-
 	}
-
 
 }

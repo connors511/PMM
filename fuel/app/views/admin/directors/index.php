@@ -30,4 +30,12 @@
 <?php endif; ?><p>
 	<?php echo Html::anchor('admin/directors/create', 'Add new Director', array('class' => 'btn success')); ?>
 
+<ul class="pager">
+	<li class="previous">
+		<?php echo \Fuel\Core\Pagination::prev_link('Previous'); ?>
+	</li>
+	<li class="next">
+		<?php echo \Fuel\Core\Pagination::next_link('Next'); ?>
+	</li>
+</ul>
 </p>

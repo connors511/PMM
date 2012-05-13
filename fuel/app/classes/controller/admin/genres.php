@@ -1,17 +1,20 @@
 <?php
-class Controller_Admin_Genres extends Controller_Admin 
+
+class Controller_Admin_Genres extends Controller_Admin
 {
 
 	public function action_index()
 	{
+		$this->set_pagination(Uri::create('admin/genres'), 3, Model_Genre::find()->count());
 		$data['genres'] = Model_Genre::find('all', array(
-		    'related' => array(
-			'movies'
-		    )
-		));
+			    'related' => array(
+				'movies'
+			    ),
+			    'limit' => \Fuel\Core\Pagination::$per_page,
+			    'offset' => \Fuel\Core\Pagination::$offset
+			));
 		$this->template->title = "Genres";
 		$this->template->content = View::forge('admin/genres/index', $data);
-
 	}
 
 	public function action_view($id = null)
@@ -19,7 +22,6 @@ class Controller_Admin_Genres extends Controller_Admin
 		$data['genre'] = Model_Genre::find($id);
 		$this->template->title = "Genre";
 		$this->template->content = View::forge('admin/genres/view', $data);
-
 	}
 
 	public function action_create()
@@ -27,20 +29,19 @@ class Controller_Admin_Genres extends Controller_Admin
 		if (Input::method() == 'POST')
 		{
 			$val = Model_Genre::validate('create');
-			
+
 			if ($val->run())
 			{
 				$genre = Model_Genre::forge(array(
-					'name' => Input::post('name'),
-				));
+					    'name' => Input::post('name'),
+					));
 
 				if ($genre and $genre->save())
 				{
-					Session::set_flash('success', 'Added genre #'.$genre->id.'.');
+					Session::set_flash('success', 'Added genre #' . $genre->id . '.');
 
 					Response::redirect('admin/genres');
 				}
-
 				else
 				{
 					Session::set_flash('error', 'Could not save genre.');
@@ -54,7 +55,6 @@ class Controller_Admin_Genres extends Controller_Admin
 
 		$this->template->title = "Genres";
 		$this->template->content = View::forge('admin/genres/create');
-
 	}
 
 	public function action_edit($id = null)
@@ -72,13 +72,11 @@ class Controller_Admin_Genres extends Controller_Admin
 
 				Response::redirect('admin/genres');
 			}
-
 			else
 			{
 				Session::set_flash('error', 'Could not update genre #' . $id);
 			}
 		}
-
 		else
 		{
 			if (Input::method() == 'POST')
@@ -87,13 +85,12 @@ class Controller_Admin_Genres extends Controller_Admin
 
 				Session::set_flash('error', $val->show_errors());
 			}
-			
+
 			$this->template->set_global('genre', $genre, false);
 		}
 
 		$this->template->title = "Genres";
 		$this->template->content = View::forge('admin/genres/edit');
-
 	}
 
 	public function action_delete($id = null)
@@ -102,17 +99,14 @@ class Controller_Admin_Genres extends Controller_Admin
 		{
 			$genre->delete();
 
-			Session::set_flash('success', 'Deleted genre #'.$id);
+			Session::set_flash('success', 'Deleted genre #' . $id);
 		}
-
 		else
 		{
-			Session::set_flash('error', 'Could not delete genre #'.$id);
+			Session::set_flash('error', 'Could not delete genre #' . $id);
 		}
 
 		Response::redirect('admin/genres');
-
 	}
-
 
 }

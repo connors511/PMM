@@ -5,11 +5,14 @@ class Controller_Admin_Subtitles extends Controller_Admin
 
 	public function action_index()
 	{
+		$this->set_pagination(Uri::create('admin/subtitles'), 3, Model_Subtitle::find()->count());
 		$data['subtitles'] = Model_Subtitle::find('all', array(
 			    'related' => array(
 				'file',
 				'movie'
-			    )
+			    ),
+			    'limit' => \Fuel\Core\Pagination::$per_page,
+			    'offset' => \Fuel\Core\Pagination::$offset
 			));
 		$this->template->title = "Subtitles";
 		$this->template->content = View::forge('admin/subtitles/index', $data);

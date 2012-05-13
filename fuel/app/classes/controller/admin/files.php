@@ -5,20 +5,11 @@ class Controller_Admin_Files extends Controller_Admin
 
 	public function action_index()
 	{
-		Pagination::set_config(array(
-		    'pagination_url' => Uri::create('admin/files'),
-		    'uri_segment' => 3,
-		    'total_items' => Model_File::find()->count(),
-		    'per_page' => 20,
-		    'template' => array(
-			'wrapper_start' => '<div class="pagination"> ',
-			'wrapper_end' => ' </div>',
-		    ),
-		));
+		$this->set_pagination(Uri::create('admin/files'), 3, Model_File::find()->count());
 		$data['files'] = Model_File::find('all', array(
-		    'related' => array(
-			'source'
-		    ),
+			    'related' => array(
+				'source'
+			    ),
 			    'limit' => \Fuel\Core\Pagination::$per_page,
 			    'offset' => \Fuel\Core\Pagination::$offset
 			));

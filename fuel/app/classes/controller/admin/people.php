@@ -1,13 +1,17 @@
 <?php
-class Controller_Admin_People extends Controller_Admin 
+
+class Controller_Admin_People extends Controller_Admin
 {
 
 	public function action_index()
 	{
-		$data['people'] = Model_Person::find('all');
+		$this->set_pagination(Uri::create('admin/people'), 3, Model_Person::find()->count());
+		$data['people'] = Model_Person::find('all', array(
+			    'limit' => \Fuel\Core\Pagination::$per_page,
+			    'offset' => \Fuel\Core\Pagination::$offset
+			));
 		$this->template->title = "People";
 		$this->template->content = View::forge('admin/people/index', $data);
-
 	}
 
 	public function action_view($id = null)
@@ -16,7 +20,6 @@ class Controller_Admin_People extends Controller_Admin
 
 		$this->template->title = "Person";
 		$this->template->content = View::forge('admin/people/view', $data);
-
 	}
 
 	public function action_create()
@@ -24,25 +27,24 @@ class Controller_Admin_People extends Controller_Admin
 		if (Input::method() == 'POST')
 		{
 			$val = Model_Person::validate('create');
-			
+
 			if ($val->run())
 			{
 				$person = Model_Person::forge(array(
-					'name' => Input::post('name'),
-					'biography' => Input::post('biography'),
-					'birthname' => Input::post('birthname'),
-					'birthday' => Input::post('birthday'),
-					'birthlocation' => Input::post('birthlocation'),
-					'height' => Input::post('height'),
-				));
+					    'name' => Input::post('name'),
+					    'biography' => Input::post('biography'),
+					    'birthname' => Input::post('birthname'),
+					    'birthday' => Input::post('birthday'),
+					    'birthlocation' => Input::post('birthlocation'),
+					    'height' => Input::post('height'),
+					));
 
 				if ($person and $person->save())
 				{
-					Session::set_flash('success', 'Added person #'.$person->id.'.');
+					Session::set_flash('success', 'Added person #' . $person->id . '.');
 
 					Response::redirect('admin/people');
 				}
-
 				else
 				{
 					Session::set_flash('error', 'Could not save person.');
@@ -56,7 +58,6 @@ class Controller_Admin_People extends Controller_Admin
 
 		$this->template->title = "People";
 		$this->template->content = View::forge('admin/people/create');
-
 	}
 
 	public function action_edit($id = null)
@@ -79,13 +80,11 @@ class Controller_Admin_People extends Controller_Admin
 
 				Response::redirect('admin/people');
 			}
-
 			else
 			{
 				Session::set_flash('error', 'Could not update person #' . $id);
 			}
 		}
-
 		else
 		{
 			if (Input::method() == 'POST')
@@ -99,13 +98,12 @@ class Controller_Admin_People extends Controller_Admin
 
 				Session::set_flash('error', $val->show_errors());
 			}
-			
+
 			$this->template->set_global('person', $person, false);
 		}
 
 		$this->template->title = "People";
 		$this->template->content = View::forge('admin/people/edit');
-
 	}
 
 	public function action_delete($id = null)
@@ -114,17 +112,14 @@ class Controller_Admin_People extends Controller_Admin
 		{
 			$person->delete();
 
-			Session::set_flash('success', 'Deleted person #'.$id);
+			Session::set_flash('success', 'Deleted person #' . $id);
 		}
-
 		else
 		{
-			Session::set_flash('error', 'Could not delete person #'.$id);
+			Session::set_flash('error', 'Could not delete person #' . $id);
 		}
 
 		Response::redirect('admin/people');
-
 	}
-
 
 }
