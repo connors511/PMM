@@ -10,6 +10,7 @@ class Model_Scraper extends \Orm\Model
 		'fields',
 		'created_at',
 		'updated_at',
+		'class'
 	);
 
 	protected static $_observers = array(
@@ -31,6 +32,7 @@ class Model_Scraper extends \Orm\Model
 		$val->add_field('type', 'Type', 'required|max_length[255]');
 		$val->add_field('version', 'Version', 'required|max_length[255]');
 		$val->add_field('fields', 'Fields', 'required');
+		$val->add_field('class', 'Class', 'required|max_length[255]');
 
 		return $val;
 	}

@@ -1,37 +1,37 @@
 <?php
+
 class Model_Scrapergroup_Movie extends \Orm\Model
 {
+
 	protected static $_properties = array(
-		'id',
-		'name',
-		'title',
-		'plot',
-		'plotsummary',
-		'tagline',
-		'rating',
-		'votes',
-		'released',
-		'runtime',
-		'contentrating',
-		'originaltitle',
-		'trailer_url',
-		'created_at',
-		'updated_at',
+	    'id',
+	    'name',
+	    'title',
+	    'plot',
+	    'plotsummary',
+	    'tagline',
+	    'rating',
+	    'votes',
+	    'released',
+	    'runtime',
+	    'contentrating',
+	    'originaltitle',
+	    'trailer_url',
+	    'created_at',
+	    'updated_at',
 	);
-	
 	protected static $_has_many = array(
 	    'scrapers'
 	);
-
 	protected static $_observers = array(
-		'Orm\Observer_CreatedAt' => array(
-			'events' => array('before_insert'),
-			'mysql_timestamp' => false,
-		),
-		'Orm\Observer_UpdatedAt' => array(
-			'events' => array('before_save'),
-			'mysql_timestamp' => false,
-		),
+	    'Orm\Observer_CreatedAt' => array(
+		'events' => array('before_insert'),
+		'mysql_timestamp' => false,
+	    ),
+	    'Orm\Observer_UpdatedAt' => array(
+		'events' => array('before_save'),
+		'mysql_timestamp' => false,
+	    ),
 	);
 
 	public static function validate($factory)
@@ -52,12 +52,25 @@ class Model_Scrapergroup_Movie extends \Orm\Model
 
 		return $val;
 	}
-	
+
 	public static function parse_movie(Model_Movie $movie, $all_fields = true)
 	{
-		$scraper = new Scraper_Imdb();
-		$scraper->set_movie($movie);
-		$scraper->search_imdb($all_fields);
+		$scrapers = array();
+		$group = $movie->file->source->scrapergroup;
+		foreach ($movie->properties() as $prop => $val)
+		{
+			$scraper_name = Model_Scraper::find($group->{$prop}->id);
+			if ($scraper_name == null) {
+				// Oh snap!
+				continue;
+			}
+			Debug::dump($scraper_name);
+			$class = $scaper_name->class;
+			echo $class;die();
+			$scraper = new $class();
+			$scraper->set_movie($movie);
+			$scraper->search_imdb($all_fields);
+		}
 	}
 
 }

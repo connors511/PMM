@@ -141,6 +141,7 @@ class Controller_Admin_Scrapers extends Controller_Admin
 				$tmp->type = $scanner->get_type();
 				$tmp->version = $scanner->get_version();
 				$tmp->fields = $scanner->get_supported_fields();
+				$tmp->class = $class;
 				$stats['new']++;
 			}
 			else
@@ -153,6 +154,7 @@ class Controller_Admin_Scrapers extends Controller_Admin
 					$tmp->type = $scanner->get_type();
 					$tmp->version = $scanner->get_version();
 					$tmp->fields = $scanner->get_supported_fields();
+					$tmp->class = $class;
 					$stats['updated']++;
 				}
 				else

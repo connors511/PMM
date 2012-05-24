@@ -42,6 +42,8 @@ class Scraper_Imdb extends Scraper
 	);
 	protected $_movie;
 	protected $_id;
+	protected $_overwrite;
+	protected $_scrape_fields;
 
 	public function get_author()
 	{
@@ -78,8 +80,11 @@ class Scraper_Imdb extends Scraper
 		$this->_movie = $movie;
 	}
 
-	public function search_imdb($all_fields)
+	public function search_imdb($fields = array(), $overwrite = false)
 	{
+		$this->_scrape_fields = empty($fields) ? $this->_fields : $fields;
+		$this->_overwrite = $overwrite;
+		
 		$url = sprintf('http://www.imdb.com/find?s=tt&q=%s+(%s)', urlencode($this->_movie->title), $this->_movie->released);
 		$page = $this->download_url($url);
 		$page = str_replace(array("\n", "\r", "<b>", "</b>"), "", $page);
@@ -101,14 +106,47 @@ class Scraper_Imdb extends Scraper
 			}
 			if ($results[0]['title'] == $this->_movie->title && $results[0]['released'] == $this->_movie->released)
 			{
-				$this->populate_all_by_id($results[0]['id']);
+				if ($this->_overwrite and $this->_scrape_fields == $this->_fields)
+				{
+					$this->populate_all_by_id($results[0]['id']);
+				}
+				else if ($this->_overwrite and $this->_scrape_fields != $this->_fields)
+				{
+					$this->populate_fields_by_id($this->_fields, $results[0]['id']);
+				}
+				else if (!$this->_overwrite and $this->_scrape_fields == $this->_fields)
+				{
+					$this->populate_all_missing_by_id($results[0]['id']);
+				}
+				else
+				{
+					// Not overwrite, only some fields
+					$this->populate_missing_fields_by_id($this->_fields, $results[0]['id']);
+				}
 			}
 			else
 			{
 				// Direct match should be 99% correct
 				// TODO: Config option
-				$this->populate_all_by_id($results[0]['id']);
+				if ($this->_overwrite and $this->_scrape_fields == $this->_fields)
+				{
+					$this->populate_all_by_id($results[0]['id']);
+				}
+				else if ($this->_overwrite and $this->_scrape_fields != $this->_fields)
+				{
+					$this->populate_fields_by_id($this->_fields, $results[0]['id']);
+				}
+				else if (!$this->_overwrite and $this->_scrape_fields == $this->_fields)
+				{
+					$this->populate_all_missing_by_id($results[0]['id']);
+				}
+				else
+				{
+					// Not overwrite, only some fields
+					$this->populate_missing_fields_by_id($this->_fields, $results[0]['id']);
+				}
 			}
+			
 		}
 		else
 		{
@@ -160,13 +198,22 @@ class Scraper_Imdb extends Scraper
 					$bet = current($bets);
 					if ($bet)
 					{
-						if ($all_fields)
+						if ($this->_overwrite and $this->_scrape_fields == $this->_fields)
 						{
 							$this->populate_all_by_id($bet['id']);
 						}
+						else if ($this->_overwrite and $this->_scrape_fields != $this->_fields)
+						{
+							$this->populate_fields_by_id($this->_fields, $bet['id']);
+						}
+						else if (!$this->_overwrite and $this->_scrape_fields == $this->_fields)
+						{
+							$this->populate_all_missing_by_id($bet['id']);
+						}
 						else
 						{
-							$this->populate_missing_by_id($bet['id']);
+							// Not overwrite, only some fields
+							$this->populate_missing_fields_by_id($this->_fields, $bet['id']);
 						}
 					}
 				}

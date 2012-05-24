@@ -2,7 +2,7 @@
 <html>
     <head>
 	<meta charset="utf-8">
-	<title><?php echo $title; ?></title>
+	<title><?php echo ucwords(str_replace('_',' &raquo; ',$title)); ?></title>
 	<?php echo Asset::css('bootstrap.css'); ?>
 	<?php echo Asset::css('style.css'); ?>
 	<style>
@@ -19,7 +19,7 @@
 	</script>
     </head>
     <body>
-
+	
 	<?php if ($current_user): ?>
     	<div class="navbar navbar-fixed-top">
     	    <div class="navba">
@@ -138,7 +138,7 @@
 	<div class="container">
 	    <div class="row">
 		<div class="span12">
-		    <h1><?php echo $title; ?></h1>
+		    <h1><?php echo ucwords(str_replace('_',' &raquo; ',$title)); ?></h1>
 		    <hr>
 		    <?php if (Session::get_flash('success')): ?>
     		    <div class="alert alert-success">

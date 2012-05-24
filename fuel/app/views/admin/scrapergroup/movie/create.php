@@ -1,4 +1,4 @@
-<h2>New Scrapergroup_movie</h2>
+<h2>New Movie scrapergroup</h2>
 <br>
 
 <?php echo render('admin/scrapergroup/movie/_form'); ?>

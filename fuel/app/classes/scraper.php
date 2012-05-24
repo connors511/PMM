@@ -60,19 +60,29 @@ abstract class Scraper
 
 	public function populate_all_by_id($id)
 	{
+		$this->populate_fields_by_id($this->_fields, $id);
+	}
+
+	public function populate_all_missing_by_id($id)
+	{
+		echo "-- doing update on {$this->_movie->title}<br>";
+		$this->populate_missing_fields_by_id($this->_fields, $id);
+	}
+	
+	public function populate_fields_by_id($fields, $id)
+	{
 		$this->_id = $id;
-		foreach ($this->_fields as $field)
+		foreach ($fields as $field)
 		{
 			$func = 'scrape_' . $field;
 			$this->_movie->{$field} = $this->{$func}();
 		}
 	}
 
-	public function populate_missing_by_id($id)
+	public function populate_missing_fields_by_id($fields, $id)
 	{
-		echo "-- doing update on {$this->_movie->title}<br>";
 		$this->_id = $id;
-		foreach ($this->_fields as $field)
+		foreach ($fields as $field)
 		{
 			$func = 'scrape_' . $field;
 			if (empty($this->_movie->{$field}))
@@ -81,7 +91,6 @@ abstract class Scraper
 			}
 		}
 	}
-
 }
 
 ?>
