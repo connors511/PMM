@@ -19,7 +19,7 @@ class Controller_Admin_Sources extends Controller_Admin
 		$data['source'] = Model_Source::find($id);
 
 		$this->template->title = "Source";
-		$this->template->content = View::forge('admin/source/view', $data);
+		$this->template->content = View::forge('admin/sources/view', $data);
 	}
 
 	public function action_create()
@@ -55,7 +55,7 @@ class Controller_Admin_Sources extends Controller_Admin
 		$groups = Model_Scraper_Group::find('all');
 		$this->template->set_global('groups', Arr::assoc_to_keyval($groups,'id','name'));
 		
-		$this->template->title = "Paths";
+		$this->template->title = "Sources";
 		$this->template->content = View::forge('admin/sources/create');
 	}
 
@@ -96,7 +96,7 @@ class Controller_Admin_Sources extends Controller_Admin
 		$groups = Model_Scraper_Group::find('all');
 		$this->template->set_global('groups', Arr::assoc_to_keyval($groups,'id','name'));
 
-		$this->template->title = "Paths";
+		$this->template->title = "Sources";
 		$this->template->content = View::forge('admin/sources/edit');
 	}
 

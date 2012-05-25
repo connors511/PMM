@@ -119,7 +119,7 @@ abstract class Scraper
 	
 	public function populate_field($field)
 	{
-		if ($this->_overwrite or !empty($this->_movie->{$field}))
+		if ($this->_overwrite or empty($this->_movie->{$field}))
 		{
 			$func = 'scrape_'.$field;
 			$this->_movie->{$field} = $this->{$func}();				
