@@ -5,7 +5,11 @@ class Controller_Admin_Scraper_Groups extends Controller_Admin
 
 	public function action_index()
 	{
-		$data['scraper_groups'] = Model_Scraper_Group::find('all');
+		$this->set_pagination(Uri::create('admin/scraper/groups'), 4, Model_Scraper_Group::find()->count());
+		$data['scraper_groups'] = Model_Scraper_Group::find('all', array(
+			    'limit' => \Fuel\Core\Pagination::$per_page,
+			    'offset' => \Fuel\Core\Pagination::$offset
+			));
 		$this->template->title = "Scraper_groups";
 		$this->template->content = View::forge('admin/scraper/groups/index', $data);
 	}

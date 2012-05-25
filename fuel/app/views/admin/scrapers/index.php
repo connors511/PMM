@@ -53,12 +53,5 @@
 	<?php echo Html::anchor('admin/scrapers/create', 'Add new Scraper', array('class' => 'btn btn-success')); ?>
 	<?php echo Html::anchor('admin/scrapers/scanscrapers', 'Scan for Scrapers', array('class' => 'btn btn-primary')); ?>
 
-<ul class="pager">
-	<li class="previous">
-		<?php echo \Fuel\Core\Pagination::prev_link('Previous'); ?>
-	</li>
-	<li class="next">
-		<?php echo \Fuel\Core\Pagination::next_link('Next'); ?>
-	</li>
-</ul>
+<?php echo \Fuel\Core\Pagination::create_links(); ?>
 </p>

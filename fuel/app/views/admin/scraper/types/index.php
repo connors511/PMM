@@ -27,5 +27,5 @@
 
 <?php endif; ?><p>
 	<?php echo Html::anchor('admin/scraper/types/create', 'Add new scraper type', array('class' => 'btn btn-success')); ?>
-
+<?php echo \Fuel\Core\Pagination::create_links(); ?>
 </p>

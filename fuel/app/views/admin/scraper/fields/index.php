@@ -29,5 +29,5 @@
 
 <?php endif; ?><p>
 	<?php echo Html::anchor('admin/scraper/fields/create', 'Add new scraper field', array('class' => 'btn btn-success')); ?>
-
+<?php echo \Fuel\Core\Pagination::create_links(); ?>
 </p>

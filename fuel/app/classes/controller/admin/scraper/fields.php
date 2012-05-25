@@ -1,17 +1,20 @@
 <?php
-class Controller_Admin_Scraper_Fields extends Controller_Admin 
+
+class Controller_Admin_Scraper_Fields extends Controller_Admin
 {
 
 	public function action_index()
 	{
+		$this->set_pagination(Uri::create('admin/scraper/fields'), 4, Model_Scraper_Field::find()->count());
 		$data['scraper_fields'] = Model_Scraper_Field::find('all', array(
-		    'related' => array(
-			'scraper_type'
-		    )
-		));
+			    'related' => array(
+				'scraper_type'
+			    ),
+			    'limit' => \Fuel\Core\Pagination::$per_page,
+			    'offset' => \Fuel\Core\Pagination::$offset
+			));
 		$this->template->title = "Scraper_fields";
 		$this->template->content = View::forge('admin/scraper/fields/index', $data);
-
 	}
 
 	public function action_view($id = null)
@@ -20,7 +23,6 @@ class Controller_Admin_Scraper_Fields extends Controller_Admin
 
 		$this->template->title = "Scraper_field";
 		$this->template->content = View::forge('admin/scraper/fields/view', $data);
-
 	}
 
 	public function action_create()
@@ -28,21 +30,20 @@ class Controller_Admin_Scraper_Fields extends Controller_Admin
 		if (Input::method() == 'POST')
 		{
 			$val = Model_Scraper_Field::validate('create');
-			
+
 			if ($val->run())
 			{
 				$scraper_field = Model_Scraper_Field::forge(array(
-					'field' => Input::post('field'),
-					'scraper_type_id' => Input::post('type'),
-				));
+					    'field' => Input::post('field'),
+					    'scraper_type_id' => Input::post('type'),
+					));
 
 				if ($scraper_field and $scraper_field->save())
 				{
-					Session::set_flash('success', 'Added scraper_field #'.$scraper_field->id.'.');
+					Session::set_flash('success', 'Added scraper_field #' . $scraper_field->id . '.');
 
 					Response::redirect('admin/scraper/fields');
 				}
-
 				else
 				{
 					Session::set_flash('error', 'Could not save scraper_field.');
@@ -56,7 +57,6 @@ class Controller_Admin_Scraper_Fields extends Controller_Admin
 
 		$this->template->title = "Scraper_Fields";
 		$this->template->content = View::forge('admin/scraper/fields/create');
-
 	}
 
 	public function action_edit($id = null)
@@ -75,13 +75,11 @@ class Controller_Admin_Scraper_Fields extends Controller_Admin
 
 				Response::redirect('admin/scraper/fields');
 			}
-
 			else
 			{
 				Session::set_flash('error', 'Could not update scraper_field #' . $id);
 			}
 		}
-
 		else
 		{
 			if (Input::method() == 'POST')
@@ -90,13 +88,12 @@ class Controller_Admin_Scraper_Fields extends Controller_Admin
 
 				Session::set_flash('error', $val->show_errors());
 			}
-			
+
 			$this->template->set_global('scraper_field', $scraper_field, false);
 		}
 
 		$this->template->title = "Scraper_fields";
 		$this->template->content = View::forge('admin/scraper/fields/edit');
-
 	}
 
 	public function action_delete($id = null)
@@ -105,17 +102,14 @@ class Controller_Admin_Scraper_Fields extends Controller_Admin
 		{
 			$scraper_field->delete();
 
-			Session::set_flash('success', 'Deleted scraper_field #'.$id);
+			Session::set_flash('success', 'Deleted scraper_field #' . $id);
 		}
-
 		else
 		{
-			Session::set_flash('error', 'Could not delete scraper_field #'.$id);
+			Session::set_flash('error', 'Could not delete scraper_field #' . $id);
 		}
 
 		Response::redirect('admin/scraper/fields');
-
 	}
-
 
 }

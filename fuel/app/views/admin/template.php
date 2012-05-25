@@ -108,22 +108,7 @@
 					    <?php echo Html::anchor('admin/' . $section_segment, $section_title) ?>
 					</li>
 				    <?php endforeach; ?>
-    				<li class="dropdown">
-    				    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Scrapergroup <b class="caret"></b></a>
-    				    <ul class="dropdown-menu">
-					    <?php foreach (glob(APPPATH . 'classes/controller/admin/scrapergroup/*.php') as $controller): ?>
-
-						<?php
-						$section_segment = basename($controller, '.php');
-						$section_title = Inflector::humanize($section_segment);
-						?>
-
-						<li class="<?php echo Uri::segment(2) == $section_segment ? 'active' : '' ?>">
-						    <?php echo Html::anchor('admin/scrapergroup/' . $section_segment, $section_title) ?>
-						</li>
-					    <?php endforeach; ?>
-    				    </ul>
-    				</li>
+					
 				<li class="dropdown">
     				    <a href="" class="dropdown-toggle" data-toggle="dropdown">Scrapers <b class="caret"></b></a>
     				    <ul class="dropdown-menu">

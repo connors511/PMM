@@ -34,14 +34,7 @@
 
 <?php endif; ?><p>
     <?php echo Html::anchor('admin/images/create', 'Add new Image', array('class' => 'btn btn-success')); ?>
-<ul class="pager">
-	<li class="previous">
-		<?php echo \Fuel\Core\Pagination::prev_link('Previous'); ?>
-	</li>
-	<li class="next">
-		<?php echo \Fuel\Core\Pagination::next_link('Next'); ?>
-	</li>
-</ul>
+<?php echo \Fuel\Core\Pagination::create_links(); ?>
 </p>
 
 <?php // TODO: Move this its own file ?>

@@ -30,12 +30,5 @@
 <?php endif; ?><p>
 	<?php echo Html::anchor('admin/sources/create', 'Add new Path', array('class' => 'btn btn-success')); ?>
 
-<ul class="pager">
-	<li class="previous">
-		<?php echo \Fuel\Core\Pagination::prev_link('Previous'); ?>
-	</li>
-	<li class="next">
-		<?php echo \Fuel\Core\Pagination::next_link('Next'); ?>
-	</li>
-</ul>
+<?php echo \Fuel\Core\Pagination::create_links(); ?>
 </p>

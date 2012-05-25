@@ -49,5 +49,5 @@
 
 <?php endif; ?><p>
 	<?php echo Html::anchor('admin/scraper/groups/create', 'Add new scraper group', array('class' => 'btn btn-success')); ?>
-
+<?php echo \Fuel\Core\Pagination::create_links(); ?>
 </p>

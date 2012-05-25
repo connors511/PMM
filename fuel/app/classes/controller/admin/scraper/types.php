@@ -4,7 +4,11 @@ class Controller_Admin_Scraper_Types extends Controller_Admin
 
 	public function action_index()
 	{
-		$data['scraper_types'] = Model_Scraper_Type::find('all');
+		$this->set_pagination(Uri::create('admin/scraper/types'), 4, Model_Scraper_Type::find()->count());
+		$data['scraper_types'] = Model_Scraper_Type::find('all', array(
+			    'limit' => \Fuel\Core\Pagination::$per_page,
+			    'offset' => \Fuel\Core\Pagination::$offset
+			));
 		$this->template->title = "Scraper_types";
 		$this->template->content = View::forge('admin/scraper/types/index', $data);
 
