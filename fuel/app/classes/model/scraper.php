@@ -5,12 +5,20 @@ class Model_Scraper extends \Orm\Model
 		'id',
 		'name',
 		'author',
-		'type',
+		'scraper_type_id',
 		'version',
-		'fields',
 		'created_at',
 		'updated_at',
 		'class'
+	);
+	protected static $_belongs_to = array(
+	    'scraper_type'
+	);
+	protected static $_has_many = array(
+	    'scraper_group_fields'
+	);
+	protected static $_many_many = array(
+	    'scraper_fields'
 	);
 
 	protected static $_observers = array(

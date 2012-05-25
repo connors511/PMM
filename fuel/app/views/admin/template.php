@@ -42,6 +42,12 @@
 					'movies',
 					'subtitles'
 				    );
+				    $scrapers = array(
+					'types',
+					'fields',
+					'groups'
+				    );
+				    $dropdowns = array('people','files','scrapers');
 				    ?>
 
     				<li class="dropdown">
@@ -91,7 +97,7 @@
 					$section_segment = basename($controller, '.php');
 					if (in_array($section_segment, $people)
 						or in_array($section_segment, $files)
-						or in_array($section_segment, array('people', 'files')))
+						or in_array($section_segment, $dropdowns))
 					{
 					    continue;
 					}
@@ -114,6 +120,26 @@
 
 						<li class="<?php echo Uri::segment(2) == $section_segment ? 'active' : '' ?>">
 						    <?php echo Html::anchor('admin/scrapergroup/' . $section_segment, $section_title) ?>
+						</li>
+					    <?php endforeach; ?>
+    				    </ul>
+    				</li>
+				<li class="dropdown">
+    				    <a href="" class="dropdown-toggle" data-toggle="dropdown">Scrapers <b class="caret"></b></a>
+    				    <ul class="dropdown-menu">
+    					<li class="<?php echo Uri::segment(2) == 'scrapers' ? 'active' : '' ?>">
+						<?php echo Html::anchor('admin/scrapers', 'Scrapers'); ?>
+    					</li>
+    					<li class="divider"></li>
+					    <?php foreach ($scrapers as $controller): ?>
+
+						<?php
+						$section_segment = basename($controller, '.php');
+						$section_title = Inflector::humanize($section_segment);
+						?>
+
+						<li class="<?php echo Uri::segment(2) == $section_segment ? 'active' : '' ?>">
+						    <?php echo Html::anchor('admin/scraper/' . $section_segment, $section_title) ?>
 						</li>
 					    <?php endforeach; ?>
     				    </ul>

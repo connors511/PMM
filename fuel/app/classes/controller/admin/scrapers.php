@@ -7,6 +7,10 @@ class Controller_Admin_Scrapers extends Controller_Admin
 	{
 		$this->set_pagination(Uri::create('admin/scrapers'), 3, Model_Scraper::find()->count());
 		$data['scrapers'] = Model_Scraper::find('all', array(
+		    'related' => array(
+			'scraper_fields',
+			'scraper_type'
+		    ),
 			    'limit' => \Fuel\Core\Pagination::$per_page,
 			    'offset' => \Fuel\Core\Pagination::$offset
 			));
@@ -35,7 +39,6 @@ class Controller_Admin_Scrapers extends Controller_Admin
 					    'author' => Input::post('author'),
 					    'type' => Input::post('type'),
 					    'version' => Input::post('version'),
-					    'fields' => Input::post('fields'),
 					));
 
 				if ($scraper and $scraper->save())
@@ -68,9 +71,8 @@ class Controller_Admin_Scrapers extends Controller_Admin
 		{
 			$scraper->name = Input::post('name');
 			$scraper->author = Input::post('author');
-			$scraper->type = Input::post('type');
+			$scraper->scraper_type = Model_Scraper::find(Input::post('type'));
 			$scraper->version = Input::post('version');
-			$scraper->fields = Input::post('fields');
 
 			if ($scraper->save())
 			{
@@ -89,9 +91,8 @@ class Controller_Admin_Scrapers extends Controller_Admin
 			{
 				$scraper->name = $val->validated('name');
 				$scraper->author = $val->validated('author');
-				$scraper->type = $val->validated('type');
+				$scraper->scraper_type = $val->validated('type');
 				$scraper->version = $val->validated('version');
-				$scraper->fields = $val->validated('fields');
 
 				Session::set_flash('error', $val->show_errors());
 			}
@@ -138,9 +139,9 @@ class Controller_Admin_Scrapers extends Controller_Admin
 				$tmp = new Model_Scraper();
 				$tmp->name = $scanner->get_name();
 				$tmp->author = $scanner->get_author();
-				$tmp->type = $scanner->get_type();
+				$tmp->scraper_type = $scanner->get_type();
 				$tmp->version = $scanner->get_version();
-				$tmp->fields = $scanner->get_supported_fields();
+				$tmp->scraper_fields = $scanner->get_supported_fields();
 				$tmp->class = $class;
 				$stats['new']++;
 			}
@@ -151,9 +152,9 @@ class Controller_Admin_Scrapers extends Controller_Admin
 					// Update version
 					// Author and fields could've changed
 					$tmp->author = $scanner->get_author();
-					$tmp->type = $scanner->get_type();
+					$tmp->scraper_type = $scanner->get_type();
 					$tmp->version = $scanner->get_version();
-					$tmp->fields = $scanner->get_supported_fields();
+					$tmp->scraper_fields = $scanner->get_supported_fields();
 					$tmp->class = $class;
 					$stats['updated']++;
 				}

@@ -10,7 +10,7 @@ class Create_scrapers
 			'id' => array('constraint' => 11, 'type' => 'int', 'auto_increment' => true),
 			'name' => array('constraint' => 255, 'type' => 'varchar'),
 			'author' => array('constraint' => 255, 'type' => 'varchar'),
-			'type' => array('constraint' => 255, 'type' => 'varchar'),
+			'scraper_type_id' => array('constraint' => 11, 'type' => 'int'),
 			'version' => array('constraint' => 255, 'type' => 'varchar'),
 			'fields' => array('type' => 'text'),
 			'created_at' => array('constraint' => 11, 'type' => 'int'),

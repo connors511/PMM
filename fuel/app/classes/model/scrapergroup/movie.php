@@ -23,6 +23,9 @@ class Model_Scrapergroup_Movie extends \Orm\Model
 	protected static $_has_many = array(
 	    'scrapers'
 	);
+	protected static $_many_many = array(
+	    'scraper_fields'
+	);
 	protected static $_observers = array(
 	    'Orm\Observer_CreatedAt' => array(
 		'events' => array('before_insert'),

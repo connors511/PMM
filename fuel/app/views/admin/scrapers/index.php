@@ -17,9 +17,25 @@
 
 			<td><?php echo $scraper->name; ?></td>
 			<td><?php echo $scraper->author; ?></td>
-			<td><?php echo str_replace(':',', ',$scraper->type); ?></td>
+			<td><?php echo $scraper->scraper_type->type; ?></td>
 			<td><?php echo $scraper->version; ?></td>
-			<td><?php echo $scraper->fields; ?></td>
+			<td>
+				<?php 
+				if (empty($scraper->scraper_fields)) 
+				{
+					echo 'None';
+				} 
+				else 
+				{
+					echo '<ul>';
+					foreach(Arr::assoc_to_keyval($scraper->scraper_fields,'id','field') as $id=>$f) 
+					{
+						echo '<li>'.Html::anchor('admin/scraper/fields/view/'.$id,$f).'</li>';
+					}
+					echo '</ul>';
+				}
+				?>
+			</td>
 			<td>
 				<?php echo Html::anchor('admin/scrapers/view/'.$scraper->id, 'View'); ?> |
 				<?php echo Html::anchor('admin/scrapers/edit/'.$scraper->id, 'Edit'); ?> |

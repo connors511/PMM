@@ -21,7 +21,7 @@
 			<?php echo Form::label('Type', 'type'); ?>
 
 			<div class="input">
-				<?php echo Form::input('type', Input::post('type', isset($scraper) ? $scraper->type : ''), array('class' => 'span6')); ?>
+				<?php echo Form::input('type', Input::post('type', isset($scraper) ? $scraper->scraper_type->type : ''), array('class' => 'span6')); ?>
 
 			</div>
 		</div>
@@ -30,14 +30,6 @@
 
 			<div class="input">
 				<?php echo Form::input('version', Input::post('version', isset($scraper) ? $scraper->version : ''), array('class' => 'span6')); ?>
-
-			</div>
-		</div>
-		<div class="clearfix">
-			<?php echo Form::label('Fields', 'fields'); ?>
-
-			<div class="input">
-				<?php echo Form::textarea('fields', Input::post('fields', isset($scraper) ? $scraper->fields : ''), array('class' => 'span10', 'rows' => 8)); ?>
 
 			</div>
 		</div>

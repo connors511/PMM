@@ -57,17 +57,25 @@ class Scraper_Imdb extends Scraper
 
 	public function get_supported_fields()
 	{
-		return implode(':', array());
+		return Model_Scraper_Field::find('all', array(
+		    'where' => array(
+			array('field','IN',$this->_fields)
+		    )
+		));
 	}
 
 	public function get_type()
 	{
-		return implode(':', array("Movies", "TV", "People"));
+		return Model_Scraper_Type::find('first', array(
+		    'where' => array(
+			array('type','=','movies')
+		    )
+		));
 	}
 
 	public function get_version()
 	{
-		return "0.1";
+		return "0.4";
 	}
 
 	public function __construct()
