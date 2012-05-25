@@ -9,7 +9,7 @@ class Scanner_Movie implements IScanner
 	protected static $regex_subtitles_lang = '/\.(?P<lang>[a-z]{2})\.(srt|sub)$/';
 	protected static $valid_image_extensions = array('png', 'jpg', 'jpeg');
 	private $_source;
-	private $_inserts;
+	private $_inserts = array();
 
 	public function get_author()
 	{
@@ -46,8 +46,6 @@ class Scanner_Movie implements IScanner
 	public function scan()
 	{
 		$this->scan_dir($this->_source->path);
-		
-		Debug::dump($this->_inserts);
 	}
 
 	public function scan_dir($dir, $parent = "", $fullpath = "")
@@ -78,7 +76,7 @@ class Scanner_Movie implements IScanner
 					// Process movie
 					self::parse_movie($p, $dir, $fullpath . $parent . $p);
 				}
-				else if (self::is_fanart_folder($dir))
+				elseif (self::is_fanart_folder($dir))
 				{
 					// Just continue.. Fanart is handled by parse_movie
 				}
@@ -188,6 +186,7 @@ class Scanner_Movie implements IScanner
 	{
 		$matches = array();
 		$inserts = array('movie' => 0, 'fanart' => 0, 'subtitles' => 0);
+		$status = 0;
 
 		// Is the structure <movie name>/<files>
 		if (preg_match('/(?P<title>.+) \((?P<year>\d+)\)/', $dir, $matches))
@@ -223,6 +222,7 @@ class Scanner_Movie implements IScanner
 			// Either path doesnt exist, or the movie is somehow not linked to the path
 			if ($movie == null)
 			{
+				echo 'new movie<br>';
 				$movie = new Model_Movie();
 				$file = Model_File::find('first', array(
 					    'where' => array(
@@ -247,22 +247,32 @@ class Scanner_Movie implements IScanner
 				$movie->released = $matches['year'];
 
 				$inserts['movie'] = $movie->title;
+				$status = 'new';
 
 				if (($nfo = self::get_nfo($files)) !== FALSE)
 				{
+					echo 'using nfo<br>';
 					// TODO: Should be config item, if nfo overwrites a new scrape?
-					Model_Io_Factory::parse_nfo($fullpath . $nfo, $movie);
+					if (!Model_Io_Factory::parse_nfo($fullpath . $nfo, $movie))
+					{
+						// Not valid nfo
+						Model_Scraper_Group::parse_movie($movie, true);
+					}
 				}
 				else
 				{
+					echo 'scraping<br>';
 					// Get new data
-					Model_Scrapergroup_Movie::parse_movie($movie);
+					Model_Scraper_Group::parse_movie($movie, true);
 				}
 			}
 			else
 			{
-				Model_Scrapergroup_Movie::parse_movie($movie, false);
-				//Debug::dump(array($movie->title, $movie->released), $matches);
+				Model_Scraper_Group::parse_movie($movie);
+				
+				$inserts['movie'] = $movie->title;
+				$status = 'updated';
+				
 				// Uhm.. Path is registred to a movie. Update missing fields?
 				if ($movie->title != $matches['title'] or $movie->released != $matches['year'])
 				{
@@ -303,7 +313,6 @@ class Scanner_Movie implements IScanner
 					else if (count($im) > 1)
 					{
 						// That is just fucked up
-						Debug::dump($im);
 						continue;
 					}
 
@@ -404,10 +413,10 @@ class Scanner_Movie implements IScanner
 		{
 			// Or one folder with all movies?
 		}
-
-		if (!empty($inserts) && $inserts['movie'] != 0)
+		
+		if ($status !== 0)
 		{
-			$this->_inserts[] = $inserts;
+			$this->_inserts[$status][] = $inserts;
 		}
 	}
 

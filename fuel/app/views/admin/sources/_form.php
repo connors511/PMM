@@ -5,15 +5,15 @@
 			<?php echo Form::label('Path', 'path'); ?>
 
 			<div class="input">
-				<?php echo Form::textarea('path', Input::post('path', isset($path) ? $path->path : ''), array('class' => 'span10', 'rows' => 8)); ?>
+				<?php echo Form::textarea('path', Input::post('path', isset($source) ? $source->path : ''), array('class' => 'span10', 'rows' => 8)); ?>
 
 			</div>
 		</div>
 		<div class="clearfix">
-			<?php echo Form::label('Scrapergroup', 'scrapergroup'); ?>
+			<?php echo Form::label('Scraper group', 'scraper_group_id'); ?>
 
 			<div class="input">
-				<?php echo Form::input('scrapergroup', Input::post('scrapergroup', isset($path) ? $path->scrapergroup : ''), array('class' => 'span6')); ?>
+				<?php echo Form::select('scraper_group_id', Input::post('scraper_group_id', isset($source) ? $source->scraper_group_id : ''), $groups, array('class' => 'span6')); ?>
 
 			</div>
 		</div>

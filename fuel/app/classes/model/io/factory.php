@@ -21,10 +21,11 @@ class Model_Io_Factory
 				if ($io->is_valid_nfo())
 				{
 					$io->update_movie($movie);
-					break;
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 
 }

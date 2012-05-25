@@ -147,7 +147,7 @@
     			    </ul>
     			    <!-- User menu -->
     			    <ul class="nav pull-right">
-    				<li class="">
+    				<li class="dropdown">
     				    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $current_user->username; ?> <b class="caret"></b></a>
     				    <ul class="dropdown-menu">
     					<li><?php echo Html::anchor('admin/logout', 'Logout') ?></li>

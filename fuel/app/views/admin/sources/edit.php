@@ -1,7 +1,7 @@
 <h2>Editing Source</h2>
 <br>
 
-<?php echo render('admin/paths/_form'); ?>
+<?php echo render('admin/sources/_form'); ?>
 <p>
-	<?php echo Html::anchor('admin/paths/view/'.$path->id, 'View'); ?> |
-	<?php echo Html::anchor('admin/paths', 'Back'); ?></p>
+	<?php echo Html::anchor('admin/sources/view/'.$source->id, 'View'); ?> |
+	<?php echo Html::anchor('admin/sources', 'Back'); ?></p>

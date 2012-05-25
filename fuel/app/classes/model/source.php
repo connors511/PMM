@@ -4,9 +4,12 @@ class Model_Source extends \Orm\Model
 	protected static $_properties = array(
 		'id',
 		'path',
-		'scrapergroup',
+		'scraper_group_id',
 		'created_at',
 		'updated_at',
+	);
+	protected static $_belongs_to = array(
+	    'scraper_group'
 	);
 
 	protected static $_observers = array(
@@ -24,7 +27,7 @@ class Model_Source extends \Orm\Model
 	{
 		$val = Validation::forge($factory);
 		$val->add_field('path', 'Path', 'required');
-		$val->add_field('scrapergroup', 'Scrapergroup', 'required|valid_string[numeric]');
+		$val->add_field('scraper_group_id', 'Scraper group', 'required|valid_string[numeric]');
 
 		return $val;
 	}

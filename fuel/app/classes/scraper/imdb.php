@@ -40,69 +40,29 @@ class Scraper_Imdb extends Scraper
 		//'writers',
 		//'poster'
 	);
-	protected $_movie;
-	protected $_id;
-	protected $_overwrite;
-	protected $_scrape_fields;
-
-	public function get_author()
-	{
-		return "Matthias Larsen";
-	}
-
-	public function get_name()
-	{
-		return "IMDb Scraper";
-	}
-
-	public function get_supported_fields()
-	{
-		return Model_Scraper_Field::find('all', array(
-		    'where' => array(
-			array('field','IN',$this->_fields)
-		    )
-		));
-	}
-
-	public function get_type()
-	{
-		return Model_Scraper_Type::find('first', array(
-		    'where' => array(
-			array('type','=','movies')
-		    )
-		));
-	}
-
-	public function get_version()
-	{
-		return "0.4";
-	}
+	
+	protected $_type = 'movies';
+	protected $_author = 'Matthias Larsen';
+	protected $_name = 'IMDb Scraper';
+	protected $_version = '0.4';
 
 	public function __construct()
 	{
 		
 	}
 
-	public function set_movie(Model_Movie &$movie)
+	public function search_site()
 	{
-		$this->_movie = $movie;
-	}
-
-	public function search_imdb($fields = array(), $overwrite = false)
-	{
-		$this->_scrape_fields = empty($fields) ? $this->_fields : $fields;
-		$this->_overwrite = $overwrite;
-		
 		$url = sprintf('http://www.imdb.com/find?s=tt&q=%s+(%s)', urlencode($this->_movie->title), $this->_movie->released);
 		$page = $this->download_url($url);
 		$page = str_replace(array("\n", "\r", "<b>", "</b>"), "", $page);
 		$page = preg_replace("#\s{2,}#", "", $page);
 
 		$matches = array();
-		$r = preg_match_all('#<title>(?:IMDb - )?(?<title>.+?) \((?<released>\d{4})\)(?:.+?)rel="canonical" (?:.+?)/(?<id>tt\d{7})#s', $page, $matches);
+		$r = preg_match_all('#<title>(?:IMDb - )?(?<title>.+?) \((Video )?(?<released>\d{4})\)(?:.+?)rel="canonical" (?:.+?)/(?<id>tt\d{7})#s', $page, $matches);
 		if ($r and !empty($matches['title'][0]))
 		{
-			echo "- got direct match on {$matches['title'][0]} ({$matches['id'][0]})<br>";
+			Log::debug("Direct match on {$matches['title'][0]} ({$matches['id'][0]})");
 			$results = array();
 			foreach ($matches['id'] as $k => $id)
 			{
@@ -114,51 +74,19 @@ class Scraper_Imdb extends Scraper
 			}
 			if ($results[0]['title'] == $this->_movie->title && $results[0]['released'] == $this->_movie->released)
 			{
-				if ($this->_overwrite and $this->_scrape_fields == $this->_fields)
-				{
-					$this->populate_all_by_id($results[0]['id']);
-				}
-				else if ($this->_overwrite and $this->_scrape_fields != $this->_fields)
-				{
-					$this->populate_fields_by_id($this->_fields, $results[0]['id']);
-				}
-				else if (!$this->_overwrite and $this->_scrape_fields == $this->_fields)
-				{
-					$this->populate_all_missing_by_id($results[0]['id']);
-				}
-				else
-				{
-					// Not overwrite, only some fields
-					$this->populate_missing_fields_by_id($this->_fields, $results[0]['id']);
-				}
+				$this->_id = $results[0]['id'];
 			}
 			else
 			{
 				// Direct match should be 99% correct
 				// TODO: Config option
-				if ($this->_overwrite and $this->_scrape_fields == $this->_fields)
-				{
-					$this->populate_all_by_id($results[0]['id']);
-				}
-				else if ($this->_overwrite and $this->_scrape_fields != $this->_fields)
-				{
-					$this->populate_fields_by_id($this->_fields, $results[0]['id']);
-				}
-				else if (!$this->_overwrite and $this->_scrape_fields == $this->_fields)
-				{
-					$this->populate_all_missing_by_id($results[0]['id']);
-				}
-				else
-				{
-					// Not overwrite, only some fields
-					$this->populate_missing_fields_by_id($this->_fields, $results[0]['id']);
-				}
+				$this->_id = $results[0]['id'];
 			}
 			
 		}
 		else
 		{
-			preg_match_all('#\?link=/title/(?<id>tt\d{7})/\';">(?<title>.{1,100})</a> \((?<released>\d{4})\)#', $page, $matches);
+			preg_match_all('#\?link=/title/(?<id>tt\d{7})/\';">(?<title>.{1,100})</a> \((Video)?(?<released>\d{4})\)#', $page, $matches);
 			if (count($matches) > 0)
 			{
 				$results = array();
@@ -172,59 +100,18 @@ class Scraper_Imdb extends Scraper
 				}
 				// Do we have a title + year match?
 				$bets = array();
+				$leven = array();
+				$current = $this->_movie->title.':'.$this->_movie->released;
 				foreach ($results as $k => $r)
 				{
-					// TODO: Add some sort of rating for the bets?
-					if ($this->_movie->title == $r['title'] && $this->_movie->released == $r['released'])
-					{
-						// Pretty safe bet..
-						// TODO: Config option to allow a title + year match to be auto selected?
-						$bets = array();
-						$bets[] = $r;
-						break;
-					}
-					else if ($this->_movie->title == $r['title'])
-					{
-						if (abs(intval($this->_movie->released) - intval($r['released']) < 2))
-						{
-							$bets[] = $r;
-						}
-						else
-						{
-							$bets[] = $r;
-						}
-					}
-					else if ($this->_movie->released == $r['released'])
-					{
-						// Pretty lousy match
-						$bets[] = $r;
-					}
+					$lev = levenshtein($current, $r['title'].':'.$r['released']);
+					$bets[$lev] = $r;
 				}
-
-				if (is_array($bets))
-				{
-					$bet = current($bets);
-					if ($bet)
-					{
-						if ($this->_overwrite and $this->_scrape_fields == $this->_fields)
-						{
-							$this->populate_all_by_id($bet['id']);
-						}
-						else if ($this->_overwrite and $this->_scrape_fields != $this->_fields)
-						{
-							$this->populate_fields_by_id($this->_fields, $bet['id']);
-						}
-						else if (!$this->_overwrite and $this->_scrape_fields == $this->_fields)
-						{
-							$this->populate_all_missing_by_id($bet['id']);
-						}
-						else
-						{
-							// Not overwrite, only some fields
-							$this->populate_missing_fields_by_id($this->_fields, $bet['id']);
-						}
-					}
-				}
+				ksort($bets);
+				// TODO Config or ask user?
+				$best_guess = current($bets);
+				$this->_id = $best_guess['id'];
+				Log::debug("Best guess is {$best_guess['title']} ({$best_guess['id']})");
 			}
 			else
 			{

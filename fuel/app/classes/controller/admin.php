@@ -1,6 +1,7 @@
 <?php
 
-class Controller_Admin extends Controller_Base {
+class Controller_Admin extends Controller_Base
+{
 
 	public $template = 'admin/template';
 
@@ -8,7 +9,7 @@ class Controller_Admin extends Controller_Base {
 	{
 		parent::before();
 
-		if ( ! Auth::member(100) and Request::active()->action != 'login')
+		if (!Auth::member(100) and Request::active()->action != 'login')
 		{
 			Response::redirect('admin/login');
 		}
@@ -24,9 +25,9 @@ class Controller_Admin extends Controller_Base {
 		if (Input::method() == 'POST')
 		{
 			$val->add('email', 'Email or Username')
-			    ->add_rule('required');
+				->add_rule('required');
 			$val->add('password', 'Password')
-			    ->add_rule('required');
+				->add_rule('required');
 
 			if ($val->run())
 			{
@@ -36,7 +37,7 @@ class Controller_Admin extends Controller_Base {
 				if (Auth::check() or $auth->login(Input::post('email'), Input::post('password')))
 				{
 					// credentials ok, go right in
-					Session::set_flash('notice', 'Welcome, '.$current_user->username);
+					Session::set_flash('notice', 'Welcome, ' . $current_user->username);
 					Response::redirect('admin');
 				}
 				else
@@ -71,53 +72,58 @@ class Controller_Admin extends Controller_Base {
 	public function action_index()
 	{
 		$sources = Model_Source::find('all');
-		View::set_global('sources',$sources);
-		
+		View::set_global('sources', $sources);
+
 		$images = Model_Image::find()->count();
-		View::set_global('images',$images);
-		
+		View::set_global('images', $images);
+
 		$movies = Model_Movie::find()->count();
-		View::set_global('movies',$movies);
-		
+		View::set_global('movies', $movies);
+
 		$files = Model_File::find()->count();
-		View::set_global('files',$files);
-		
+		View::set_global('files', $files);
+
 		$subtitles = Model_Subtitle::find()->count();
-		View::set_global('subtitles',$subtitles);
-		
+		View::set_global('subtitles', $subtitles);
+
 		$people = Model_Person::find()->count();
-		View::set_global('people',$people);
-		
+		View::set_global('people', $people);
+
 		$actors = Model_Actor::find()->count();
-		View::set_global('actors',$actors);
-		
+		View::set_global('actors', $actors);
+
 		$directors = Model_Director::find()->count();
-		View::set_global('directors',$directors);
-		
+		View::set_global('directors', $directors);
+
 		$producers = Model_Producer::find()->count();
-		View::set_global('producers',$producers);
-		
+		View::set_global('producers', $producers);
+
 		$this->template->title = 'Dashboard';
 		$this->template->content = View::forge('admin/dashboard');
 	}
-	
+
 	public function action_scan($id)
 	{
-	        $path = Model_Source::find($id);
-		if ($path == null) {
-		    Session::set_flash('error', 'Invalid path ID');
+		$path = Model_Source::find($id);
+
+		if ($path == null or $id == null)
+		{
+			Session::set_flash('error', 'Invalid path ID');
+			Response::redirect('admin');
 		}
-		
+
 		$scanner = new Scanner_Movie($path);
 		$scanner->scan();
-		
+
 		$inserts = $scanner->get_and_reset_inserts();
-		
-		Session::set_flash('success','Scanned ' . count($inserts) . ' movies.');
-		
-		//Response::redirect('admin');
+
+		$new = isset($inserts['new']) ? count($inserts['new']) : 0;
+		$updated = isset($inserts['updated']) ? count($inserts['updated']) : 0;
+		Session::set_flash('success', 'Scanned ' . ($new + $updated) . ' movies; '.$new.' was added and '.$updated.' was updated.');
+
+		Response::redirect('admin');
 	}
-	
+
 	public function action_truncate()
 	{
 		\DBUtil::truncate_table('actors');
@@ -126,13 +132,13 @@ class Controller_Admin extends Controller_Base {
 		\DBUtil::truncate_table('genres');
 		\DBUtil::truncate_table('genres_movies');
 		\DBUtil::truncate_table('images');
-		
+
 		\DBUtil::truncate_table('movies');
 		\DBUtil::truncate_table('people');
 		\DBUtil::truncate_table('producers');
 		\DBUtil::truncate_table('subtitles');
-		
-		\File::delete_dir(DOCROOT.'assets/img/cache',true,false);
+
+		\File::delete_dir(DOCROOT . 'assets/img/cache', true, false);
 		Response::redirect('admin');
 	}
 

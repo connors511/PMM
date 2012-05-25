@@ -7,22 +7,82 @@
 abstract class Scraper
 {
 
-// Name of the scraper
-	public abstract function get_name();
+	protected $_movie;
+	protected $_id;
+	protected $_overwrite;
+	protected $_scrape_fields;
 
-// Author of the scraper
-	public abstract function get_author();
+	public function set_movie(Model_Movie &$movie)
+	{
+		$this->_movie = $movie;
+		return $this;
+	}
 
-// Version of the scraper
-	public abstract function get_version();
+	public function set_allow_overwrite($allow)
+	{
+		$this->_overwrite = (bool) $allow;
+		return $this;
+	}
 
-// Type of scraper: Movie, TV, People
-	public abstract function get_type();
+	public function set_scrape_fields(Array $fields)
+	{
+		$this->_scrape_fields = $fields;
+		return $this;
+	}
 
-// Fields of getType that can be scraped
-	public abstract function get_supported_fields();
+	public function get_author()
+	{
+		return $this->_author;
+	}
 
-// Downloads a webpage
+	public function get_name()
+	{
+		return $this->_name;
+	}
+
+	public function get_supported_fields()
+	{
+		return Model_Scraper_Field::find('all', array(
+		    'where' => array(
+			array('field','IN',$this->_fields)
+		    )
+		));
+	}
+
+	public function get_type()
+	{
+		return Model_Scraper_Type::find('first', array(
+		    'where' => array(
+			array('type','=',$this->_type)
+		    )
+		));
+	}
+
+	public function get_version()
+	{
+		return "0.4";
+	}
+
+	// Search the site for the movie ID on the site
+	public abstract function search_site();
+
+	// Do the actual scraping
+	public function scrape()
+	{
+		Log::debug("Scraping '{$this->_movie->title}'");
+		if ($this->_id == null)
+		{
+			$this->search_site();
+		}
+		
+		foreach($this->_scrape_fields as $field)
+		{
+			$this->populate_field($field->field);
+		}
+		Log::debug("Finished scraping '{$this->_movie->title}'");
+	}
+
+	// Downloads a webpage
 	protected function download_url($url, $cache = true)
 	{
 		try
@@ -44,7 +104,6 @@ abstract class Scraper
 					    "Accept-Language: en-us,en"
 				    ))
 				))->execute()->response();
-			//echo 'downloaded ' . $url . '<br>';
 			if ($cache)
 			{
 				Cache::set(sha1($url), $page);
@@ -57,40 +116,16 @@ abstract class Scraper
 	{
 		return $this->download_url(sprintf($url, $param), $cache);
 	}
-
-	public function populate_all_by_id($id)
-	{
-		$this->populate_fields_by_id($this->_fields, $id);
-	}
-
-	public function populate_all_missing_by_id($id)
-	{
-		echo "-- doing update on {$this->_movie->title}<br>";
-		$this->populate_missing_fields_by_id($this->_fields, $id);
-	}
 	
-	public function populate_fields_by_id($fields, $id)
+	public function populate_field($field)
 	{
-		$this->_id = $id;
-		foreach ($fields as $field)
+		if ($this->_overwrite or !empty($this->_movie->{$field}))
 		{
-			$func = 'scrape_' . $field;
-			$this->_movie->{$field} = $this->{$func}();
+			$func = 'scrape_'.$field;
+			$this->_movie->{$field} = $this->{$func}();				
 		}
 	}
 
-	public function populate_missing_fields_by_id($fields, $id)
-	{
-		$this->_id = $id;
-		foreach ($fields as $field)
-		{
-			$func = 'scrape_' . $field;
-			if (empty($this->_movie->{$field}))
-			{
-				$this->_movie->{$field} = $this->{$func}();
-			}
-		}
-	}
 }
 
 ?>

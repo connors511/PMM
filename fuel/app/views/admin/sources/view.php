@@ -4,8 +4,8 @@
 	<strong>Path:</strong>
 	<?php echo $source->path; ?></p>
 <p>
-	<strong>Scrapergroup:</strong>
-	<?php echo $source->scrapergroup; ?></p>
+	<strong>Scraper group:</strong>
+	<?php echo $source->scraper_group->name; ?></p>
 
 <?php echo Html::anchor('admin/sources/edit/'.$source->id, 'Edit'); ?> |
 <?php echo Html::anchor('admin/sources', 'Back'); ?>

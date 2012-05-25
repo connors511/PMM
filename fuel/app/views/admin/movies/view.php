@@ -23,7 +23,7 @@
 	<?php echo $movie->released; ?></p>
 <p>
 	<strong>Runtime:</strong>
-	<?php echo $movie->runtime; ?></p>
+	<?php if ($movie->runtime) echo Time::time_elapsed_min($movie->runtime); ?></p>
 <p>
 	<strong>Runtime file:</strong>
 	<?php echo $movie->runtime_file; ?></p>

@@ -5,7 +5,7 @@
 	<thead>
 		<tr>
 			<th>Path</th>
-			<th>Scrapergroup</th>
+			<th>Scraper group</th>
 			<th></th>
 		</tr>
 	</thead>
@@ -13,7 +13,7 @@
 <?php foreach ($sources as $source): ?>		<tr>
 
 			<td><?php echo $source->path; ?></td>
-			<td><?php echo $source->scrapergroup; ?></td>
+			<td><?php echo $source->scraper_group->name; ?></td>
 			<td>
 				<?php echo Html::anchor('admin/sources/view/'.$source->id, 'View'); ?> |
 				<?php echo Html::anchor('admin/sources/edit/'.$source->id, 'Edit'); ?> |

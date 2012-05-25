@@ -45,7 +45,7 @@
 			<td><?php echo $movie->rating; ?></td>
 			<td><?php echo number_format($movie->votes); ?></td>
 			<td><?php echo $movie->released; ?></td>
-			<td><?php echo Time::time_elapsed_min($movie->runtime); ?></td>
+			<td><?php if ($movie->runtime) echo Time::time_elapsed_min($movie->runtime); ?></td>
 			<td>
 				<?php echo Html::anchor('admin/movies/view/'.$movie->id, 'View'); ?> |
 				<?php echo Html::anchor('admin/movies/edit/'.$movie->id, 'Edit'); ?> |

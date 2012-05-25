@@ -14,7 +14,8 @@ class Model_Scraper_Group extends \Orm\Model
 	protected static $_has_many = array(
 	    'scraper_group_fields' => array(
 		'cascade_delete' => true
-	    )
+	    ),
+	    'sources'
 	);
 	protected static $_belongs_to = array(
 	    'scraper_type'
@@ -40,25 +41,29 @@ class Model_Scraper_Group extends \Orm\Model
 		return $val;
 	}
 
-	public static function parse_movie(Model_Movie $movie, $all_fields = true)
+	public static function parse_movie(Model_Movie $movie, $allow_overwrite = false)
 	{
 		$scrapers = array();
-		$group = $movie->file->source->scrapergroup;
-		foreach ($movie->properties() as $prop => $val)
+		$group = $movie->file->source->scraper_group;
+		
+		$scrapers = array();
+		foreach($group->scraper_group_fields as $f)
 		{
-			$scraper_name = Model_Scraper::find($group->{$prop}->id);
-			if ($scraper_name == null)
+			$scrapers[$f->scraper->id][] = $f;
+		}
+		foreach($scrapers as $id => $sgfs)
+		{
+			$fields = array();
+			foreach($sgfs as $sgf)
 			{
-				// Oh snap!
-				continue;
+				$fields[] = $sgf->scraper_field;
 			}
-			Debug::dump($scraper_name);
-			$class = $scaper_name->class;
-			echo $class;
-			die();
-			$scraper = new $class();
-			$scraper->set_movie($movie);
-			$scraper->search_imdb($all_fields);
+			$scrapername = $sgfs[0]->scraper->class;
+			$scraper = new $scrapername();
+			$scraper->set_movie($movie)
+				->set_scrape_fields($fields)
+				->set_allow_overwrite($allow_overwrite)
+				->scrape();
 		}
 	}
 

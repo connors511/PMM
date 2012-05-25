@@ -32,7 +32,7 @@ class Controller_Admin_Sources extends Controller_Admin
 			{
 				$source = Model_Source::forge(array(
 					    'path' => Input::post('path'),
-					    'scrapergroup' => Input::post('scrapergroup'),
+					    'scraper_group_id' => Input::post('scraper_group_id'),
 					));
 
 				if ($source and $source->save())
@@ -51,7 +51,10 @@ class Controller_Admin_Sources extends Controller_Admin
 				Session::set_flash('error', $val->show_errors());
 			}
 		}
-
+		
+		$groups = Model_Scraper_Group::find('all');
+		$this->template->set_global('groups', Arr::assoc_to_keyval($groups,'id','name'));
+		
 		$this->template->title = "Paths";
 		$this->template->content = View::forge('admin/sources/create');
 	}
@@ -64,7 +67,7 @@ class Controller_Admin_Sources extends Controller_Admin
 		if ($val->run())
 		{
 			$source->path = Input::post('path');
-			$source->scrapergroup = Input::post('scrapergroup');
+			$source->scraper_group_id = Input::post('scraper_group_id');
 
 			if ($source->save())
 			{
@@ -89,6 +92,9 @@ class Controller_Admin_Sources extends Controller_Admin
 
 			$this->template->set_global('source', $source, false);
 		}
+		
+		$groups = Model_Scraper_Group::find('all');
+		$this->template->set_global('groups', Arr::assoc_to_keyval($groups,'id','name'));
 
 		$this->template->title = "Paths";
 		$this->template->content = View::forge('admin/sources/edit');

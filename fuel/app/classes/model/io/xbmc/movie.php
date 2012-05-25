@@ -85,7 +85,7 @@ class Model_Io_Xbmc_Movie extends Model_Io_Base
 				$movie->{$key} = $val;
 			}
 		}
-		//$movie->save();
+		$movie->save();
 		//die();
 		//\Debug::dump($movie);die();
 	}
