@@ -40,7 +40,6 @@ class Scraper_Imdb extends Scraper
 		//'writers',
 		//'poster'
 	);
-	
 	protected $_type = 'movies';
 	protected $_author = 'Matthias Larsen';
 	protected $_name = 'IMDb Scraper';
@@ -82,7 +81,6 @@ class Scraper_Imdb extends Scraper
 				// TODO: Config option
 				$this->_id = $results[0]['id'];
 			}
-			
 		}
 		else
 		{
@@ -101,10 +99,10 @@ class Scraper_Imdb extends Scraper
 				// Do we have a title + year match?
 				$bets = array();
 				$leven = array();
-				$current = $this->_movie->title.':'.$this->_movie->released;
+				$current = $this->_movie->title . ':' . $this->_movie->released;
 				foreach ($results as $k => $r)
 				{
-					$lev = levenshtein($current, $r['title'].':'.$r['released']);
+					$lev = levenshtein($current, $r['title'] . ':' . $r['released']);
 					$bets[$lev] = $r;
 				}
 				ksort($bets);
@@ -563,6 +561,19 @@ class Scraper_Imdb extends Scraper
 					$role = strip_tags($role);
 
 					$roles = explode('/', $role);
+
+					$person = Model_Person::find('first', array(
+						    'where' => array(
+							array('name', '=', $matches['name'][$k])
+						    )
+						));
+
+					if ($person == null)
+					{
+						$person = new Model_Person();
+						$person->name = $matches['name'][$k];
+					}
+
 					foreach ($roles as $r)
 					{
 						$r = trim($r);
@@ -595,16 +606,6 @@ class Scraper_Imdb extends Scraper
 
 						if ($actor == null)
 						{
-							$person = Model_Person::find('first', array(
-								    'where' => array(
-									array('name', '=', $matches['name'][$k])
-								    )
-								));
-							if ($person == null)
-							{
-								$person = new Model_Person();
-								$person->name = $matches['name'][$k];
-							}
 							$actor = new Model_Actor();
 							$actor->person = $person;
 							$actor->role = $r;
