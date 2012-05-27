@@ -123,7 +123,7 @@
 						$section_title = Inflector::humanize($section_segment);
 						?>
 
-						<li class="<?php echo Uri::segment(2) == $section_segment ? 'active' : '' ?>">
+						<li class="<?php echo Uri::segment(3) == $section_segment ? 'active' : '' ?>">
 						    <?php echo Html::anchor('admin/scraper/' . $section_segment, $section_title) ?>
 						</li>
 					    <?php endforeach; ?>

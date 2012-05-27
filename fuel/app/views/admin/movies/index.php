@@ -20,7 +20,7 @@
 
 			<td>
 				<?php if (!empty($movie->poster)) {
-					echo Html::img($movie->poster, array('width' => '90', 'height' => '120'));
+					echo Html::img(str_replace('w500','w185',$movie->poster));
 				} ?>
 			</td>
 			<td><?php echo $movie->title; ?></td>

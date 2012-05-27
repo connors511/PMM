@@ -5,16 +5,7 @@ class Controller_Admin_Images extends Controller_Admin
 
 	public function action_index()
 	{
-		Pagination::set_config(array(
-		    'pagination_url' => Uri::create('admin/images'),
-		    'uri_segment' => 3,
-		    'total_items' => Model_Image::find()->count(),
-		    'per_page' => 20,
-		    'template' => array(
-			'wrapper_start' => '<div class="pagination"> ',
-			'wrapper_end' => ' </div>',
-		    ),
-		));
+		$this->set_pagination(Uri::create('admin/images'), 3, Model_Image::find()->count());
 		$data['images'] = Model_Image::find('all', array(
 			    'related' => array(
 				'movie'

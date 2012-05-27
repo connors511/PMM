@@ -121,7 +121,7 @@ class Controller_Admin extends Controller_Base
 		$updated = isset($inserts['updated']) ? count($inserts['updated']) : 0;
 		Session::set_flash('success', 'Scanned ' . ($new + $updated) . ' movies; '.$new.' was added and '.$updated.' was updated.');
 
-		Response::redirect('admin');
+		//Response::redirect('admin');
 	}
 
 	public function action_truncate()

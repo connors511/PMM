@@ -27,12 +27,12 @@
 				} 
 				else 
 				{
-					echo '<ul>';
+					$links = array();
 					foreach(Arr::assoc_to_keyval($scraper->scraper_fields,'id','field') as $id=>$f) 
 					{
-						echo '<li>'.Html::anchor('admin/scraper/fields/view/'.$id,$f).'</li>';
+						$links[] = Html::anchor('admin/scraper/fields/view/'.$id,$f);
 					}
-					echo '</ul>';
+					echo implode(', ',$links);
 				}
 				?>
 			</td>

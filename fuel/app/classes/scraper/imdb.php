@@ -98,7 +98,6 @@ class Scraper_Imdb extends Scraper
 				}
 				// Do we have a title + year match?
 				$bets = array();
-				$leven = array();
 				$current = $this->_movie->title . ':' . $this->_movie->released;
 				foreach ($results as $k => $r)
 				{
@@ -116,8 +115,6 @@ class Scraper_Imdb extends Scraper
 				echo 'Skipping ' . $this->_movie->title;
 			}
 		}
-
-		return false;
 	}
 
 	public function scrape_title()

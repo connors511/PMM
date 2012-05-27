@@ -43,24 +43,24 @@ abstract class Scraper
 	public function get_supported_fields()
 	{
 		return Model_Scraper_Field::find('all', array(
-		    'where' => array(
-			array('field','IN',$this->_fields)
-		    )
-		));
+			    'where' => array(
+				array('field', 'IN', $this->_fields)
+			    )
+			));
 	}
 
 	public function get_type()
 	{
 		return Model_Scraper_Type::find('first', array(
-		    'where' => array(
-			array('type','=',$this->_type)
-		    )
-		));
+			    'where' => array(
+				array('type', '=', $this->_type)
+			    )
+			));
 	}
 
 	public function get_version()
 	{
-		return "0.4";
+		return $this->_version;
 	}
 
 	// Search the site for the movie ID on the site
@@ -74,8 +74,14 @@ abstract class Scraper
 		{
 			$this->search_site();
 		}
-		
-		foreach($this->_scrape_fields as $field)
+
+		if ($this->_id == '' or $this->_id == null)
+		{
+			// Skip if no id was found.
+			return;
+		}
+
+		foreach ($this->_scrape_fields as $field)
 		{
 			$this->populate_field($field->field);
 		}
@@ -88,7 +94,6 @@ abstract class Scraper
 		try
 		{
 			$page = Cache::get(sha1($url));
-			//echo 'got cache for ' . $url . '<br>';
 		}
 		catch (\CacheNotFoundException $e)
 		{
@@ -96,7 +101,7 @@ abstract class Scraper
 				    'driver' => 'curl',
 				    'set_options' => array(
 					//CURLOPT_FILE => $img,
-					CURLOPT_HEADER => 1,
+					CURLOPT_HEADER => 0,
 					CURLOPT_MAXREDIRS => 2,
 					CURLOPT_FOLLOWLOCATION => 1,
 					CURLOPT_HTTPHEADER => array(
@@ -116,13 +121,13 @@ abstract class Scraper
 	{
 		return $this->download_url(sprintf($url, $param), $cache);
 	}
-	
+
 	public function populate_field($field)
 	{
 		if ($this->_overwrite or empty($this->_movie->{$field}))
 		{
-			$func = 'scrape_'.$field;
-			$this->_movie->{$field} = $this->{$func}();				
+			$func = 'scrape_' . $field;
+			$this->_movie->{$field} = $this->{$func}();
 		}
 	}
 
