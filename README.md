@@ -28,6 +28,6 @@ You can also shorten the last two commands to one:
 
     git submodule update --init
 
-Set the DB config, and run the following command to create the tables and an admin user with 'admin' as username and password
+Run the following command to use the installation wizard
 
-    oil refine migrate:current
+    oil refine install
