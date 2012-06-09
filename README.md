@@ -31,3 +31,21 @@ You can also shorten the last two commands to one:
 Run the following command to use the installation wizard
 
     oil refine install
+
+##Features
+PMM is currently able to scrape basic info about movies from IMDb and TMDb.
+Other features include:
+* Validate nfo files against .xsd
+* Load info from XBMC nfo files validated against .xsd
+* Edit movies, actors, directors, producers, people and genres.
+* Define which scraper retrieves which fields with `scraper groups`
+* Define which scraper groups are used for which folders with `sources`
+* Continue browsing after starting a scrape using `background workers`
+
+#Planned features
+* Export nfo files
+* Different save locations for each type of file (fanart, thumb, movie, subtitle, nfo)
+* Renaming of files
+* Support for TV shows
+* Subtitles downloader
+* Streaming from nice frontend
