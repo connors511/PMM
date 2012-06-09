@@ -19,5 +19,23 @@
 	<strong>Height:</strong>
 	<?php echo $person->height; ?></p>
 
+<?php
+$actors = $person->actors;
+if (!empty($actors))
+{
+	?>
+	<p>
+		<strong>Acts in:</strong>
+		<?php 
+		foreach($actors as $a)
+		{
+			echo '<br>'.$a->movie->title . ' as ' . $a->role;
+		}
+		?>
+	</p>
+	<?php
+}
+?>
+
 <?php echo Html::anchor('admin/people/edit/'.$person->id, 'Edit'); ?> |
 <?php echo Html::anchor('admin/people', 'Back'); ?>

@@ -127,9 +127,67 @@ abstract class Scraper
 	{
 		if ($this->_overwrite or empty($this->_movie->{$field}))
 		{
+			Log::debug("Scraping field '{$field}'");
 			$func = 'scrape_' . $field;
-			$this->_movie->{$field} = $this->{$func}();
+			$res = $this->{$func}();
+			if ($res)
+			{
+				$this->_movie->{$field} = $res;
+				$this->_movie->save();
+			}
+			Log::debug("Done scraping field '{$field}'");
 		}
+		else
+		{
+			Log::debug("Skipped field '{$field}'");
+		}
+	}
+
+	public function get_actor($name, $role)
+	{
+		$person = Model_Person::find('first', array(
+			    'where' => array(
+				array('name', '=', $name)
+			    )
+			));
+
+		if ($person == null)
+		{
+			$person = new Model_Person();
+			$person->name = $name;
+			$person->save();
+		}
+
+		$actor = Model_Actor::find('all', array(
+			    'related' => array(
+				'person' => array(
+				    'where' => array(
+					array(
+					    'name', '=', $name
+					)
+				    )
+				)
+			    ),
+			    'where' => array(
+				array(
+				    'role' => $role
+				)
+			    )
+			));
+
+		foreach ($actor as $a)
+		{
+			if ($a->movie->id == $this->_movie->id)
+			{
+				return $actor;
+			}
+		}
+
+		$actor = new Model_Actor();
+		$actor->person = $person;
+		$actor->role = $role;
+
+		return $actor;
 	}
 
 }

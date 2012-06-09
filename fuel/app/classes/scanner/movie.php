@@ -266,22 +266,40 @@ class Scanner_Movie implements IScanner
 				if (!Model_Io_Factory::parse_nfo($nfo, $movie))
 				{
 					// Not valid nfo
-					//Model_Scraper_Group::parse_movie($movie, true);
-					Job::create('Scraper_group', 'scraper', array($movie->id, true));
+					if (Config::get('settings.jobs.use', true))
+					{
+						Job::create('Scraper_group', 'scraper', array($movie->id, true));
+					}
+					else
+					{
+						Model_Scraper_Group::parse_movie($movie, true);
+					}
 				}
 			}
 			else
 			{
 				// Get new data
-				//Model_Scraper_Group::parse_movie($movie, true);
-				Job::create('Scraper_group', 'scraper', array($movie->id, true));
+				if (Config::get('settings.jobs.use', true))
+				{
+					Job::create('Scraper_group', 'scraper', array($movie->id, true));
+				}
+				else
+				{
+					Model_Scraper_Group::parse_movie($movie, true);
+				}
 			}
 		}
 		else
 		{
 			// Update missing fields?
-			//Model_Scraper_Group::parse_movie($movie);
-			Job::create('Scraper_group', 'scraper', array($movie->id));
+			if (Config::get('settings.jobs.use', true))
+			{
+				Job::create('Scraper_group', 'scraper', array($movie->id));
+			}
+			else
+			{
+				Model_Scraper_Group::parse_movie($movie);
+			}
 		}
 	}
 

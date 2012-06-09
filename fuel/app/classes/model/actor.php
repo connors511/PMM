@@ -13,7 +13,7 @@ class Model_Actor extends \Orm\Model
 	);
 	protected static $_belongs_to = array(
 	    'person',
-	    'movie',
+	    'movie'
 	);
 	protected static $_observers = array(
 	    'Orm\Observer_CreatedAt' => array(

@@ -15,9 +15,9 @@ class Model_Person extends \Orm\Model
 	    'updated_at',
 	);
 	protected static $_has_many = array(
-	    'actor',
-	    'director',
-	    'producer',
+	    'actors',
+	    'directors',
+	    'producers',
 	);
 	protected static $_observers = array(
 	    'Orm\Observer_CreatedAt' => array(

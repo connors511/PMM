@@ -9,6 +9,7 @@ class Scraper_Tmdb extends Scraper
 	protected $_urls = array(
 	    'search' => 'http://api.themoviedb.org/3/search/movie?query=%s',
 	    'main' => 'http://api.themoviedb.org/3/movie/%s',
+	    'cast' => 'http://api.themoviedb.org/3/movie/%s/casts',
 	    // TODO Get poster path from TMDb configuration via API?
 	    'poster_url' => 'http://cf2.imgobject.com/t/p/w500'
 	);
@@ -71,7 +72,12 @@ class Scraper_Tmdb extends Scraper
 		$res = $this->download_url_param($this->_urls[$url], $this->_id);
 		if (($r = $this->_get_helper($res, $field)))
 		{
-			Log::debug("Getting {$field}. Found: '{$r}'");
+			$t = $r;
+			if (is_array($t))
+			{
+				$t = print_r($t, true);
+			}
+			Log::debug("Getting {$field}. Found: '{$t}'");
 			return $r;
 		}
 		if (in_array($ret_field, $this->_movie->properties()))
@@ -94,7 +100,7 @@ class Scraper_Tmdb extends Scraper
 		if (empty($results['results']))
 		{
 			// Attempt to remove any chars or strings that might fuck the search up
-			$strips = array(':', '-', 'edition','unrated','directors','cut');
+			$strips = array(':', '-', 'edition', 'unrated', 'directors', 'cut');
 			$url = sprintf($this->_urls['search'], urlencode(str_ireplace($strips, '', $this->_movie->title)), $this->_movie->released);
 			$results = $this->download_url($url);
 		}
@@ -152,7 +158,44 @@ class Scraper_Tmdb extends Scraper
 
 	public function scrape_directors()
 	{
-		
+		$this->download_url_param($this->_urls['cast'], $this->_id);
+		$crew = $this->_return_helper('crew', false, 'cast');
+		if (!is_array($crew))
+		{
+			return false;
+		}
+		$directors = array();
+		foreach ($crew as $c)
+		{
+			if (strpos(strtolower($c['job']), 'director') === false)
+			{
+				continue;
+			}
+			$res = Model_Person::find('all', array(
+				    'where' => array(
+					array('name', '=', $c['name'])
+				    )
+				));
+			if (count($res) == 1)
+			{
+				$res = current($res);
+			}
+			else if (count($res) > 1)
+			{
+				// Wtf?
+				continue;
+			}
+			if ($res == null)
+			{
+				$res = new Model_Person();
+				$res->name = $c['name'];
+			}
+
+			$d = new Model_Director();
+			$d->person = $res;
+			$directors[] = $d;
+		}
+		return empty($directors) ? false : $directors;
 	}
 
 	public function scrape_plot()
@@ -172,7 +215,16 @@ class Scraper_Tmdb extends Scraper
 
 	public function scrape_country()
 	{
-		
+		$countries = $this->_return_helper('production_countries', 'country');
+		if (is_array($countries))
+		{
+			$c = $countries[0]['name'];
+		}
+		else
+		{
+			$c = "";
+		}
+		return $c;
 	}
 
 	public function scrape_genres()
@@ -221,12 +273,67 @@ class Scraper_Tmdb extends Scraper
 
 	public function scrape_producers()
 	{
-		
+		$crew = $this->_return_helper('crew', false, 'cast');
+		if (!is_array($crew))
+		{
+			return false;
+		}
+		$producers = array();
+		foreach ($crew as $c)
+		{
+			if (strpos(strtolower($c['job']), 'producer') === false)
+			{
+				continue;
+			}
+
+			$res = Model_Person::find('all', array(
+				    'where' => array(
+					array('name', '=', $c['name'])
+				    )
+				));
+			if (count($res) == 1)
+			{
+				$res = current($res);
+			}
+			else if (count($res) > 1)
+			{
+				// Wtf?
+				continue;
+			}
+			if ($res == null)
+			{
+				$res = new Model_Person();
+				$res->name = $c['name'];
+			}
+
+			$p = new Model_Producer();
+			$p->person = $res;
+			$p->role = $c['job'];
+			$producers[] = $p;
+		}
+
+		return empty($producers) ? false : $producers;
 	}
 
 	public function scrape_actors()
 	{
-		
+		$cast = $this->_return_helper('cast', false, 'cast');
+		if (!is_array($cast))
+		{
+			return false;
+		}
+
+		$actors = array();
+		foreach ($cast as $c)
+		{
+			if (empty($c['character']))
+			{
+				continue;
+			}
+			
+			$actors[] = $this->get_actor($c['name'], $c['character']);
+		}
+		return $actors;
 	}
 
 	public function scrape_poster()
@@ -236,7 +343,7 @@ class Scraper_Tmdb extends Scraper
 		{
 			return $this->_urls['poster_url'] . $poster;
 		}
-		return '';
+		return false;
 	}
 
 }
