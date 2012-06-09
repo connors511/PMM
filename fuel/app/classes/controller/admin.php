@@ -111,15 +111,22 @@ class Controller_Admin extends Controller_Base
 			Session::set_flash('error', 'Invalid path ID');
 			Response::redirect('admin');
 		}
+		
+		try
+		{
+			$scanner = new Scanner_Movie($path);
+			$scanner->scan();
 
-		$scanner = new Scanner_Movie($path);
-		$scanner->scan();
+			$inserts = $scanner->get_and_reset_inserts();
 
-		$inserts = $scanner->get_and_reset_inserts();
-
-		$new = isset($inserts['new']) ? count($inserts['new']) : 0;
-		$updated = isset($inserts['updated']) ? count($inserts['updated']) : 0;
-		Session::set_flash('success', 'Scanned ' . ($new + $updated) . ' movies; '.$new.' was added and '.$updated.' was updated.');
+			$new = isset($inserts['new']) ? count($inserts['new']) : 0;
+			$updated = isset($inserts['updated']) ? count($inserts['updated']) : 0;
+			Session::set_flash('success', 'Scanned ' . ($new + $updated) . ' movies; '.$new.' was added and '.$updated.' was updated.');
+		} 
+		catch(MissingScraperGroupException $e)
+		{
+			Session::set_flash('error', $e->getMessage());
+		}
 
 		//Response::redirect('admin');
 	}

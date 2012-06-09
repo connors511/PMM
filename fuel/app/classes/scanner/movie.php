@@ -74,7 +74,7 @@ class Scanner_Movie implements IScanner
 				if (!self::is_fanart_folder($dir) and self::is_movie_folder($dir))
 				{
 					// Process movie
-					self::parse_movie($p, $dir, $fullpath . $parent . $p);
+					$this->parse_movie_folder($p, $dir, $fullpath . $parent . $p);
 				}
 				elseif (self::is_fanart_folder($dir))
 				{
@@ -83,7 +83,7 @@ class Scanner_Movie implements IScanner
 				else
 				{
 					// Most likely a top level dir
-					self::scan_dir($dir, $p, $fullpath . $parent);
+					$this->scan_dir($dir, $p, $fullpath . $parent);
 				}
 			}
 		}
@@ -128,10 +128,10 @@ class Scanner_Movie implements IScanner
 		return false;
 	}
 
-	public static function get_subtitles(Array $dir)
+	public static function get_subtitles($dir)
 	{
 		$subtitles = array();
-		foreach ($dir as $p => $file)
+		foreach (File::read_dir($dir) as $p => $file)
 		{
 			if (is_array($file))
 			{
@@ -140,28 +140,27 @@ class Scanner_Movie implements IScanner
 
 			if (preg_match(self::$regex_subtitles, $file))
 			{
-				$subtitles[] = $file;
+				$subtitles[] = $dir . DS . $file;
 			}
 		}
 
 		return empty($subtitles) ? false : $subtitles;
 	}
 
-	public static function get_nfo(Array $dir)
+	public static function get_nfo(Model_Movie $movie)
 	{
-		foreach ($dir as $p => $file)
+		$ext = pathinfo($movie->file->path, PATHINFO_EXTENSION);
+		$files = array(
+		    str_replace($ext, 'nfo', $movie->file->path),
+		    dirname($movie->file->path) . DS . 'movie.nfo'
+		);
+		foreach ($files as $f)
 		{
-			if (is_array($file))
+			if (file_exists($f))
 			{
-				continue;
-			}
-
-			if (strpos($file, '.nfo') !== FALSE)
-			{
-				return $file;
+				return $f;
 			}
 		}
-
 		return false;
 	}
 
@@ -182,11 +181,10 @@ class Scanner_Movie implements IScanner
 		}
 	}
 
-	public function parse_movie($dir, $files, $fullpath)
+	public function parse_movie_folder($dir, $files, $fullpath)
 	{
 		$matches = array();
-		$inserts = array('movie' => 0, 'fanart' => 0, 'subtitles' => 0);
-		$status = 0;
+		$new = true;
 
 		// Is the structure <movie name>/<files>
 		if (preg_match('/(?P<title>.+) \((?P<year>\d+)\)/', $dir, $matches))
@@ -219,10 +217,8 @@ class Scanner_Movie implements IScanner
 				return;
 			}
 
-			// Either path doesnt exist, or the movie is somehow not linked to the path
 			if ($movie == null)
 			{
-				echo 'new movie<br>';
 				$movie = new Model_Movie();
 				$file = Model_File::find('first', array(
 					    'where' => array(
@@ -245,178 +241,180 @@ class Scanner_Movie implements IScanner
 
 				$movie->title = $matches['title'];
 				$movie->released = $matches['year'];
-
-				$inserts['movie'] = $movie->title;
-				$status = 'new';
-
-				if (($nfo = self::get_nfo($files)) !== FALSE)
-				{
-					echo 'using nfo<br>';
-					// TODO: Should be config item, if nfo overwrites a new scrape?
-					if (!Model_Io_Factory::parse_nfo($fullpath . $nfo, $movie))
-					{
-						// Not valid nfo
-						Model_Scraper_Group::parse_movie($movie, true);
-					}
-				}
-				else
-				{
-					echo 'scraping<br>';
-					// Get new data
-					Model_Scraper_Group::parse_movie($movie, true);
-				}
 			}
 			else
 			{
-				Model_Scraper_Group::parse_movie($movie);
-				
-				$inserts['movie'] = $movie->title;
-				$status = 'updated';
-				
-				// Uhm.. Path is registred to a movie. Update missing fields?
-				if ($movie->title != $matches['title'] or $movie->released != $matches['year'])
-				{
-					// Ask user if he wants to force an update?
-					// Or perhaps, manually select the movie?
-				}
+				$new = false;
 			}
-
-			if ($fanart_folder = self::get_fanart_folder($fullpath))
-			{
-				$fanart = File::read_dir($fanart_folder);
-				$fanarts = array();
-				foreach ($fanart as $img)
-				{
-					$info = File::file_info($fanart_folder . $img);
-					if (!in_array($info['extension'], self::$valid_image_extensions))
-					{
-						continue;
-					}
-					// FIXME: Can we assume that the file isnt registred instead of checking for missing link?
-					$im = Model_Image::find('all', array(
-						    'related' => array(
-							'file' => array(
-							    'where' => array(
-								array(
-								    'path', '=', $fanart_folder . $img
-								)
-							    )
-							),
-							'movie'
-						    )
-						));
-
-					if (count($im) == 1)
-					{
-						$im = current($im);
-					}
-					else if (count($im) > 1)
-					{
-						// That is just fucked up
-						continue;
-					}
-
-					if ($im == null || $im->movie == null)
-					{
-						$im = new Model_Image();
-						$im->file = new Model_File();
-						$im->file->path = $fanart_folder . $img;
-						$im->file->source = $this->_source;
-
-						if (filesize($fanart_folder . $img) <= 0)
-						{
-							continue;
-						}
-
-						try
-						{
-							$image = Image::load($fanart_folder . $img);
-							$sizes = $image->sizes();
-
-							$im->height = $sizes->height;
-							$im->width = $sizes->width;
-						}
-						catch (RuntimeException $e)
-						{
-							// GD lib not found, so we cant get image height and width
-							$im->height = 0;
-							$im->width = 0;
-						}
-						catch (Exception $e)
-						{
-							continue;
-						}
-
-						$movie->images[] = $im;
-						$inserts['fanart']++;
-					}
-				}
-			}
-			else
-			{
-				// Scrape it?
-			}
-
-			if ($subtitles = self::get_subtitles($files))
-			{
-				foreach ($subtitles as $sub)
-				{
-					// FIXME: Can we assume that the file isnt registred instead of checking for missing link?
-					$su = Model_Subtitle::find('all', array(
-						    'related' => array(
-							'file' => array(
-							    'where' => array(
-								array(
-								    'path', '=', $fullpath . $sub
-								)
-							    )
-							),
-							'movie'
-						    )
-						));
-
-					if (count($su) == 1)
-					{
-						$su = current($su);
-					}
-					else if (count($su) > 1)
-					{
-						// Wtf?
-						continue;
-					}
-
-					$matches = array();
-					preg_match(self::$regex_subtitles_lang, $sub, $matches);
-
-					if ($su == null || $su->movie == null)
-					{
-						$su = new Model_Subtitle();
-						$su->file = new Model_File();
-						$su->file->path = $fullpath . $sub;
-						$su->file->source = $this->_source;
-
-						$inserts['subtitles']++;
-
-						$matches and $su->language = $matches['lang'];
-						$movie->subtitles[] = $su;
-					}
-				}
-			}
-			else
-			{
-				// Scrape it?
-			}
-
-			$movie->save();
 		}
 		else
 		{
 			// Or one folder with all movies?
 		}
-		
-		if ($status !== 0)
+		$movie->save();
+		self::parse_movie($movie, $new);
+	}
+
+	public static function parse_movie($movie, $new = true)
+	{
+		if ($new)
 		{
-			$this->_inserts[$status][] = $inserts;
+
+			if (($nfo = self::get_nfo($movie)) !== FALSE)
+			{
+				// TODO: Should be config item, if nfo overwrites a new scrape?
+				if (!Model_Io_Factory::parse_nfo($nfo, $movie))
+				{
+					// Not valid nfo
+					//Model_Scraper_Group::parse_movie($movie, true);
+					Job::create('Scraper_group', 'scraper', array($movie->id, true));
+				}
+			}
+			else
+			{
+				// Get new data
+				//Model_Scraper_Group::parse_movie($movie, true);
+				Job::create('Scraper_group', 'scraper', array($movie->id, true));
+			}
+		}
+		else
+		{
+			// Update missing fields?
+			//Model_Scraper_Group::parse_movie($movie);
+			Job::create('Scraper_group', 'scraper', array($movie->id));
+		}
+	}
+
+	public static function parse_fanart($movie)
+	{
+
+		if (($fanart_folder = self::get_fanart_folder(dirname($movie->file->path))))
+		{
+			$fanart = File::read_dir($fanart_folder);
+			foreach ($fanart as $img)
+			{
+				$info = File::file_info($fanart_folder . $img);
+				if (!in_array($info['extension'], self::$valid_image_extensions))
+				{
+					continue;
+				}
+				// FIXME: Can we assume that the file isnt registred instead of checking for missing link?
+				$im = Model_Image::find('all', array(
+					    'related' => array(
+						'file' => array(
+						    'where' => array(
+							array(
+							    'path', '=', $fanart_folder . $img
+							)
+						    )
+						),
+						'movie'
+					    )
+					));
+
+				if (count($im) == 1)
+				{
+					$im = current($im);
+				}
+				else if (count($im) > 1)
+				{
+					// That is just fucked up
+					continue;
+				}
+
+				if ($im == null || $im->movie == null)
+				{
+					$im = new Model_Image();
+					$im->file = new Model_File();
+					$im->file->path = $fanart_folder . $img;
+					$im->file->source = $movie->file->source;
+
+					if (filesize($fanart_folder . $img) <= 0)
+					{
+						continue;
+					}
+
+					try
+					{
+						$image = Image::load($fanart_folder . $img);
+						$sizes = $image->sizes();
+
+						$im->height = $sizes->height;
+						$im->width = $sizes->width;
+					}
+					catch (RuntimeException $e)
+					{
+						// GD lib not found, so we cant get image height and width
+						$im->height = 0;
+						$im->width = 0;
+					}
+					catch (Exception $e)
+					{
+						continue;
+					}
+
+					$im->movie = $movie;
+					$im->save();
+				}
+			}
+		}
+		else
+		{
+			// Scrape it?
+		}
+	}
+
+	public static function parse_subtitles($movie)
+	{
+
+		if (($subtitles = self::get_subtitles(dirname($movie->file->path))))
+		{
+			foreach ($subtitles as $sub)
+			{
+				// FIXME: Can we assume that the file isnt registred instead of checking for missing link?
+				$su = Model_Subtitle::find('all', array(
+					    'related' => array(
+						'file' => array(
+						    'where' => array(
+							array(
+							    'path', '=', $sub
+							)
+						    )
+						),
+						'movie'
+					    )
+					));
+
+				if (count($su) == 1)
+				{
+					$su = current($su);
+				}
+				else if (count($su) > 1)
+				{
+					// Wtf?
+					continue;
+				}
+
+				$matches = array();
+				preg_match(self::$regex_subtitles_lang, $sub, $matches);
+
+				if ($su == null || $su->movie == null)
+				{
+					$su = new Model_Subtitle();
+					$su->file = new Model_File();
+					$su->file->path = $sub;
+					$su->file->source = $movie->file->source;
+
+
+					$matches and $su->language = $matches['lang'];
+					$su->movie = $movie;
+					$su->save();
+				}
+			}
+		}
+		else
+		{
+			// Scrape it?
 		}
 	}
 

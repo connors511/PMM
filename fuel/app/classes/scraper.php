@@ -85,6 +85,7 @@ abstract class Scraper
 		{
 			$this->populate_field($field->field);
 		}
+		$this->_movie->save();
 		Log::debug("Finished scraping '{$this->_movie->title}'");
 	}
 

@@ -71,4 +71,51 @@ class Model_Movie extends \Orm\Model
 		return $val;
 	}
 
+	/**
+	 * Rename all files related to the movie
+	 * 
+	 * @param type $pattern pattern or text to rename to
+	 * @param type $is_pattern is first parameter a pattern
+	 */
+	public function rename($pattern, $is_pattern = true)
+	{
+		if (!$is_pattern)
+		{
+			if (rename($this->file->path, $pattern))
+			{
+				// Rename success
+			}
+			else
+			{
+				
+			}
+		}
+		else
+		{
+			if (strpos($pattern, '/') === false)
+			{
+				// Only a file rename
+				// Subtitles, poster, folder art and main fanart
+				// TODO: These should be downloaded and linked to Model_File
+				$paths = array(
+				    /*$this->thumb,
+				    $this->fanart,
+				    $this->poster*/
+				);
+				foreach($this->images as $img)
+				{
+					$paths[] = $img->file->path;
+				}
+				foreach($paths as $path)
+				{
+					// Construct new file name
+				}
+			}
+			else
+			{
+				// Moving or renaming folder too
+			}
+		}
+	}
+
 }

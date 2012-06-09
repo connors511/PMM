@@ -1,5 +1,7 @@
 <?php
 
+class MissingScraperGroupException extends Exception { }
+
 class Model_Scraper_Group extends \Orm\Model
 {
 
@@ -41,10 +43,14 @@ class Model_Scraper_Group extends \Orm\Model
 		return $val;
 	}
 
-	public static function parse_movie(Model_Movie $movie, $allow_overwrite = false)
+	public static function parse_movie(Model_Movie &$movie, $allow_overwrite = false)
 	{
 		$scrapers = array();
 		$group = $movie->file->source->scraper_group;
+		if (empty($group))
+		{
+			throw new MissingScraperGroupException("No scraper group found for source '{$movie->file->source->path}'");
+		}
 		
 		$scrapers = array();
 		foreach($group->scraper_group_fields as $f)
@@ -58,7 +64,7 @@ class Model_Scraper_Group extends \Orm\Model
 			{
 				$fields[] = $sgf->scraper_field;
 			}
-			$scrapername = $sgfs[0]->scraper->class;
+			$scrapername = '\\'.$sgfs[0]->scraper->class;
 			$scraper = new $scrapername();
 			$scraper->set_movie($movie)
 				->set_scrape_fields($fields)
