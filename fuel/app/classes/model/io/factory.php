@@ -20,7 +20,7 @@ class Model_Io_Factory
 				$io = new $class($nfo);
 				if ($io->is_valid_nfo())
 				{
-					$io->update_movie($movie);
+					$io->import_movie($movie);
 					return true;
 				}
 			}

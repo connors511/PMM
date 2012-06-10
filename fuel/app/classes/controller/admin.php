@@ -130,6 +130,16 @@ class Controller_Admin extends Controller_Base
 
 		//Response::redirect('admin');
 	}
+	
+	public function action_rename($id)
+	{
+		$pattern = Input::get('p','test');
+		$bool = false;
+		$movie = Model_Movie::find($id);
+		
+		$movie->rename($pattern, $bool);
+		
+	}
 
 	public function action_truncate()
 	{

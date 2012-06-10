@@ -47,5 +47,30 @@ class Model_File extends \Orm\Model
 	{
 		return Num::format_bytes($this->size, $dec);
 	}
+	
+	public function folder($realpath = false)
+	{
+		$path = $realpath ? $this->realpath : $this->path;
+		return dirname($path);
+	}
+	
+	public function name($with_ext = true)
+	{
+		$name = pathinfo($this->path, PATHINFO_FILENAME);
+		if ($with_ext === true)
+		{
+			$name .= '.'.$this->ext();
+		}
+		else if ($with_ext !== false)
+		{
+			$name .= '.'.$with_ext;
+		}
+		return $name;
+	}
+	
+	public function ext()
+	{
+		return pathinfo($this->path, PATHINFO_EXTENSION);
+	}
 
 }

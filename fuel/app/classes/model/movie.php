@@ -75,47 +75,58 @@ class Model_Movie extends \Orm\Model
 	 * Rename all files related to the movie
 	 * 
 	 * @param type $pattern pattern or text to rename to
-	 * @param type $is_pattern is first parameter a pattern
 	 */
-	public function rename($pattern, $is_pattern = true)
+	public function rename($pattern)
 	{
-		if (!$is_pattern)
+		//$pattern = str_replace('$','$this->',$pattern);
+		extract($this->_data);
+		$pattern = preg_replace('#\$((\w|->|_|\((true|false)*\))+)#', "'.\$this->$1.'", $pattern);
+		$pattern .= "'";
+		if (substr($pattern, 0, 2) == "'.")
 		{
-			if (rename($this->file->path, $pattern))
+			$pattern = substr($pattern, 2);
+		}
+		else
+		{
+			$pattern = "'" . $pattern;
+		}
+		//echo $pattern . '<br>';
+		eval('$res = ' . $pattern . ';');
+		
+		if (strpos($res, '/') === false)
+		{
+			// Only a file rename
+			// Subtitles, poster, folder art and main fanart
+			$paths = array(
+				/* $this->thumb,
+				  $this->fanart,
+				  $this->poster */
+			);
+			foreach ($this->images as $img)
+			{
+				$paths[] = $img->file->path;
+			}
+			
+			foreach ($paths as $path)
+			{
+				
+				// Construct new file name
+			}
+
+			/*if (rename($this->file->path, $res))
 			{
 				// Rename success
 			}
 			else
 			{
 				
-			}
+			}*/
 		}
 		else
 		{
-			if (strpos($pattern, '/') === false)
-			{
-				// Only a file rename
-				// Subtitles, poster, folder art and main fanart
-				// TODO: These should be downloaded and linked to Model_File
-				$paths = array(
-				    /*$this->thumb,
-				    $this->fanart,
-				    $this->poster*/
-				);
-				foreach($this->images as $img)
-				{
-					$paths[] = $img->file->path;
-				}
-				foreach($paths as $path)
-				{
-					// Construct new file name
-				}
-			}
-			else
-			{
-				// Moving or renaming folder too
-			}
+			
 		}
+		die();
 	}
 
 }

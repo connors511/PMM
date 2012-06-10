@@ -41,9 +41,9 @@ Other features include:
 * Define which scraper retrieves which fields with `scraper groups`
 * Define which scraper groups are used for which folders with `sources`
 * Continue browsing after starting a scrape using `background workers`
+* Export validated nfo files
 
 #Planned features
-* Export nfo files
 * Different save locations for each type of file (fanart, thumb, movie, subtitle, nfo)
 * Renaming of files
 * Support for TV shows

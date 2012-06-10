@@ -35,5 +35,4 @@ class Model_Actor extends \Orm\Model
 
 		return $val;
 	}
-
 }
