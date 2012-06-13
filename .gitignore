@@ -16,4 +16,4 @@ nbproject/
 /fuel/app/config/crypt.php
 /public/assets/img/cache/*
 *.cache
-/fuel/app/config/development/migrations.php
+/fuel/app/config/development/*
