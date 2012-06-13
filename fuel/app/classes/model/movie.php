@@ -79,7 +79,7 @@ class Model_Movie extends \Orm\Model
 	public function rename($pattern)
 	{
 		//$pattern = str_replace('$','$this->',$pattern);
-		extract($this->_data);
+		//extract($this->_data); // Not needed when replaced with $this->
 		$pattern = preg_replace('#\$((\w|->|_|\((true|false)*\))+)#', "'.\$this->$1.'", $pattern);
 		$pattern .= "'";
 		if (substr($pattern, 0, 2) == "'.")

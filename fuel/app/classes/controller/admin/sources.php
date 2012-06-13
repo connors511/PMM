@@ -31,7 +31,7 @@ class Controller_Admin_Sources extends Controller_Admin
 			if ($val->run())
 			{
 				$source = Model_Source::forge(array(
-					    'path' => Input::post('path'),
+					    'path' => rtrim(Input::post('path'),'/'),
 					    'scraper_group_id' => Input::post('scraper_group_id'),
 					));
 
@@ -66,7 +66,7 @@ class Controller_Admin_Sources extends Controller_Admin
 
 		if ($val->run())
 		{
-			$source->path = Input::post('path');
+			$source->path = rtrim(Input::post('path'),'/');
 			$source->scraper_group_id = Input::post('scraper_group_id');
 
 			if ($source->save())
