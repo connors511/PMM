@@ -133,11 +133,22 @@ class Controller_Admin extends Controller_Base
 	
 	public function action_rename($id)
 	{
-		$pattern = Input::get('p','test');
+		/*$pattern = Input::get('p','test');
 		$bool = false;
-		$movie = Model_Movie::find($id);
 		
-		$movie->rename($pattern, $bool);
+		$movie->rename($pattern, $bool);*/
+		
+		require_once(APPPATH.'vendor/ffmpeg-php/FFmpegAutoloader.php');
+		$m = Model_Movie::find($id);
+		$movie = new FFmpegMovie($m->file->path);
+		foreach(get_class_methods($movie) as $func)
+		{
+			if (substr($func, 0, 3) == 'get')
+			{
+				$movie->{$func}();
+			}
+		}
+		Debug::dump($movie);
 		
 	}
 

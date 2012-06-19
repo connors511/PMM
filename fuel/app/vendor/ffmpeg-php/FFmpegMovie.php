@@ -10,7 +10,8 @@
 class FFmpegMovie implements Serializable {
 
     protected static $REGEX_DURATION          = '/Duration: ([0-9]{2}):([0-9]{2}):([0-9]{2})(\.([0-9]+))?/';
-    protected static $REGEX_FRAME_RATE        = '/([0-9\.]+\sfps,\s)?([0-9\.]+)\stbr/';    
+    protected static $REGEX_FRAME_RATE        = '/([0-9\.]+\sfps,\s)?([0-9\.]+)\stbr/';
+    /* ID3 */
     protected static $REGEX_COMMENT           = '/comment\s*(:|=)\s*(.+)/i';
     protected static $REGEX_TITLE             = '/title\s*(:|=)\s*(.+)/i';
     protected static $REGEX_ARTIST            = '/(artist|author)\s*(:|=)\s*(.+)/i';
@@ -18,17 +19,24 @@ class FFmpegMovie implements Serializable {
     protected static $REGEX_GENRE             = '/genre\s*(:|=)\s*(.+)/i';
     protected static $REGEX_TRACK_NUMBER      = '/track\s*(:|=)\s*(.+)/i';
     protected static $REGEX_YEAR              = '/year\s*(:|=)\s*(.+)/i';
+    /* Video */
+    protected static $REGEX_HAS_VIDEO         = '/Stream.+Video/';
     protected static $REGEX_FRAME_WH          = '/Video:.+?([1-9][0-9]*)x([1-9][0-9]*)/';
     protected static $REGEX_PIXEL_FORMAT      = '/Video: [^,]+, ([^,]+)/';
     protected static $REGEX_BITRATE           = '/bitrate: ([0-9]+) kb\/s/';    
     protected static $REGEX_VIDEO_BITRATE     = '/Video:.+?([0-9]+) kb\/s/';
+    protected static $REGEX_VIDEO_CODEC       = '/Video:\s([^,]+),/';
+    /* Audio */
+    protected static $REGEX_HAS_AUDIO         = '/Stream.+Audio/';
     protected static $REGEX_AUDIO_BITRATE     = '/Audio:.+?([0-9]+) kb\/s/';
     protected static $REGEX_AUDIO_SAMPLE_RATE = '/Audio:.+?([0-9]+) Hz/';
-    protected static $REGEX_VIDEO_CODEC       = '/Video:\s([^,]+),/';
     protected static $REGEX_AUDIO_CODEC       = '/Audio:\s([^,]+),/';
-    protected static $REGEX_AUDIO_CHANNELS    = '/Audio:\s[^,]+,[^,]+,([^,]+)/';
-    protected static $REGEX_HAS_AUDIO         = '/Stream.+Audio/';
-    protected static $REGEX_HAS_VIDEO         = '/Stream.+Video/';
+    protected static $REGEX_AUDIO_CHANNELS    = '/Audio:\s[^,]+,[^,]+,\s([0-9\.]+)/';
+    protected static $REGEX_AUDIO_LANGUAGE    = '/\((.+?)\): Audio/';
+    /* Subtitle */
+    protected static $REGEX_HAS_SUBTITLE      = '/Stream.+Subtitle/';
+    protected static $REGEX_SUBTITLE_LANGUAGE = '/\((.+?)\): Subtitle/';
+    
     protected static $REGEX_ERRORS            = '/.*(Error|Permission denied|could not seek to position|Invalid pixel format|Unknown encoder|could not find codec|does not contain any stream).*/i';
 
     /**
@@ -184,6 +192,9 @@ class FFmpegMovie implements Serializable {
     * @var int
     */
     protected $audioChannels;
+    
+    protected $subtitleLanguage;
+    protected $audioLanguage;
     
     /**
     * Open a video or audio file and return it as an FFmpegMovie object. 
@@ -495,8 +506,14 @@ class FFmpegMovie implements Serializable {
     public function getAudioBitRate() {
         if ($this->audioBitRate === null) {
             $match = array();
-            preg_match(self::$REGEX_AUDIO_BITRATE, $this->output, $match);
-            $this->audioBitRate = (int) ((array_key_exists(1, $match)) ? ($match[1] * 1000) : 0);
+            preg_match_all(self::$REGEX_AUDIO_BITRATE, $this->output, $match);
+	    if (array_key_exists(1, $match))
+	    {
+		foreach($match[1] as $m)
+		{
+			$this->audioBitRate[] = (int) ($m * 1000);
+		}
+	    }
         }
         
         return $this->audioBitRate;
@@ -510,8 +527,14 @@ class FFmpegMovie implements Serializable {
     public function getAudioSampleRate() {
         if ($this->audioSampleRate === null) {
             $match = array();
-            preg_match(self::$REGEX_AUDIO_SAMPLE_RATE, $this->output, $match);
-            $this->audioSampleRate = (int) ((array_key_exists(1, $match)) ? $match[1] : 0);
+            preg_match_all(self::$REGEX_AUDIO_SAMPLE_RATE, $this->output, $match);
+	    if (array_key_exists(1, $match))
+	    {
+		foreach($match[1] as $m)
+		{
+			$this->audioSampleRate[] = (int) $m;
+		}
+	    }
         }
         
         return $this->audioSampleRate;
@@ -549,8 +572,14 @@ class FFmpegMovie implements Serializable {
     public function getAudioCodec() {
         if ($this->audioCodec === null) {
             $match = array();
-            preg_match(self::$REGEX_AUDIO_CODEC, $this->output, $match);
-            $this->audioCodec = (array_key_exists(1, $match)) ? trim($match[1]) : '';
+            preg_match_all(self::$REGEX_AUDIO_CODEC, $this->output, $match);
+	    if (array_key_exists(1, $match))
+	    {
+		foreach($match[1] as $m)
+		{
+			$this->audioCodec[] = trim($m);
+		}
+	    }
         }
         
         return $this->audioCodec;
@@ -564,26 +593,61 @@ class FFmpegMovie implements Serializable {
     public function getAudioChannels() {
         if ($this->audioChannels === null) {
             $match = array();
-            preg_match(self::$REGEX_AUDIO_CHANNELS, $this->output, $match);
+            preg_match_all(self::$REGEX_AUDIO_CHANNELS, $this->output, $match);
             if (array_key_exists(1, $match)) {
-                switch (trim($match[1])) {
-                    case 'mono':
-                        $this->audioChannels = 1; break;
-                    case 'stereo':
-                        $this->audioChannels = 2; break;
-                    case '5.1':
-                        $this->audioChannels = 6; break;
-                    case '5:1':
-                        $this->audioChannels = 6; break;
-                    default: 
-                        $this->audioChannels = (int) $match[1];
-                }                 
+		    foreach($match[1] as $m)
+		    {
+			switch (trim($m)) {
+			case 'mono':
+				$this->audioChannels[] = 1; break;
+			case 'stereo':
+				$this->audioChannels[] = 2; break;
+			case '5.1':
+				$this->audioChannels[] = 6; break;
+			case '5:1':
+				$this->audioChannels[] = 6; break;
+			default: 
+				$this->audioChannels[] = (int) $m;
+			}
+		    }
             } else {
-                $this->audioChannels = 0;
+                $this->audioChannels[] = 0;
             }
         }
         
         return $this->audioChannels;
+    }
+    
+    public function getAudioLanguage() {
+	if ($this->audioLanguage === null) {
+            $match = array();
+            preg_match_all(self::$REGEX_AUDIO_LANGUAGE, $this->output, $match);
+	    if (array_key_exists(1, $match))
+	    {
+		foreach($match[1] as $m)
+		{
+			$this->audioLanguage[] = trim($m);
+		}
+	    }
+        }
+        
+        return $this->audioLanguage;
+    }
+    
+    public function getSubtitleLanguage() {
+	if ($this->subtitleLanguage === null) {
+            $match = array();
+            preg_match_all(self::$REGEX_SUBTITLE_LANGUAGE, $this->output, $match);
+	    if (array_key_exists(1, $match))
+	    {
+		foreach($match[1] as $m)
+		{
+			$this->subtitleLanguage[] = trim($m);
+		}
+	    }
+        }
+        
+        return $this->subtitleLanguage;
     }
     
     /**
@@ -602,6 +666,15 @@ class FFmpegMovie implements Serializable {
     */
     public function hasVideo() {
         return (boolean) preg_match(self::$REGEX_HAS_VIDEO, $this->output);
+    }
+    
+    /**
+    * Return boolean value indicating whether the movie has an embedded subtitle.
+    *
+    * @return boolean 
+    */
+    public function hasSubtitle() {
+        return (boolean) preg_match(self::$REGEX_HAS_SUBTITLE, $this->output);
     }
     
     /**

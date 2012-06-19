@@ -192,8 +192,13 @@ class Model_Io_Xbmc_Movie extends Model_Io_Base
 			}
 			else
 			{
-				// The rest should be single attributes
-				$movie->{$key} = $val;
+				try {
+					// Handle filenameandpath
+					// The rest should be single attributes
+					$movie->{$key} = $val;
+				} catch(Exception $e) {
+					
+				}
 			}
 		}
 		$movie->save();

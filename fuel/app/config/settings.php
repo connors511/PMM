@@ -20,5 +20,8 @@ return array(
 	    'folder' => '$movie->file->folder()'.DS.'folder.$file->ext()',
 	    'nfo' => '$movie->file->folder()'.DS.'movie.nfo',
 	)
+    ),
+    'binaries' => array(
+	'ffmpeg' => 'ffmpeg'
     )
 );

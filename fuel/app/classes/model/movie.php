@@ -24,12 +24,16 @@ class Model_Movie extends \Orm\Model
 	    'file_id',
 	    'poster'
 	);
+	protected static $_has_one = array(
+	    'stream_video'
+	);
 	protected static $_has_many = array(
 	    'actors',
 	    'directors',
 	    'producers',
 	    'subtitles',
 	    'images',
+	    'stream_audios'
 	);
 	protected static $_belongs_to = array(
 	    'file',
@@ -45,6 +49,9 @@ class Model_Movie extends \Orm\Model
 	    'Orm\Observer_UpdatedAt' => array(
 		'events' => array('before_save'),
 		'mysql_timestamp' => false,
+	    ),
+	    'Observer_Streamdetails' => array(
+		'events' => array('before_insert')
 	    ),
 	);
 
@@ -92,7 +99,8 @@ class Model_Movie extends \Orm\Model
 		}
 		//echo $pattern . '<br>';
 		eval('$res = ' . $pattern . ';');
-		
+		Debug::dump($res);
+		die();
 		if (strpos($res, '/') === false)
 		{
 			// Only a file rename

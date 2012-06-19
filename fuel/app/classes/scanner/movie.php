@@ -251,6 +251,10 @@ class Scanner_Movie implements IScanner
 		{
 			// Or one folder with all movies?
 		}
+		if (!isset($movie))
+		{
+			echo $dir;
+		}
 		$movie->save();
 		self::parse_movie($movie, $new);
 	}
