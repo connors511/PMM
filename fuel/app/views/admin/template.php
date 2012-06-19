@@ -47,7 +47,12 @@
 					'fields',
 					'groups'
 				    );
-				    $dropdowns = array('people','files','scrapers');
+				    $tools = array(
+					'export',
+					'import',
+					'scrape'
+				    );
+				    $dropdowns = array('people','files','scrapers','tools');
 				    ?>
 
     				<li class="dropdown">
@@ -134,6 +139,26 @@
 
 						<li class="<?php echo Uri::segment(3) == $section_segment ? 'active' : '' ?>">
 						    <?php echo Html::anchor('admin/scraper/' . $section_segment, $section_title) ?>
+						</li>
+					    <?php endforeach; ?>
+    				    </ul>
+    				</li>
+				<li class="dropdown">
+    				    <a href="" class="dropdown-toggle" data-toggle="dropdown">Tools <b class="caret"></b></a>
+    				    <ul class="dropdown-menu">
+    					<li class="<?php echo (Uri::segment(2) == 'tools' and !Uri::segment(3)) ? 'active' : '' ?>">
+						<?php echo Html::anchor('admin/tools', 'Dashboard'); ?>
+    					</li>
+    					<li class="divider"></li>
+					    <?php foreach ($tools as $controller): ?>
+
+						<?php
+						$section_segment = basename($controller, '.php');
+						$section_title = Inflector::humanize($section_segment);
+						?>
+
+						<li class="<?php echo Uri::segment(3) == $section_segment ? 'active' : '' ?>">
+						    <?php echo Html::anchor('admin/tools/' . $section_segment, $section_title) ?>
 						</li>
 					    <?php endforeach; ?>
     				    </ul>
