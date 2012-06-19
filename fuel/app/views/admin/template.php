@@ -77,6 +77,7 @@
 						<?php echo Html::anchor('admin/files', 'Files'); ?>
     					</li>
     					<li class="divider"></li>
+					<li class="nav-header">Physical</li>
 					    <?php foreach ($files as $controller): ?>
 
 						<?php
@@ -88,6 +89,14 @@
 						    <?php echo Html::anchor('admin/' . $section_segment, $section_title) ?>
 						</li>
 					    <?php endforeach; ?>
+					<li class="divider"></li>
+					<li class="nav-header">Streams</li>
+					<li class="<?php echo Uri::segment(2).'/'.Uri::segment(3) == 'stream/video' ? 'active' : '' ?>">
+						<?php echo Html::anchor('admin/stream/video', 'Video') ?>
+					</li>
+					<li class="<?php echo Uri::segment(2).'/'.Uri::segment(3) == 'stream/audio' ? 'active' : '' ?>">
+						<?php echo Html::anchor('admin/stream/audio', 'Audio') ?>
+					</li>
     				    </ul>
     				</li>
 

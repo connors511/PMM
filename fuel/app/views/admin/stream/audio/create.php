@@ -1,4 +1,4 @@
-<h2>New Stream_audio</h2>
+<h2>New audio stream</h2>
 <br>
 
 <?php echo render('admin/stream/audio/_form'); ?>

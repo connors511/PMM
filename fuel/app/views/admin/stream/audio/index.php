@@ -1,4 +1,4 @@
-<h2>Listing Stream_audios</h2>
+<h2>Listing audio streams</h2>
 <br>
 <?php if ($stream_audios): ?>
 <table class="table table-striped table-bordered">
@@ -33,7 +33,7 @@
 </table>
 
 <?php else: ?>
-<p>No Stream_audios.</p>
+<p>No audio streams.</p>
 
 <?php endif; ?><p>
 	<?php echo Html::anchor('admin/stream/audio/create', 'Add new Stream audio', array('class' => 'btn btn-success')); ?>

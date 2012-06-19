@@ -1,4 +1,4 @@
-<h2>Editing Stream_audio</h2>
+<h2>Editing audio stream</h2>
 <br>
 
 <?php echo render('admin/stream/audio/_form'); ?>
