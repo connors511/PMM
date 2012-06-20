@@ -9,7 +9,8 @@ class Scanner_Movie implements IScanner
 	protected static $regex_subtitles_lang = '/\.(?P<lang>[a-z]{2})\.(srt|sub)$/';
 	protected static $valid_image_extensions = array('png', 'jpg', 'jpeg');
 	private $_source;
-	private $_inserts = array();
+	private $_inserts = array('new'=>0,'updated'=>0);
+	private $_force = false;
 
 	public function get_author()
 	{
@@ -39,8 +40,13 @@ class Scanner_Movie implements IScanner
 	public function get_and_reset_inserts()
 	{
 		$tmp = $this->_inserts;
-		$this->_inserts = array();
+		$this->_inserts = array('new'=>0,'updated'=>0);
 		return $tmp;
+	}
+
+	public function set_force($force)
+	{
+		$this->_force = $force;
 	}
 
 	public function scan()
@@ -256,7 +262,15 @@ class Scanner_Movie implements IScanner
 			echo $dir;
 		}
 		$movie->save();
-		self::parse_movie($movie, $new);
+		if ($new or $this->_force)
+		{
+			$this->_inserts['new']++;
+		}
+		else
+		{
+			$this->_inserts['updated']++;
+		}
+		self::parse_movie($movie, $new or $this->_force);
 	}
 
 	public static function parse_movie($movie, $new = true)

@@ -11,6 +11,9 @@ class Model_Source extends \Orm\Model
 	protected static $_belongs_to = array(
 	    'scraper_group'
 	);
+	protected static $_has_many = array(
+	    'files'
+	);
 
 	protected static $_observers = array(
 		'Orm\Observer_CreatedAt' => array(

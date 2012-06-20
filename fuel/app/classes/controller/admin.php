@@ -101,35 +101,6 @@ class Controller_Admin extends Controller_Base
 		$this->template->title = 'Dashboard';
 		$this->template->content = View::forge('admin/dashboard');
 	}
-
-	public function action_scan($id)
-	{
-		$path = Model_Source::find($id);
-
-		if ($path == null or $id == null)
-		{
-			Session::set_flash('error', 'Invalid path ID');
-			Response::redirect('admin');
-		}
-		
-		try
-		{
-			$scanner = new Scanner_Movie($path);
-			$scanner->scan();
-
-			$inserts = $scanner->get_and_reset_inserts();
-
-			$new = isset($inserts['new']) ? count($inserts['new']) : 0;
-			$updated = isset($inserts['updated']) ? count($inserts['updated']) : 0;
-			Session::set_flash('success', 'Scanned ' . ($new + $updated) . ' movies; '.$new.' was added and '.$updated.' was updated.');
-		} 
-		catch(MissingScraperGroupException $e)
-		{
-			Session::set_flash('error', $e->getMessage());
-		}
-
-		//Response::redirect('admin');
-	}
 	
 	public function action_rename($id)
 	{
