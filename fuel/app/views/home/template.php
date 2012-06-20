@@ -297,6 +297,7 @@ echo Asset::render('gamma');
 d = document.getElementById('movies');
 xx = Math.floor(screen.width / 203);
 d.style.width=(203 * xx)+"px";
+Gamma.Movies._urlBase = '<?php echo Uri::create('home/'); ?>';
 Gamma.Init();
 Gamma.Movies._page = <?php echo $dpage; ?>;
 </script>
