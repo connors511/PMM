@@ -1,0 +1,300 @@
+body {
+	background-color: #171717;
+	border: 0;
+	padding: 0;
+	margin: 0;
+	font-family: Tahoma, Sans-Serif;
+	font-weight: bold;
+}
+.orange {
+	color: #e29700;
+}
+#container {
+	padding: auto;
+}
+#movies {
+	margin: auto;
+}
+#menu {
+	height: 60px;
+	width: 100%;
+	border: 0;
+	border-top: 1px solid #262626;
+	position: fixed;
+	bottom: 0px;
+        z-index: 999;
+	padding: 0;
+	/* Fallback for web browsers that doesn't support RGBa */
+	background: rgb(0, 0, 0);
+	/* RGBa with 0.6 opacity */
+	background: rgba(0, 0, 0, 0.94);	
+	/* For IE 5.5 - 7*/
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#ef000000, endColorstr=#ef000000);
+	/* For IE 8*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#ef000000, endColorstr=#ef000000)";
+}
+#logo {
+	padding: 6px 20px;
+	margin: 0;
+	float: left;
+}
+.movie {
+	width: 185px;
+	height: 290px;
+	float: left;
+	margin: 9px;
+}
+.movie .title {
+	margin: 0 4px 4px 4px;
+	height: 20px;
+	overflow: hidden;
+}
+.movie .cover {
+	height: 265px;
+	border: 0;
+	padding: 0;
+}
+.movie .cover img {
+	height: 265px;
+	width: 185px;
+}
+.movie .bar {
+	height: 30px;
+	/* Fallback for web browsers that doesn't support RGBa */
+	background: rgb(0, 0, 0);
+	/* RGBa with 0.6 opacity */
+	background: rgba(0, 0, 0, 0.5);
+	/* For IE 5.5 - 7*/
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+	/* For IE 8*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+	color: #7f7f7f;
+	position: relative;
+	bottom: 30px;
+}
+.movie .bar .year {
+	line-height: 30px;
+	padding: 0;
+	margin: 0 10px;
+}
+.hd {
+	margin: 8px 10px 9px 0px;
+}
+/* HD logo */
+.format, .hd {
+    background: -moz-linear-gradient(100% 100% 90deg, #CCC, #393939);
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#CCC), to(#393939));
+    padding: 0px 2px;
+    font-size: 12px;
+    line-height: 13px;
+    color: #888;
+    font-weight: normal;
+}
+#title #hd, .hd, .format {
+    background:none repeat scroll 0 0 #666666;
+    color:black;
+    display:block;
+    float:right;
+    font-weight:bold;
+    margin-left:5px;
+    padding:0 2px;
+    position:relative;
+    text-shadow:0 1px 2px #999999;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+}
+#title #hd, .title .hd {
+    background: #666;
+    color: #000;
+    text-shadow: #999 0 1px 2px;
+    font-weight: bold;
+    padding: 0px 2px;
+    position: relative;
+    display: block;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    float: right;
+}
+.title .hd {
+    font-size: 12px;
+    line-height: 13px;
+}
+#title #hd {
+    top: 4px;
+    font-size: 13px;
+    line-height: 15px;
+}
+.hd {
+    background: -moz-linear-gradient(100% 100% 90deg, #D9D6D1, #4A5456) !important;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#D9D6D1), to(#4A5456)) !important;
+}
+.hd.full {
+    background: -moz-linear-gradient(100% 100% 90deg, #FEE893, #FACD36) !important;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FEE893), to(#FACD36)) !important;
+}
+.hd.sd {    
+	background: -moz-linear-gradient(100% 100% 90deg, #9db1cd, #354a68) !important;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#9db1cd), to(#354a68)) !important;
+}
+/* quick search */
+#quick_search {
+	height: 60px;
+	width: 100%;
+}
+#quick_search_form {
+	margin: auto;
+	width: 300px;
+	margin-top: 5px;
+}
+#quick_search_form input {
+	width: 100%;
+}
+input {
+	font-family: Tahoma, Sans-Serif;
+	text-align: center;
+	font-size: 7pt;
+	font-weight: bold;
+	height: 30px;
+	width: 180px;
+	color: #272727;
+	border: 1px solid #272727;
+	-webkit-border-radius: 15px; 
+	-moz-border-radius: 15px; 
+	border-radius: 15px;
+	margin: 10px 0px 5px 0px;
+	background-color: #080808;
+}
+input[type="text"] {
+	text-transform: uppercase;
+}
+/* advanced search */
+#advanced_search {
+	font-family: "Microsoft Yi Baiti", Tahoma, Sans-serif;
+	color: #FFFFFF;
+	font-weight: normal;
+	margin-left: 20px;
+	margin-right: 20px;
+	margin-bottom: 20px;
+        height: 240px;
+        width: 100%;
+        position: relative;
+        z-index: 3;
+}
+#advanced_search * {
+	font-family: inherit;
+	color: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+}
+#advanced_search table {
+	width: 100%;
+	text-transform: uppercase;
+}
+#advanced_search table tr {
+	vertical-align: top;
+}
+#advanced_search input {
+	width: auto;
+	height: auto;
+	margin: auto;
+}
+#advanced_search .label {
+	text-transform: capitalize;
+}
+#advanced_search input[type="text"] {
+	-webkit-border-radius: 3px; 
+	-moz-border-radius: 3px; 
+	border-radius: 3px;
+	text-transform: none;
+	color: #272626;
+	border: 1px solid #272626;
+	text-align: left;
+	padding: 3px;
+}
+
+/* tickbox */
+.ticbox {
+    width: 10px;
+    height: 10px;
+    background: url(http://battlelog-cdn.battlefield.com/public/serverguide/icon_checkbox.png?v=1628729) no-repeat;
+    position: absolute;
+    top: 4px;
+    left: 0;
+}
+.setting-none, .setting-include, .setting-exclude {
+    width: 85%;
+    line-height: 16px;
+    text-align: left;
+    float: left;
+    cursor: pointer;
+    position: relative;
+    clear: both;
+    margin: 0 8px 0px 0px;
+    display: block;
+}
+.setting-none span, .setting-include span, .setting-exclude span {
+    margin-left: 15px;
+}
+.setting-include:hover .ticbox {
+    background-position: 0 -10px;
+}
+.setting-none .ticbox {
+    background-position: 0 -20px;
+}
+.setting-include .ticbox {
+    background-position: 0 0;
+}
+.setting-exclude .ticbox {
+    background-position: -10px -10px;
+}
+.setting-exclude:hover .ticbox {
+    background-position: -10px -20px;
+}
+
+/* page break */
+#movies .bc-results {
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    clear: both;
+    text-align: center;
+    background: #0F0F0F url(../../assets/img/gradient-filters.gif) top repeat-x;
+    border: 1px solid #323232;
+    height: 35px;
+    margin: 9px;
+    font-size: 11px;
+    color: #333333;
+}
+#movies .bc-results .left {
+    padding: 5px 5px 5px 0;
+    vertical-align: middle;
+    margin:7px 0 0 10px;
+}
+#movies .bc-results a {
+    text-decoration: none;
+}
+#movies .bc-results a:hover {
+    text-decoration: underline;
+}
+.grey {
+    color: #686868 !important;
+}
+.white {
+    color: #ffffff !important;
+}
+.left {
+    float: left;
+}
+.right {
+    float: right;
+}
+#movies_space {
+    height: 70px;
+}
+
+#ruler {
+	visibility: hidden;
+	white-space: nowrap;
+	width: auto;
+}
