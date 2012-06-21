@@ -5,6 +5,7 @@ body {
 	margin: 0;
 	font-family: Tahoma, Sans-Serif;
 	font-weight: bold;
+	font-size: 16px;
 }
 .orange {
 	color: #e29700;
@@ -199,7 +200,7 @@ input[type="text"] {
 	height: auto;
 	margin: auto;
 }
-#advanced_search .label {
+#advanced_search .label_text {
 	text-transform: capitalize;
 }
 #advanced_search input[type="text"] {
@@ -297,4 +298,27 @@ input[type="text"] {
 	visibility: hidden;
 	white-space: nowrap;
 	width: auto;
+}
+
+/** Popovers **/
+.popover-content {
+	height: 240px;
+	font-weight: normal;
+	background-color: #333333;
+	color: #151515;
+}
+.popover-title {
+	font-size: 12px;
+	background-color: #222222;
+	border-bottom: 1px solid #3F3F3F;
+	color: #E29700;
+}
+.popover-inner {
+	background: rgba(127, 127, 127, 0.8);
+}
+.popover.right .arrow {
+	border-right: 5px solid #7F7F7F !important;
+}
+.popover.left .arrow {
+	border-left: 5px solid #7F7F7F !important;
 }

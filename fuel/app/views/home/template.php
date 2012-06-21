@@ -4,10 +4,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo $title; ?></title>
 <?php
+echo Asset::css('bootstrap.css');
+echo Asset::css('bootstrap-responsive.css');
 echo Asset::css('home.css');
-Asset::js(array('jquery.min.js', 'jquery.scrollTo-1.4.2-min.js','jquery.localscroll-1.2.7-min.js','jquery.lazyload.js'), array(), 'jquery', false);
+Asset::js(array('jquery-1.7.2.js', 'jquery.scrollTo-1.4.2-min.js','jquery.localscroll-1.2.7-min.js','jquery.lazyload.js','jquery.hoverIntent.js'), array(), 'jquery', false);
 Asset::js(array('misc.js','gamma/core.js','gamma/genrescroll.js','gamma/infscroll.js','gamma/movies.js','pjax.js'), array(), 'gamma', false);
 echo Asset::render('jquery');
+echo Asset::js('bootstrap.js');
 echo Asset::render('gamma');
 ?>
 </head>
@@ -37,19 +40,19 @@ echo Asset::render('gamma');
 							<td>
                                                                 <div class="setting-none">
                                                                         <div class="ticbox" target="s_imdb_rating"></div>
-                                                                        <span class="label">over</span>
+                                                                        <span class="label_text">over</span>
                                                                 </div>
 							</td>
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_imdb_rating"></div>
-                                                                        <span class="label">under</span>
+                                                                        <span class="label_text">under</span>
                                                                 </div>
 							</td>
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_imdb_rating"></div>
-                                                                        <span class="label">equal</span>
+                                                                        <span class="label_text">equal</span>
                                                                 </div>
 							</td>
 							<input type="hidden" id="s_imdb_rating" value="0" />
@@ -74,7 +77,7 @@ echo Asset::render('gamma');
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_resolution" id="s_resolution_1080p"></div>
-                                                                        <span class="label">1080p</span>
+                                                                        <span class="label_text">1080p</span>
                                                                 </div>
 							</td>
 						</tr>
@@ -82,7 +85,7 @@ echo Asset::render('gamma');
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_resolution" id="s_resolution_720p"></div>
-                                                                        <span class="label">720p</span>
+                                                                        <span class="label_text">720p</span>
                                                                 </div>
 							</td>
 						</tr>
@@ -90,7 +93,7 @@ echo Asset::render('gamma');
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_resolution" id="s_resolution_DVD"></div>
-                                                                        <span class="label">DVD</span>
+                                                                        <span class="label_text">DVD</span>
                                                                 </div>
 							</td>
 						</tr>
@@ -120,7 +123,7 @@ echo Asset::render('gamma');
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_same_movie"></div>
-                                                                        <span class="label">Same movie</span>
+                                                                        <span class="label_text">Same movie</span>
                                                                 </div>
 								<input type="hidden" id="s_same_movie" value="0" />
 							</td>
@@ -139,7 +142,7 @@ echo Asset::render('gamma');
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_released" id="s_released_<?php echo $y;?>"></div>
-                                                                        <span class="label"><?php echo $y; ?></span>
+                                                                        <span class="label_text"><?php echo $y; ?></span>
                                                                 </div>
 							</td>
 						</tr>
@@ -162,7 +165,7 @@ echo Asset::render('gamma');
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_genres" id="s_genres_<?php echo $genres[$i];?>"></div>
-                                                                        <span class="label"><?php echo $genres[$i]; ?></span>
+                                                                        <span class="label_text"><?php echo $genres[$i]; ?></span>
                                                                 </div>
 							</td>
 						<?php
@@ -184,7 +187,7 @@ echo Asset::render('gamma');
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_added" id="s_added_<?php echo $y;?>"></div>
-                                                                        <span class="label" value="<?php echo $i; ?>"><?php echo $y; ?></span>
+                                                                        <span class="label_text" value="<?php echo $i; ?>"><?php echo $y; ?></span>
                                                                 </div>
 							</td>
 						</tr>
@@ -204,13 +207,13 @@ echo Asset::render('gamma');
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_aspect" id="s_aspect_4:3"></div>
-                                                                        <span class="label">4:3</span>
+                                                                        <span class="label_text">4:3</span>
                                                                 </div>
 							</td>
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_aspect" id="s_aspect_1.85:1"></div>
-                                                                        <span class="label">1.85:1</span>
+                                                                        <span class="label_text">1.85:1</span>
                                                                 </div>
 							</td>
 						</tr>
@@ -218,13 +221,13 @@ echo Asset::render('gamma');
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_aspect" id="s_aspect_3:2"></div>
-                                                                        <span class="label">3:2</span>
+                                                                        <span class="label_text">3:2</span>
                                                                 </div>
 							</td>
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_aspect" id="s_aspect_2.39:1"></div>
-                                                                        <span class="label">2.39:1</span>
+                                                                        <span class="label_text">2.39:1</span>
                                                                 </div>
 							</td>
 						</tr>
@@ -232,7 +235,7 @@ echo Asset::render('gamma');
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_aspect" id="s_aspect_16:9"></div>
-                                                                        <span class="label">16:9</span>
+                                                                        <span class="label_text">16:9</span>
                                                                 </div>
 							</td>
 						</tr>
@@ -246,13 +249,13 @@ echo Asset::render('gamma');
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_audio" id="s_audio_mono"></div>
-                                                                        <span class="label">mono</span>
+                                                                        <span class="label_text">mono</span>
                                                                 </div>
 							</td>
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_audio" id="s_audio_stereo"></div>
-                                                                        <span class="label">stereo</span>
+                                                                        <span class="label_text">stereo</span>
                                                                 </div>
 							</td>
 						</tr>
@@ -260,13 +263,13 @@ echo Asset::render('gamma');
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_audio" id="s_audio_5.1"></div>
-                                                                        <span class="label">5.1</span>
+                                                                        <span class="label_text">5.1</span>
                                                                 </div>
 							</td>
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_audio" id="s_audio_7.1"></div>
-                                                                        <span class="label">7.1</span>
+                                                                        <span class="label_text">7.1</span>
                                                                 </div>
 							</td>
 						</tr>
@@ -274,13 +277,13 @@ echo Asset::render('gamma');
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_audio" id="s_audio_DTS"></div>
-                                                                        <span class="label">DTS</span>
+                                                                        <span class="label_text">DTS</span>
                                                                 </div>
 							</td>
 							<td>
 								<div class="setting-none">
                                                                         <div class="ticbox" target="s_audio" id="s_audio_DTS-MA"></div>
-                                                                        <span class="label">DTS-MA</span>
+                                                                        <span class="label_text">DTS-MA</span>
                                                                 </div>
 							</td>
 						</tr>
@@ -299,7 +302,7 @@ xx = Math.floor(screen.width / 203);
 d.style.width=(203 * xx)+"px";
 Gamma.Movies._urlBase = '<?php echo Uri::create('home/'); ?>';
 Gamma.Init();
-Gamma.Movies._page = <?php echo $dpage; ?>;
+Gamma.Movies._page = <?php echo \Pagination::$current_page; ?>;
 </script>
 </body>
 </html>

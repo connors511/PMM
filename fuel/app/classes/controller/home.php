@@ -7,12 +7,16 @@ class Controller_Home extends Controller_Base
 
 	public function before()
 	{
+		if (\Fuel\Core\Input::is_ajax())
+		{
+			$this->template = 'home/ajax';
+		}
 		parent::before();
 	}
 
 	public function action_index()
 	{
-		$this->set_pagination(Uri::create('home'), 2, Model_Movie::find()->count());
+		$this->set_pagination(Uri::create('home'), 2, Model_Movie::find()->count(), 50);
 		$movies = Model_Movie::find('all', array(
 			    'related' => array(
 				'stream_video'
@@ -22,8 +26,22 @@ class Controller_Home extends Controller_Base
 			));
 
 		$this->template->set_global('movies', $movies);
-		$this->template->set_global('dpage', 10);
+		$this->template->set_global('count', count($movies));
 		$this->template->title = 'Movies';
+		
+		if (Input::is_ajax())
+		{
+			$arr = array(
+			    'total' => \Pagination::total_items(),
+			    'perpage' => \Pagination::$per_page,
+			    'count' => count($movies),
+			    'movies' => $this->template->render()
+			);
+			
+			// Handle it better?
+			echo json_encode($arr);
+			die();
+		}
 	}
 
 }

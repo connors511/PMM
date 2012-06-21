@@ -3,7 +3,7 @@ Gamma.Movies = {
 	 Settings
 	 **********/ 
 	_range_limit: 5000, //Gamma.Settings.Movies.maxMovies,
-	_urlBase: 'http://82.211.220.249/serenity/public/movies/', //Gamma.Settings.Movies.urlBase,
+	_urlBase: '', //Gamma.Settings.Movies.urlBase,
 	/**********
 	 Computed variables
 	 **********/

@@ -1,0 +1,1 @@
+<?php echo render('home/overview', array('movies'=>$movies)); ?>
