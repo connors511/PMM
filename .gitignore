@@ -17,3 +17,4 @@ nbproject/
 /public/assets/img/cache/*
 *.cache
 /fuel/app/config/development/*
+/fuel/app/tmp/*
