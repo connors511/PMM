@@ -24,7 +24,7 @@ class Controller_Admin_Tools_Export extends Controller_Admin
 		{
 			\Session::set_flash('error', 'You must choose an export type!');
 		}
-		else if (Input::post('submit', false))
+		else if (in_array(Input::post('submit', false), array('fields', 'all')))
 		{
 			if (Input::post('export_type', false) == 'fields')
 			{
@@ -90,6 +90,55 @@ class Controller_Admin_Tools_Export extends Controller_Admin
 			File::create($path, $filename, $res);
 
 			Response::redirect('admin/tools/export/download/' . str_replace('.', '_', $filename));
+		}
+		else if (Input::post('export_type', false) == 'files')
+		{
+			$files = Input::post('export_files');
+			$paths = array();
+			foreach($files as $f)
+			{
+				foreach(Input::post($f.'_paths') as $p)
+				{
+					if (strlen($p) > 0)
+					{
+						$paths[$f] = $p;
+					}
+				}
+			}
+			// Figure out which movies should be exported..
+			$movies = Model_Movie::find('all', array(
+			    'where' => array(
+				array('id',1)
+			    )
+			));
+			foreach((array)$movies as $movie)
+			{
+				foreach($files as $f)
+				{
+					switch($f)
+					{
+						case "poster":
+							// TODO: The poster should be stored locally
+							
+							break;
+						case "folder":
+							break;
+						case "fanart":
+							break;
+						case "nfo":
+
+							break;
+						case "subtitles":
+							foreach($movie->subtitles as $sub)
+							{
+								$sub->file->export($paths[$f]);
+							}
+							break;
+						default:
+							break;
+					}
+				}
+			}
 		}
 
 		$this->template->title = "Export";

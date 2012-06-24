@@ -72,6 +72,21 @@ class Model_File extends \Orm\Model
 	{
 		return pathinfo($this->path, PATHINFO_EXTENSION);
 	}
+	
+	public function get_movie()
+	{
+		if ($this->movie != null)
+		{
+			return $this->movie;
+		} else if ($this->image != null)
+		{
+			return $this->image->movie;
+		} else if ($this->subtitle != null)
+		{
+			return $this->subtitle->movie;
+		}
+		return null;
+	}
 
 	/**
 	 * Copies the image to another location
@@ -91,6 +106,7 @@ class Model_File extends \Orm\Model
 		foreach ($paths as $path)
 		{
 			$new_path = preg_replace('#\$((\w|->|_|\((true|false)*\))+)#', "'.\$this->$1.'", $path);
+			$new_path = str_replace('$this->movie->','$this->get_movie()->',$new_path);
 			$new_path .= "'";
 			if (substr($new_path, 0, 2) == "'.")
 			{
@@ -100,22 +116,31 @@ class Model_File extends \Orm\Model
 			{
 				$new_path = "'" . $new_path;
 			}
-			//echo $pattern . '<br>';
+			//echo $new_path . '<br>';
 			eval('$new_path = ' . $new_path . ';');
 
-			if (copy($this->file->path, $new_path))
+			/*
+			 * TODO:
+			 * Consider multiple subtitles. Prepend language
+			 * Consider fanarts. Perhaps it should export to a folder,
+			 * or a file that gets a number prepended?
+			 */
+			if (copy($this->path, $new_path))
 			{
-				$model = Model_Source::find('first', array(
+				/*$model = Model_Source::find('first', array(
 					    'where' => array(
-						array(
-						    \DB::expr("LOCATE(path, {$new_path}) = 0")
-						)
+						array("LOCATE(path, {$new_path})",'=','0')
 					    ),
 					    'order_by' => array(
-						DB::expr("(LENGTH(path) - LENGTH(REPLACE(path, '{DS}', '')))") => 'desc'
+						"(LENGTH(path) - LENGTH(REPLACE(path, '{DS}', '')))" => 'desc'
 					    )
-					));
+					));*/
+				$model = Model_Source::query()
+					->where(DB::expr("LOCATE(path, '{$new_path}')"),'=','0')
+					->order_by(DB::expr("(LENGTH(path) - LENGTH(REPLACE(path, '{DS}', '')))"), 'desc')
+					->get_one();
 				// Exported outside sources
+				// TODO: Seems to skip for everything. The above query doesnt seem to find the correct path
 				if ($model == null)
 				{
 					continue;
@@ -136,7 +161,9 @@ class Model_File extends \Orm\Model
 				}
 				else if ($this->subtitle != null)
 				{
-					$file->subtitle = $this->subtitle;
+					$file->subtitle = new Model_Subtitle();
+					$file->subtitle->language = $this->subtitle->language;
+					$file->subtitle->movie_id = $this->subtitle->movie_id;
 				}
 				$file->save();
 			}

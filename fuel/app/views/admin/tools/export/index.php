@@ -80,6 +80,67 @@ echo Form::open();
 		<div id="select_files" class="select_group">
 			<p>Not implemented.</p>
 			<p>Should choose NFO, Fanart, Subtitles with save locations</p>
+			<div class="row">
+				<?php
+				$fields = array(
+					'poster' => 'Poster',
+					'folder' => 'Folder',
+					'fanart' => 'Fanart',
+					'nfo' => 'NFO',
+					'subtitles' => 'Subtitles',
+				);
+				$i = 0;
+				$switch = ceil(count($fields) / 2);
+				foreach($fields as $k => $v):
+					if ($i % $switch == 0) {
+						echo "<div class='span3'>";
+					}
+					$i++;
+				?>
+					<label class="checkbox">
+						<input type="checkbox" name="export_files[]" value="<?php echo $k; ?>" class="by_file"> <?php echo $v; ?>
+					</label>
+				<?php
+				if ($i % $switch == 0 or $i == count($fields)) {
+					echo "</div>";
+				}
+				endforeach;
+				?>
+			</div>
+			<hr>
+			<div class="row">
+				<?php foreach($fields as $k => $v): ?>
+				<div id="file_type_<?php echo $k; ?>" class="file_type span6">
+					<h3><?php echo $v; ?> paths</h3>
+					<?php 
+					foreach((array)\Config::get('settings.export.save_locations.'.$k, array()) as $val)
+					{
+						echo Form::input($k.'_paths[]', $val, array('class' => 'span6 file_path'));
+					}
+					?>
+					<a href="#" class="btn btn-success pull-right add_file_type" id="add_file_<?php echo $k; ?>" data-type="<?php echo $k; ?>"><i class="icon-plus"></i>Add path</a>
+				</div>
+				<?php
+				endforeach; 
+				?>
+			</div>
+			<script>
+				$(document).ready(function() {
+					$('.file_type').hide();
+					
+					$('.by_file').change(function() {
+						var val = $(this).val();
+						
+						$('#file_type_' + val).toggle();
+					});
+					
+					$('.add_file_type').click(function() {
+						var html = '<input type="text" name="'+ $(this).attr('data-type');
+						html += '_paths[]" value="" class="file_path span6">';
+						$(this).before(html);
+					});
+				});
+			</script>
 		</div>
 	</div>
 </div>
@@ -109,7 +170,6 @@ echo Form::open();
 			endforeach;
 			?>
 		</div>
-		
 	</div>
 	<div class="span6">
 		<h2>Toggle by year</h2>
