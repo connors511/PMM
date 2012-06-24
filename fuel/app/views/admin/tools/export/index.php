@@ -23,7 +23,7 @@ echo Form::open();
 			<?php
 			$files = File::read_dir(APPPATH.'views'.DS.'templates'.DS.'export', 0);
 			echo Form::select('export_template', null, $files, array('class' => 'span6'));
-			echo Form::label('Or create your own', 'export_template_user');
+			echo Form::label('Or create your own (using PHP)', 'export_template_user');
 			echo Form::textarea('export_template_user', '', array('rows' => 6, 'cols' => 8, 'class'=>'span6'));
 			
 			$exts = array(
