@@ -50,7 +50,8 @@
 				    $tools = array(
 					'export',
 					'import',
-					'scrape'
+					'scrape',
+					'settings'
 				    );
 				    $dropdowns = array('people','files','scrapers','tools');
 				    ?>

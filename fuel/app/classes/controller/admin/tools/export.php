@@ -18,8 +18,11 @@ class Controller_Admin_Tools_Export extends Controller_Admin {
 		
 		$data['movies'] = Model_Movie::find('all');
 		$data['count'] = Model_Movie::find()->count();
-		
-		if (Input::post('submit', false) and Input::post('movie', false))
+		if (Input::post('submit', false) and Input::post('export_type','choose') == 'choose')
+		{
+			\Session::set_flash('error','You must choose an export type!');
+		}
+		else if (Input::post('submit', false) and Input::post('movie', false))
 		{
 			ob_start();
 			$movies = Input::post('movie');

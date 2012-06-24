@@ -3,7 +3,7 @@ echo Form::open();
 ?>
 
 <div class="row">
-	<div class="span12">
+	<div class="span6">
 		<h2>Export type</h2>
 		<p>Each export type has unique options. Select a type, then options before exporting</p>
 		<?php
@@ -15,50 +15,64 @@ echo Form::open();
 		    ),
 		    'files' => 'Files'
 		);
-		echo Form::select('export_type', 'choose', $selects);
+		echo Form::select('export_type', 'choose', $selects, array('class' => 'span6'));
 		?>
-		<div id="select_fields">
-			<p>Export a list with movies that are missing the following fields</p>
-			<?php
-			$fields = array(
-			'plot' => 'Plot',
-			'plotsummary' => 'Plot summary',
-			'tagline' => 'Tagline',
-			'rating' => 'Rating',
-			'votes' => 'Votes',
-			'released' => 'Released',
-			'runtime' => 'Runtime',
-			'contentrating' => 'Content rating',
-			'originaltitle' => 'Original title',
-			'thumb' => 'Thumb',
-			'fanart' => 'Fanart',
-			'trailer_url' => 'Trailer url',
-			'poster' => 'Poster'
-			);
-			foreach($fields as $k => $v):
-			?>
-				<label class="checkbox">
-					<input type="checkbox" name="missing_fields[]" value="<?php echo $k; ?>" class="by_field"> <?php echo $v; ?>
-				</label>
-			<?php
-			endforeach;
-			?>
-		</div>
+		<hr>
 		<div id="export_template">
 			<p>Choose an export template</p>
 			<?php
 			$files = File::read_dir(APPPATH.'views'.DS.'templates'.DS.'export', 0);
-			echo Form::select('export_template', null, $files);
+			echo Form::select('export_template', null, $files, array('class' => 'span6'));
 			echo Form::label('Or create your own', 'export_template_user');
-			echo Form::textarea('export_template_user', '', array('rows' => 6, 'cols' => 8));
+			echo Form::textarea('export_template_user', '', array('rows' => 6, 'cols' => 8, 'class'=>'span6'));
 			
 			$exts = array(
 			    'xml' => 'XML',
 			    'html' => 'HTML'
 			);
 			echo Form::label('Choose file extension', 'export_file_ext');
-			echo Form::select('export_file_ext', null, $exts);
+			echo Form::select('export_file_ext', null, $exts, array('class' => 'span6'));
 			?>
+		</div>
+	</div>
+	<div class="span6">
+		<div id="select_fields" class="select_group">
+			<p>Export a list with movies that are missing the following fields</p>
+			<div class="row">
+				<?php
+				$fields = array(
+					'plot' => 'Plot',
+					'plotsummary' => 'Plot summary',
+					'tagline' => 'Tagline',
+					'rating' => 'Rating',
+					'votes' => 'Votes',
+					'released' => 'Released',
+					'runtime' => 'Runtime',
+					'contentrating' => 'Content rating',
+					'originaltitle' => 'Original title',
+					'thumb' => 'Thumb',
+					'fanart' => 'Fanart',
+					'trailer_url' => 'Trailer url',
+					'poster' => 'Poster'
+				);
+				$i = 0;
+				$switch = ceil(count($fields) / 2);
+				foreach($fields as $k => $v):
+					if ($i % $switch == 0) {
+						echo "<div class='span3'>";
+					}
+					$i++;
+				?>
+					<label class="checkbox">
+						<input type="checkbox" name="missing_fields[]" value="<?php echo $k; ?>" class="by_field"> <?php echo $v; ?>
+					</label>
+				<?php
+				if ($i % $switch == 0 or $i == count($fields)) {
+					echo "</div>";
+				}
+				endforeach;
+				?>
+			</div>
 		</div>
 	</div>
 </div>
@@ -225,6 +239,12 @@ if (isset($result))
 			}
 			
 			$boxes.toggleCheckbox();
+		});
+		
+		$('.select_group').hide();
+		$('#form_export_type').change(function() {
+			$('.select_group').hide();
+			$('#select_' + $(this).val()).show();
 		});
 	});
 </script>
