@@ -7,7 +7,7 @@ class Controller_Home extends Controller_Base
 
 	public function before()
 	{
-		if (\Fuel\Core\Input::is_ajax())
+		if (\Fuel\Core\Input::is_ajax() && Uri::segment(2) != 'watch')
 		{
 			$this->template = 'home/ajax';
 		}
@@ -43,5 +43,28 @@ class Controller_Home extends Controller_Base
 			die();
 		}
 	}
-
+	
+	public function action_watch($id)
+	{
+		$movie = Model_Movie::find($id);
+		if ($movie == null)
+		{
+			throw new \Fuel\Core\HttpNotFoundException();
+		}
+		
+		return View::forge('home/watch', array('movie' => $movie));
+	}
+	
+	public function action_stream($id)
+	{
+		$movie = Model_Movie::find($id);
+		if ($movie == null)
+		{
+			throw new \Fuel\Core\HttpNotFoundException();
+		}
+		
+		$stream = new Vstream();
+		$stream->stream($movie->file->path);
+		die();
+	}
 }

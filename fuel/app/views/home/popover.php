@@ -1,6 +1,7 @@
 <?php
 // TODO: Depend on user preferences?
 ?>
+<b>ID:</b> <?php echo $movie->id; ?><br />
 <b>Year:</b> <?php echo $movie->released; ?><br />
 <b>Tagline:</b> <?php echo $movie->tagline; ?><br />
 <b>Runtime:</b> <?php echo $movie->runtime; ?><br />

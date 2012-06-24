@@ -1,4 +1,4 @@
-<div class="movie" rel="popover" data-content-body="<?php include('popover.php'); ?>" data-original-title="<?php echo $movie->title; ?>">
+<div class="movie" rel="popover" data-content-body="<?php include('popover.php'); ?>" data-original-title="<?php echo $movie->title; ?>" data-id="<?php echo $movie->id; ?>">
         <div class="title orange"><?php echo $movie->title; ?></div>
         <div class="cover">
                 <img src="<?php echo $movie->poster == "" ? "http://placehold.it/185x265" : str_replace('w500','w185',$movie->poster); ?>" />
