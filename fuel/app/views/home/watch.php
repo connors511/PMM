@@ -161,7 +161,7 @@ a
 	text-decoration: none;
 	margin: 0 0 4px 0;
 	color: #000;
-	background: transparent url(../assets/img/buttons.png) 0 0 no-repeat;
+	background: transparent url(<?php echo Asset::get_file('buttons.png','img'); ?>) 0 0 no-repeat;
 	font-weight: bold;
 }
 
