@@ -27,13 +27,16 @@ echo Form::open();
 			echo Form::textarea('export_template_user', '', array('rows' => 6, 'cols' => 8, 'class'=>'span6'));
 			
 			$exts = array(
+			    'html' => 'HTML',
 			    'xml' => 'XML',
-			    'html' => 'HTML'
 			);
 			echo Form::label('Choose file extension', 'export_file_ext');
 			echo Form::select('export_file_ext', null, $exts, array('class' => 'span6'));
 			?>
 		</div>
+		<hr>
+		<h2>Export</h2>
+		<?php echo Form::submit('submit', 'Export', array('class' => 'btn btn-primary')); ?>
 	</div>
 	<div class="span6">
 		<div id="select_fields" class="select_group">
@@ -74,20 +77,10 @@ echo Form::open();
 				?>
 			</div>
 		</div>
-	</div>
-</div>
-<hr>
-<div class="row">
-	<div class="span8">
-		<h2>Options</h2>
-		<p>Select save locations or keep config</p>
-		<p>Select files to export; posters, covers, nfo, fanart, subtitles</p>
-		<p>Export files or create a list of movies from a template</p>
-		<p>Export list based on criterias such as rating</p>
-	</div>
-	<div class="span4">
-		<h2>Export</h2>
-		<?php echo Form::submit('submit', 'Export', array('class' => 'btn btn-primary')); ?>
+		<div id="select_files" class="select_group">
+			<p>Not implemented.</p>
+			<p>Should choose NFO, Fanart, Subtitles with save locations</p>
+		</div>
 	</div>
 </div>
 <hr>
