@@ -2,7 +2,7 @@
 
 return array(
     'jobs' => array(
-	'use' => false,
+	'use' => true,
     ),
     'scanner' => array(
 	'exists' => array(
@@ -10,7 +10,7 @@ return array(
 	)
     ),
     'export' => array(
-	'save_location' => array(
+	'save_locations' => array(
 	    'subtitles' => '$movie->file->folder()'.DS.'$movie->file->name(false).srt',
 	    'fanart' => '$movie->file->folder()'.DS.'fanart'.DS.'$file->name()',
 	    'poster' => array(
