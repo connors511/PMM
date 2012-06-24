@@ -41,11 +41,15 @@ Other features include:
 * Define which scraper retrieves which fields with `scraper groups`
 * Define which scraper groups are used for which folders with `sources`
 * Continue browsing after starting a scrape using `background workers`
-* Export validated nfo files
+* Export validated nfo files (UI almost finished)
+* Stream movies (currently working in FF and Chrome with VLC installed)
+* Different save locations for each type of file (fanart, thumb, subtitle, nfo, cover)
+* Basic frontend for cover view
+* Export movie lists; currently supporting all movies or movies missing chosen fields
 
 #Planned features
-* Different save locations for each type of file (fanart, thumb, movie, subtitle, nfo)
 * Renaming of files
 * Support for TV shows
 * Subtitles downloader
-* Streaming from nice frontend
+* People scraper (for bio, portrait)
+* Fanart scraper
