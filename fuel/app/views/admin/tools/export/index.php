@@ -1,3 +1,82 @@
+<?php
+echo Form::open();
+?>
+
+<div class="row">
+	<div class="span12">
+		<h2>Export type</h2>
+		<p>Each export type has unique options. Select a type, then options before exporting</p>
+		<?php
+		$selects = array(
+		    'choose' => 'Choose type',
+		    'Lists' => array(
+			'fields' => 'Missing field(s)',
+			'all' => 'All movies',
+		    ),
+		    'files' => 'Files'
+		);
+		echo Form::select('export_type', 'choose', $selects);
+		?>
+		<div id="select_fields">
+			<p>Export a list with movies that are missing the following fields</p>
+			<?php
+			$fields = array(
+			'plot' => 'Plot',
+			'plotsummary' => 'Plot summary',
+			'tagline' => 'Tagline',
+			'rating' => 'Rating',
+			'votes' => 'Votes',
+			'released' => 'Released',
+			'runtime' => 'Runtime',
+			'contentrating' => 'Content rating',
+			'originaltitle' => 'Original title',
+			'thumb' => 'Thumb',
+			'fanart' => 'Fanart',
+			'trailer_url' => 'Trailer url',
+			'poster' => 'Poster'
+			);
+			foreach($fields as $k => $v):
+			?>
+				<label class="checkbox">
+					<input type="checkbox" name="missing_fields[]" value="<?php echo $k; ?>" class="by_field"> <?php echo $v; ?>
+				</label>
+			<?php
+			endforeach;
+			?>
+		</div>
+		<div id="export_template">
+			<p>Choose an export template</p>
+			<?php
+			$files = File::read_dir(APPPATH.'views'.DS.'templates'.DS.'export', 0);
+			echo Form::select('export_template', null, $files);
+			echo Form::label('Or create your own', 'export_template_user');
+			echo Form::textarea('export_template_user', '', array('rows' => 6, 'cols' => 8));
+			
+			$exts = array(
+			    'xml' => 'XML',
+			    'html' => 'HTML'
+			);
+			echo Form::label('Choose file extension', 'export_file_ext');
+			echo Form::select('export_file_ext', null, $exts);
+			?>
+		</div>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="span8">
+		<h2>Options</h2>
+		<p>Select save locations or keep config</p>
+		<p>Select files to export; posters, covers, nfo, fanart, subtitles</p>
+		<p>Export files or create a list of movies from a template</p>
+		<p>Export list based on criterias such as rating</p>
+	</div>
+	<div class="span4">
+		<h2>Export</h2>
+		<?php echo Form::submit('submit', 'Export', array('class' => 'btn btn-primary')); ?>
+	</div>
+</div>
+<hr>
 <div class="row">
 	<div class="span6">
 		<h2>Toggle by first letter</h2>
@@ -86,6 +165,7 @@
 	?>
 	<label class="checkbox">
 		<input type="checkbox" class="cb_movie" 
+		       name="movie[]"
 		       value="<?php echo $m->id; ?>" 
 		       year="<?php echo $released; ?>"
 		       letter="<?php echo $letter; ?>"> <?php echo "{$m->title} ({$m->released})"; ?>
@@ -97,20 +177,14 @@
 	endforeach;
 	?>
 </div>
-<hr>
-<div class="row">
-	<div class="span8">
-		<h2>Options</h2>
-		<p>Select save locations or keep config</p>
-		<p>Select files to export; posters, covers, nfo, fanart, subtitles</p>
-		<p>Export files or create a list of movies from a template</p>
-		<p>Export list based on criterias such as rating</p>
-	</div>
-	<div class="span4">
-		<h2>Export</h2>
-		<span class="btn btn-success">Export</span>
-	</div>
-</div>
+<?php
+echo Form::close();
+if (isset($result))
+{
+	echo '<hr>';
+	echo $result;
+}
+?>
 <script type="text/javascript">
 	$.fn.toggleCheckbox = function() {
 		this.prop('checked', !this.prop('checked'));
