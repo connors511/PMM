@@ -124,6 +124,10 @@ class Controller_Admin_Tools_Export extends Controller_Admin
 						case "folder":
 							break;
 						case "fanart":
+							foreach($movie->images as $img)
+							{
+								$img->file->export($paths[$f]);
+							}
 							break;
 						case "nfo":
 

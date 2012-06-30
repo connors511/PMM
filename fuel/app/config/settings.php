@@ -12,12 +12,12 @@ return array(
     'export' => array(
 	'save_locations' => array(
 	    'subtitles' => '$movie->file->folder()'.DS.'$movie->file->name(false).srt',
-	    'fanart' => '$movie->file->folder()'.DS.'fanart'.DS.'$file->name()',
+	    'fanart' => '$movie->file->folder()'.DS.'fanart'.DS.'$name()',
 	    'poster' => array(
-		'$movie->file->folder()'.DS.'poster.$file->ext()',
-		'$movie->file->folder()'.DS.'$movie->file->name(false).$file->ext()'
+		'$movie->file->folder()'.DS.'poster.$ext()',
+		'$movie->file->folder()'.DS.'$movie->file->name(false).$ext()'
 	    ),
-	    'folder' => '$movie->file->folder()'.DS.'folder.$file->ext()',
+	    'folder' => '$movie->file->folder()'.DS.'folder.$ext()',
 	    'nfo' => '$movie->file->folder()'.DS.'movie.nfo',
 	)
     ),
