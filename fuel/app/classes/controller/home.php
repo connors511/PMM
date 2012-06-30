@@ -87,6 +87,17 @@ class Controller_Home extends Controller_Base
 
 		return View::forge('home/watch', array('movie' => $movie));
 	}
+	
+	public function action_play($id)
+	{
+		$movie = Model_Movie::find($id);
+		if ($movie == null)
+		{
+			throw new \Fuel\Core\HttpNotFoundException();
+		}
+
+		return View::forge('home/play', array('id' => $movie->id));
+	}
 
 	public function action_stream($id)
 	{

@@ -323,7 +323,7 @@ a
 	    </div>
         </div>
         <div id="play_button"> 
-            <a href="<?php echo Uri::create('home/stream/'.$movie->id); ?>" id="play_movie">Play!</a> 
+            <a href="<?php echo Uri::create('home/play/'.$movie->id); ?>" id="play_movie">Play!</a> 
             <a href="/" id="view_comments">Comments</a> 
         </div> 
         </div> <!-- movie -->
