@@ -90,22 +90,6 @@
 			</div>
 		</div>
 		<div class="clearfix">
-			<?php echo Form::label('Thumb', 'thumb'); ?>
-
-			<div class="input">
-				<?php echo Form::input('thumb', Input::post('thumb', isset($movie) ? $movie->thumb : ''), array('class' => 'span6')); ?>
-
-			</div>
-		</div>
-		<div class="clearfix">
-			<?php echo Form::label('Fanart', 'fanart'); ?>
-
-			<div class="input">
-				<?php echo Form::input('fanart', Input::post('fanart', isset($movie) ? $movie->fanart : ''), array('class' => 'span6')); ?>
-
-			</div>
-		</div>
-		<div class="clearfix">
 			<?php echo Form::label('Trailer url', 'trailer_url'); ?>
 
 			<div class="input">

@@ -34,12 +34,6 @@
 	<strong>Originaltitle:</strong>
 	<?php echo $movie->originaltitle; ?></p>
 <p>
-	<strong>Thumb:</strong>
-	<?php echo $movie->thumb; ?></p>
-<p>
-	<strong>Fanart:</strong>
-	<?php echo $movie->fanart; ?></p>
-<p>
 	<strong>Trailer url:</strong>
 	<?php echo $movie->trailer_url; ?></p>
 <p>

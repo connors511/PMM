@@ -16,8 +16,6 @@ class Model_Movie extends \Orm\Model
 	    'runtime_file',
 	    'contentrating',
 	    'originaltitle',
-	    'thumb',
-	    'fanart',
 	    'trailer_url',
 	    'created_at',
 	    'updated_at',
@@ -69,8 +67,6 @@ class Model_Movie extends \Orm\Model
 		$val->add_field('runtime_file', 'Runtime File', 'required|valid_string[numeric]');
 		$val->add_field('contentrating', 'Contentrating', 'required|max_length[255]');
 		$val->add_field('originaltitle', 'Originaltitle', 'required|max_length[255]');
-		$val->add_field('thumb', 'Thumb', 'required|valid_string[numeric]');
-		$val->add_field('fanart', 'Fanart', 'required|valid_string[numeric]');
 		$val->add_field('poster', 'Poster', 'valid_string');
 		$val->add_field('file_id', 'File', 'required|valid_string[numeric]');
 		//$val->add_field('trailer_url', 'Trailer Url', 'required');

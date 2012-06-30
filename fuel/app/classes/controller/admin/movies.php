@@ -45,8 +45,6 @@ class Controller_Admin_Movies extends Controller_Admin
 					    'runtime_file' => Input::post('runtime_file'),
 					    'contentrating' => Input::post('contentrating'),
 					    'originaltitle' => Input::post('originaltitle'),
-					    'thumb' => Input::post('thumb'),
-					    'fanart' => Input::post('fanart'),
 					    'trailer_url' => Input::post('trailer_url'),
 					    'file_id' => Input::post('file_id'),
 					));
@@ -90,8 +88,6 @@ class Controller_Admin_Movies extends Controller_Admin
 			$movie->runtime_file = Input::post('runtime_file');
 			$movie->contentrating = Input::post('contentrating');
 			$movie->originaltitle = Input::post('originaltitle');
-			$movie->thumb = Input::post('thumb');
-			$movie->fanart = Input::post('fanart');
 			$movie->trailer_url = Input::post('trailer_url');
 			$movie->file_id = Input::post('file_id');
 
@@ -121,8 +117,6 @@ class Controller_Admin_Movies extends Controller_Admin
 				$movie->runtime_file = $val->validated('runtime_file');
 				$movie->contentrating = $val->validated('contentrating');
 				$movie->originaltitle = $val->validated('originaltitle');
-				$movie->thumb = $val->validated('thumb');
-				$movie->fanart = $val->validated('fanart');
 				$movie->trailer_url = $val->validated('trailer_url');
 				$movie->file_id = $val->validated('file_id');
 
