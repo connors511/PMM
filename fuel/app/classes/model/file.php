@@ -100,7 +100,7 @@ class Model_File extends \Orm\Model
 		$paths = \Config::get('settings.export.save_locations.' . $path, $path);
 		if (!is_array($path))
 		{
-			$paths = array($path);
+			$paths = (array)$path;
 		}
 
 		foreach ($paths as $path)
@@ -119,22 +119,28 @@ class Model_File extends \Orm\Model
 			//echo $new_path . '<br>';
 			eval('$new_path = ' . $new_path . ';');
 
-			/*
-			 * TODO:
-			 * Consider multiple subtitles. Prepend language
-			 * Consider fanarts. Perhaps it should export to a folder,
-			 * or a file that gets a number prepended?
-			 */
+			
+			if ($this->image != null)
+			{
+				// Start at _1 for fanart
+				$ext = strrchr($new_path, '.');
+				$new_path = Str::increment(str_replace($ext, '', $new_path)) . $ext;
+			} else if ($this->subtitle != null and $this->subtitle->language != null)
+			{
+				// Append language if it exists
+				$ext = strrchr($new_path, '.');
+				$new_path = str_replace($ext, '.'.$this->subtitle->language.$ext, $new_path);
+			}
+			if (file_exists($new_path))
+			{
+				while(file_exists($new_path))
+				{
+					$ext = strrchr($new_path, '.');
+					$new_path = Str::increment(str_replace($ext, '', $new_path)) . $ext;
+				}
+			}
 			if (copy($this->path, $new_path))
 			{
-				/*$model = Model_Source::find('first', array(
-					    'where' => array(
-						array("LOCATE(path, {$new_path})",'=','0')
-					    ),
-					    'order_by' => array(
-						"(LENGTH(path) - LENGTH(REPLACE(path, '{DS}', '')))" => 'desc'
-					    )
-					));*/
 				$model = Model_Source::query()
 					->where(DB::expr("LOCATE(path, '{$new_path}')"),'=','0')
 					->order_by(DB::expr("(LENGTH(path) - LENGTH(REPLACE(path, '{DS}', '')))"), 'desc')
@@ -153,7 +159,10 @@ class Model_File extends \Orm\Model
 				// Figure out what we're exporting
 				if ($this->image != null)
 				{
-					$file->image = $this->image;
+					$file->image = new Model_Image();
+					$file->image->height = $this->image->height;
+					$file->image->width = $this->image->width;
+					$file->image->movie_id = $this->image->movie_id;
 				}
 				else if ($this->movie != null)
 				{
