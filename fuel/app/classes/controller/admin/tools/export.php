@@ -106,6 +106,7 @@ class Controller_Admin_Tools_Export extends Controller_Admin
 				}
 			}
 			// Figure out which movies should be exported..
+			// TODO: Fix hardcoded
 			$movies = Model_Movie::find('all', array(
 			    'where' => array(
 				array('id',1)
@@ -130,7 +131,7 @@ class Controller_Admin_Tools_Export extends Controller_Admin
 							}
 							break;
 						case "nfo":
-
+							$movie->save_nfo($paths[$f]);
 							break;
 						case "subtitles":
 							foreach($movie->subtitles as $sub)

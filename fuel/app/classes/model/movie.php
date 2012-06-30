@@ -132,5 +132,13 @@ class Model_Movie extends \Orm\Model
 		}
 		die();
 	}
+	
+	public function save_nfo($path)
+	{
+		$path = $this->file->resolve_path($path);
+		$folder = dirname($path);
+		$file = basename($path);
+		Model_Io_Factory::export_nfo($this, $folder, $file);
+	}
 
 }

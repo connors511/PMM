@@ -87,6 +87,25 @@ class Model_File extends \Orm\Model
 		}
 		return null;
 	}
+	
+	public function resolve_path($pattern)
+	{
+		$new_path = preg_replace('#\$((\w|->|_|\((true|false)*\))+)#', "'.\$this->$1.'", $pattern);
+		$new_path = str_replace('$this->movie->','$this->get_movie()->',$new_path);
+		$new_path .= "'";
+		if (substr($new_path, 0, 2) == "'.")
+		{
+			$new_path = substr($new_path, 2);
+		}
+		else
+		{
+			$new_path = "'" . $new_path;
+		}
+		//echo $new_path . '<br>';
+		eval('$new_path = ' . $new_path . ';');
+		
+		return $new_path;
+	}
 
 	/**
 	 * Copies the image to another location
@@ -105,20 +124,7 @@ class Model_File extends \Orm\Model
 
 		foreach ($paths as $path)
 		{
-			$new_path = preg_replace('#\$((\w|->|_|\((true|false)*\))+)#', "'.\$this->$1.'", $path);
-			$new_path = str_replace('$this->movie->','$this->get_movie()->',$new_path);
-			$new_path .= "'";
-			if (substr($new_path, 0, 2) == "'.")
-			{
-				$new_path = substr($new_path, 2);
-			}
-			else
-			{
-				$new_path = "'" . $new_path;
-			}
-			//echo $new_path . '<br>';
-			eval('$new_path = ' . $new_path . ';');
-
+			$new_path = $this->resolve_path($path);
 			
 			if ($this->image != null)
 			{

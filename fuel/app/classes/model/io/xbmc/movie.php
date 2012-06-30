@@ -46,7 +46,7 @@ class Model_Io_Xbmc_Movie extends Model_Io_Base
 		    'plot' => $movie->plot,
 		    'tagline' => $movie->tagline,
 		    'runtime' => $movie->runtime,
-		    'thumb' => $movie->thumb,
+		    //'thumb' => $movie->thumb,
 		    //'mpaa' => $movie->mpaa,
 		    //'playcount' => $movie->playcount,
 		    //'watched' => $movie->watched,

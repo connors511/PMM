@@ -27,6 +27,14 @@ class Model_Io_Factory
 		}
 		return false;
 	}
+	
+	public static function export_nfo(Model_Movie $movie, $folder, $file)
+	{
+		// TODO: Fetch from config
+		$oi_class = 'Model_Io_Xbmc_Movie';
+		$oi = new $oi_class($folder.$file);
+		return $oi->export_movie($movie, $folder, $file);
+	}
 
 }
 
