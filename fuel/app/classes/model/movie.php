@@ -81,56 +81,29 @@ class Model_Movie extends \Orm\Model
 	 */
 	public function rename($pattern)
 	{
-		//$pattern = str_replace('$','$this->',$pattern);
-		//extract($this->_data); // Not needed when replaced with $this->
-		$pattern = preg_replace('#\$((\w|->|_|\((true|false)*\))+)#', "'.\$this->$1.'", $pattern);
-		$pattern .= "'";
-		if (substr($pattern, 0, 2) == "'.")
-		{
-			$pattern = substr($pattern, 2);
-		}
-		else
-		{
-			$pattern = "'" . $pattern;
-		}
-		//echo $pattern . '<br>';
-		eval('$res = ' . $pattern . ';');
-		Debug::dump($res);
-		die();
-		if (strpos($res, '/') === false)
-		{
-			// Only a file rename
-			// Subtitles, poster, folder art and main fanart
-			$paths = array(
-				/* $this->thumb,
-				  $this->fanart,
-				  $this->poster */
-			);
-			foreach ($this->images as $img)
-			{
-				$paths[] = $img->file->path;
-			}
-			
-			foreach ($paths as $path)
-			{
-				
-				// Construct new file name
-			}
+		$res = $this->file->resolve_path($pattern);
+		$test = array();
 
-			/*if (rename($this->file->path, $res))
-			{
-				// Rename success
-			}
-			else
-			{
-				
-			}*/
-		}
-		else
+		// Only a file rename
+		// Subtitles, poster, folder art and main fanart
+		$paths = array(
+			/* $this->fanart,
+				$this->poster */
+		);
+		foreach ($this->images as $img)
 		{
-			
+			$paths[] = $img->file->path;
 		}
-		die();
+
+		foreach ($paths as $path)
+		{
+			$new_path = str_replace($this->file->folder(), dirname($res), $path);
+			if ($path != $new_path)
+			{
+				// TODO: Error handling
+				rename($path, $new_path);
+			}
+		}
 	}
 	
 	public function save_nfo($path)
