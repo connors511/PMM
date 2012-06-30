@@ -177,7 +177,15 @@ echo Form::open();
 			<?php
 			$range = range($year['max'], $year['max'] - 10);
 			// TODO: Seems to skip over 1940, even if present as year[min]
-			$range = array_merge($range, range($year['max'] - 11, $year['min'], 10), array('All'));
+			if ($year['max'] - 11 > $year['min'])
+			{
+				$range2 = range($year['max'] - 11, $year['min'], 10);
+			}
+			else
+			{
+				$range2 = array();
+			}
+			$range = array_merge($range, $range2, array('All'));
 			$i = 0;
 			$switch = ceil(count($range) / 3);
 			foreach($range as $k=>$r):
@@ -263,7 +271,7 @@ if (isset($result))
 			var $boxes;
 			if (letter == 'All')
 			{
-				$boxes = $('input[type="checkbox"]');
+				$boxes = $('.cb_movie, .by_letter, .by_year');
 			}
 			else if (letter == '#')
 			{
@@ -284,7 +292,7 @@ if (isset($result))
 			console.log(year);
 			if (year == 'All')
 			{
-				$boxes = $('input[type="checkbox"]');
+				$boxes = $('.cb_movie, .by_letter, .by_year');
 			}
 			else
 			{

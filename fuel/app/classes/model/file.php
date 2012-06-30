@@ -124,13 +124,17 @@ class Model_File extends \Orm\Model
 
 		foreach ($paths as $path)
 		{
+			// TODO: Config if it should overwrite existing files on export?
 			$new_path = $this->resolve_path($path);
 			
 			if ($this->image != null)
 			{
-				// Start at _1 for fanart
-				$ext = strrchr($new_path, '.');
-				$new_path = Str::increment(str_replace($ext, '', $new_path)) . $ext;
+				// Start at _1 for fanart if file already exists
+				if (file_exists($new_path))
+				{
+					$ext = strrchr($new_path, '.');
+					$new_path = Str::increment(str_replace($ext, '', $new_path)) . $ext;
+				}
 			} else if ($this->subtitle != null and $this->subtitle->language != null)
 			{
 				// Append language if it exists
@@ -145,10 +149,19 @@ class Model_File extends \Orm\Model
 					$new_path = Str::increment(str_replace($ext, '', $new_path)) . $ext;
 				}
 			}
+			if (!file_exists(dirname($new_path)))
+			{
+				// Recursively create missing dirs
+				mkdir(dirname($new_path), 0777, true);
+			}
+			// TODO: Use File::copy instead?
 			if (copy($this->path, $new_path))
 			{
+				chmod($new_path, 0777);
+				
+				$new_path_db = DB::quote($new_path);
 				$model = Model_Source::query()
-					->where(DB::expr("LOCATE(path, '{$new_path}')"),'=','0')
+					->where(DB::expr("LOCATE(path, {$new_path_db})"),'=','0')
 					->order_by(DB::expr("(LENGTH(path) - LENGTH(REPLACE(path, '{DS}', '')))"), 'desc')
 					->get_one();
 				// Exported outside sources

@@ -109,34 +109,48 @@ class Controller_Admin_Tools_Export extends Controller_Admin
 			// TODO: Fix hardcoded
 			$movies = Model_Movie::find('all', array(
 			    'where' => array(
-				array('id',1)
+				array('id', 'IN', Input::post('movie'))
 			    )
 			));
+			$results = array('error'=>0,'success'=>0);
+			
 			foreach((array)$movies as $movie)
 			{
-				foreach($files as $f)
+				foreach((array)$files as $f)
 				{
 					switch($f)
 					{
 						case "poster":
 							// TODO: The poster should be stored locally
-							
+							if ($movie->save_poster($paths[$f]))
+								$results['success']++;
+							else
+								$results['error']++;
 							break;
 						case "folder":
 							break;
 						case "fanart":
 							foreach($movie->images as $img)
 							{
-								$img->file->export($paths[$f]);
+								if ($img->file->export($paths[$f]))
+									$results['success']++;
+								else
+									$results['error']++;
 							}
 							break;
 						case "nfo":
-							$movie->save_nfo($paths[$f]);
+							if ($movie->save_nfo($paths[$f]))
+								$results['success']++;
+							else
+								$results['error']++;
 							break;
 						case "subtitles":
 							foreach($movie->subtitles as $sub)
 							{
-								$sub->file->export($paths[$f]);
+								if ($sub->file->export($paths[$f]))
+									$results['success']++;
+								else
+									$results['error']++;
 							}
 							break;
 						default:
@@ -144,8 +158,9 @@ class Controller_Admin_Tools_Export extends Controller_Admin
 					}
 				}
 			}
+			Session::set_flash('success',"Export had {$results['success']} successfull exports and {$results['error']} failed.");
 		}
-
+		
 		$this->template->title = "Export";
 		$this->template->content = View::forge('admin/tools/export/index', $data);
 	}

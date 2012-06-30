@@ -138,7 +138,16 @@ class Model_Movie extends \Orm\Model
 		$path = $this->file->resolve_path($path);
 		$folder = dirname($path);
 		$file = basename($path);
-		Model_Io_Factory::export_nfo($this, $folder, $file);
+		return Model_Io_Factory::export_nfo($this, $folder, $file);
+	}
+	
+	public function save_poster($path)
+	{
+		if (empty($this->poster) or $this->poster == null)
+			return false;
+		
+		$path = $this->file->resolve_path($path);
+		return copy($this->poster, $path);
 	}
 
 }
