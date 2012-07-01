@@ -60,6 +60,7 @@ class Controller_Home extends Controller_Base
 
 		$this->template->set_global('movies', $movies);
 		$this->template->set_global('count', count($movies));
+		$this->template->set_global('term', $term);
 		$this->template->title = 'Movies';
 
 		if (Input::is_ajax())

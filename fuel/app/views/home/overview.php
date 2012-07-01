@@ -22,32 +22,7 @@
 
 	<script type="text/javascript">
 	$(document).ready(function() {
-		/*var dim = PMM.Movies._getMovieListDimensions();
-		var count = Math.floor($('#movies').outerWidth() / dim.width);
-
-		$('.movie').popover({
-			placement: function(pop, dom_el) {
-				left_pos = $(dom_el).offset().left + $(dom_el).width();
-				bottom_pos = $(dom_el).offset().top + $(dom_el).height();
-				width = window.innerWidth;
-				height = window.innerHeight;
-				
-				console.log(bottom_pos+' vs '+height);
-				if (bottom_pos > height)
-					return false;
-				console.log(left_pos+' vs '+width);
-				if (width - left_pos < 300)
-					return 'left';
-				return 'right';
-			},
-			delay: {
-				show: 500,
-				hide: 100
-			},
-			content: function(dom_el) {
-				return $(this).attr('data-content-body').replace(/<b>/g,'<b class="orange">');
-			}
-		});
+		/*
 		$('.movie').click(function() {
 			var baseuri = '<?php echo Uri::create('home/watch/'); ?>';
 			var uri = baseuri + $(this).attr('data-id');
@@ -85,7 +60,7 @@
 	<div id="quick_search">
                 <?php echo Asset::img('logo.png', array('id' => 'logo')); ?>
 		<form id="quick_search_form">
-			<input type="text" id="quick_search_input" value="quick search" />
+			<input type="text" id="quick_search_input" value="<?php echo isset($term) ? $term : 'quick search'; ?>" />
 		</form>
 	</div>
 	<div id="advanced_search">

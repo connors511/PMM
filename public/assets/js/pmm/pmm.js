@@ -14,6 +14,8 @@ PMM = {
 		//	PMM.Search.Advanced.Init();
 		PMM.InfiniteScrolling != null && 
 			PMM.InfiniteScrolling.Init();
+		PMM.Popover != null && 
+			PMM.Popover.Init();
 
 	}
 }
