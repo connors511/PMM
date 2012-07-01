@@ -7,8 +7,11 @@ function cLog(txt) {
 String.prototype.visualLength = function()
 {
     var ruler = document.getElementById("ruler").getElementsByTagName('div')[0];
+    document.getElementById("ruler").style.display = 'block';
     ruler.innerHTML = this;
-    return ruler.offsetWidth;
+    var width = ruler.offsetWidth;
+    document.getElementById("ruler").style.display = 'none';
+    return width;
 }
  
 String.prototype.trimToPx = function(length)
