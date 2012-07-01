@@ -117,6 +117,8 @@ PMM.Movies = {
 		
 		$('#movies_space').before($m);
 		
+		PMM.Popover.createPopovers();
+		
 		this.setPermalink(this._page);
 		
 		// Call callback, if provided

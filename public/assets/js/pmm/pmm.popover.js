@@ -3,9 +3,14 @@ PMM.Popover = {
 	Init: function() {
 		cLog("PMM.Popover.Init called. Initiating Popovers");
 		
-		var dim = PMM.Movies.getMovieListDimensions();
-		var count = Math.floor($('#movies').outerWidth() / dim.width);
-
+		//var dim = PMM.Movies.getMovieListDimensions();
+		//var count = Math.floor($('#movies').outerWidth() / dim.width);
+		this.createPopovers();
+	},
+	
+	createPopovers: function() {
+		cLog("Creating popovers");
+		
 		$('.movie').popover({
 			placement: function(pop, dom_el) {
 				left_pos = $(dom_el).offset().left + $(dom_el).width();
@@ -14,7 +19,8 @@ PMM.Popover = {
 				height = window.innerHeight;
 				
 				console.log(bottom_pos+' vs '+height);
-				if (bottom_pos > height)
+				// 50 offset to prevent too much overlapping with the bottom bar
+				if (bottom_pos > $(window).scrollTop() + height - 50)
 					return false;
 				console.log(left_pos+' vs '+width);
 				if (width - left_pos < 300)
@@ -29,5 +35,5 @@ PMM.Popover = {
 				return $(this).attr('data-content-body').replace(/<b>/g,'<b class="orange">');
 			}
 		});
-	}	
+	}
 }
