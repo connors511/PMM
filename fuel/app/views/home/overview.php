@@ -10,7 +10,7 @@
 	?>
 
 	<div class="bc-results"><span class="left">
-	<a href="javascript:void(0);" class="grey" onclick="Gamma.Movies.Permalink('+Gamma.Movies._page+');">Permalink</a></span>
+	<a href="javascript:void(0);" class="grey" onclick="PMM.Movies.Permalink('+PMM.Movies._page+');">Permalink</a></span>
 	<span style="line-height:2em;font-size:16px" class="grey">Page <strong class="white">
 	<?php echo \Pagination::$current_page; ?></strong> of <strong class="white"><?php echo ceil(\Pagination::total_items() / \Pagination::$per_page); ?>
 	</strong> from <strong class="white" style="font-family:Georgia">
@@ -22,7 +22,7 @@
 
 	<script type="text/javascript">
 	$(document).ready(function() {
-		var dim = Gamma.Movies._getMovieListDimensions();
+		/*var dim = PMM.Movies._getMovieListDimensions();
 		var count = Math.floor($('#movies').outerWidth() / dim.width);
 
 		$('.movie').popover({
@@ -70,7 +70,7 @@
 		});
 		$('.movie_close, #back').live('click', function() {
 			$('#container').remove();
-		});
+		});*/
 		/*var options = {
 			'placement': 'left'
 		}
@@ -358,7 +358,8 @@
 d = document.getElementById('movies');
 xx = Math.floor(window.width / 203);
 d.style.width=(203 * xx)+"px";
-Gamma.Movies._urlBase = '<?php echo Uri::create('home/'); ?>';
-Gamma.Init();
-Gamma.Movies._page = <?php echo \Pagination::$current_page; ?>;
+PMM.Settings.BASE_URL = '<?php echo Uri::create('/'); ?>';
+PMM.Init();
+if (PMM.Movies != null)
+	PMM.Movies._page = <?php echo \Pagination::$current_page; ?>;
 </script>

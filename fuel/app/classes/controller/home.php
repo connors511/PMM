@@ -46,7 +46,7 @@ class Controller_Home extends Controller_Base
 
 	public function action_search($term = "")
 	{
-		$this->set_pagination(Uri::create('home'), 4, Model_Movie::find()->count(), 50);
+		$this->set_pagination(Uri::create('home'), 4, Model_Movie::find()->where('title', 'like', '%' . $term . '%')->count(), 50);
 		$movies = Model_Movie::find('all', array(
 			    'related' => array(
 				'stream_video'
@@ -87,7 +87,7 @@ class Controller_Home extends Controller_Base
 
 		return View::forge('home/watch', array('movie' => $movie));
 	}
-	
+
 	public function action_play($id)
 	{
 		$movie = Model_Movie::find($id);
