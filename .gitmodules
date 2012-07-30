@@ -19,6 +19,3 @@
 [submodule "fuel/packages/email"]
 	path = fuel/packages/email
 	url = git://github.com/fuel/email.git
-[submodule "fuel/packages/warden"]
-	path = fuel/packages/warden
-	url = git@github.com:connors511/warden.git
