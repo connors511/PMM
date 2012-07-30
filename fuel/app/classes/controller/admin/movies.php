@@ -11,7 +11,8 @@ class Controller_Admin_Movies extends Controller_Admin
 				'genres'
 			    ),
 			    'limit' => \Fuel\Core\Pagination::$per_page,
-			    'offset' => \Fuel\Core\Pagination::$offset
+			    'offset' => \Fuel\Core\Pagination::$offset,
+			    'order_by' => 'title'
 			));
 		$this->template->title = "Movies";
 		$this->template->content = View::forge('admin/movies/index', $data);

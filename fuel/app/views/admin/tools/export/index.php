@@ -88,6 +88,7 @@ echo Form::open();
 					'fanart' => 'Fanart',
 					'nfo' => 'NFO',
 					'subtitles' => 'Subtitles',
+					'movie' => 'Movie'
 				);
 				$i = 0;
 				$switch = ceil(count($fields) / 2);

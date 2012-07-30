@@ -20,11 +20,12 @@ class Controller_Admin_Tools_Export extends Controller_Admin
 		$data['movies'] = Model_Movie::find('all');
 		$data['count'] = Model_Movie::find()->count();
 		
+		
 		if (Input::post('submit', false) and Input::post('export_type', 'choose') == 'choose')
 		{
 			\Session::set_flash('error', 'You must choose an export type!');
 		}
-		else if (in_array(Input::post('submit', false), array('fields', 'all')))
+		else if (in_array(Input::post('export_type', false), array('fields', 'all')))
 		{
 			if (Input::post('export_type', false) == 'fields')
 			{
@@ -60,13 +61,13 @@ class Controller_Admin_Tools_Export extends Controller_Admin
 						}
 					}
 				}
-				$where = array('where' => $wheres);
+				$where = array('where' => $wheres, 'order_by' => array('title'));
 				//Debug::dump($where);die();
 				$movies = Model_Movie::find('all', $where);
 			}
 			else if (Input::post('export_type', false) == 'all')
 			{
-				$movies = Model_Movie::find('all');
+				$movies = Model_Movie::find('all', array('order_by' => array('title')));
 			}
 			$files = File::read_dir(APPPATH . 'views' . DS . 'templates' . DS . 'export', 0);
 			
@@ -152,6 +153,9 @@ class Controller_Admin_Tools_Export extends Controller_Admin
 								else
 									$results['error']++;
 							}
+							break;
+						case "movie":
+								$movie->file->export($paths[$f]);
 							break;
 						default:
 							break;
