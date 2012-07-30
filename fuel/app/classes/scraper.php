@@ -177,7 +177,7 @@ abstract class Scraper
 
 		foreach ($actor as $a)
 		{
-			if ($a->movie->id == $this->_movie->id)
+			if ($this->_movie instanceof Model_Movie and $a->movie instanceof Model_Movie and $a->movie->id == $this->_movie->id)
 			{
 				return $actor;
 			}

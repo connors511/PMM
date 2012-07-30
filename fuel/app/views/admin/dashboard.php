@@ -10,10 +10,7 @@
 		<p>Press <a href="admin/truncate">here</a> to truncate the tables.</p>
 	</div>
 	<div class="span4">
-		<h2>Scan</h2>
-		<?php foreach($sources as $p) : ?>
-		<p><?php echo Html::anchor('admin/scan/'.$p->id, $p->path); ?></p>
-		<?php endforeach; ?>
+		&nbsp;
 	</div>
 	<div class="span4">
 		<h2>Stats</h2>

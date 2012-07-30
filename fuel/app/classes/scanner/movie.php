@@ -4,7 +4,7 @@ class Scanner_Movie implements IScanner
 {
 
 	protected static $regex_moviefolder = '/\.(mkv|nfo|mp4)$/';
-	protected static $regex_movie_file = '/(?P<file>.+)\.(mkv|mp4|avi)$/';
+	protected static $regex_movie_file = '/(?P<file>.+)\.(mkv|mp4|avi|m2ts)$/';
 	protected static $regex_subtitles = '/\.(srt|sub)$/';
 	protected static $regex_subtitles_lang = '/\.(?P<lang>[a-z]{2})\.(srt|sub)$/';
 	protected static $valid_image_extensions = array('png', 'jpg', 'jpeg');
@@ -170,19 +170,42 @@ class Scanner_Movie implements IScanner
 		return false;
 	}
 
-	public static function get_movie(Array $dir)
+	public static function get_movie(Array $dir, $parent = false, $fullpath = false)
 	{
 		// TODO: Add support for cd's, dvd's and BDMV
-		foreach ($dir as $p => $file)
+		if ($parent == "STREAM/")
 		{
-			if (is_array($file))
+			// BDMV
+			$size = 0;
+			$f = '';
+			foreach ($dir as $p => $file)
 			{
-				continue;
+				if (preg_match(self::$regex_movie_file, $file))
+				{
+					if (filesize($fullpath . $file) > $size)
+					{
+						$size = filesize($fullpath . $file);
+						$f = $file;
+					}
+				}
 			}
-
-			if (preg_match(self::$regex_movie_file, $file))
+			// Our best bet is the biggest file
+			return $f;
+		}
+		else
+		{
+			// Normal movie file
+			foreach ($dir as $p => $file)
 			{
-				return $file;
+				if (is_array($file))
+				{
+					continue;
+				}
+
+				if (preg_match(self::$regex_movie_file, $file))
+				{
+					return $file;
+				}
 			}
 		}
 	}
@@ -193,10 +216,10 @@ class Scanner_Movie implements IScanner
 		$new = true;
 
 		// Is the structure <movie name>/<files>
-		if (preg_match('/(?P<title>.+) \((?P<year>\d+)\)/', $dir, $matches))
+		if (($dir == 'STREAM/' && preg_match('#.*(?<=/)(?P<title>.+) \((?P<year>\d+)\)#', $fullpath, $matches)) || preg_match('/(?P<title>.+) \((?P<year>\d+)\)/', $dir, $matches))
 		{
 			// Using <title> (<year>)/<movie> structure
-			$movie_file = self::get_movie($files);
+			$movie_file = self::get_movie($files, $dir, $fullpath);
 			if ($movie_file == false)
 			{
 				// Somehow, we've got a non-movie file :/
@@ -261,7 +284,10 @@ class Scanner_Movie implements IScanner
 		{
 			echo $dir;
 		}
-		$movie->save();
+		else if (is_object($movie))
+		{
+			$movie->save();
+		}
 		if ($new or $this->_force)
 		{
 			$this->_inserts['new']++;
@@ -270,7 +296,10 @@ class Scanner_Movie implements IScanner
 		{
 			$this->_inserts['updated']++;
 		}
-		self::parse_movie($movie, $new or $this->_force);
+		if ($movie instanceof Model_Movie)
+			self::parse_movie($movie, $new or $this->_force);
+		else
+			\Log::debug("Count not parse {$dir} ({$fullpath})", 'parse_movie_folder');
 	}
 
 	public static function parse_movie($movie, $new = true)

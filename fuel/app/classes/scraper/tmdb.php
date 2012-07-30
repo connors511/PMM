@@ -72,12 +72,12 @@ class Scraper_Tmdb extends Scraper
 		$res = $this->download_url_param($this->_urls[$url], $this->_id);
 		if (($r = $this->_get_helper($res, $field)))
 		{
-			$t = $r;
+			/*$t = $r;
 			if (is_array($t))
 			{
 				$t = print_r($t, true);
 			}
-			Log::debug("Getting {$field}. Found: '{$t}'");
+			Log::debug("Getting {$field}. Found: '{$t}'");*/
 			return $r;
 		}
 		if (in_array($ret_field, $this->_movie->properties()))
