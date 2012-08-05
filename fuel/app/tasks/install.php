@@ -37,14 +37,14 @@ class Install
 			*************************************************
 			*     		Checking dependencies		*
 			*************************************************");
-		$deps = array('curl' => 'cURL', 'fileinfo' => 'Fileinfo');
+		$php_deps = array('curl' => 'cURL', 'fileinfo' => 'Fileinfo');
 
 		$result = "";
 		$failed = array();
 
 		$module = 'php5.3+';
 		$name = 'php5.3+';
-		if (version_compare(PHP_VERSION, '5.3.0') >= 0)
+		if (version_compare(PHP_VERSION, '5.3.2') >= 0)
 		{
 			$result = $OK;
 		}
@@ -55,7 +55,7 @@ class Install
 		}
 		\Cli::write("Checking for: {$name}							{$result}");
 
-		foreach($deps as $module => $name)
+		foreach($php_deps as $module => $name)
 		{
 		
 			if (in_array($module, get_loaded_extensions()))
@@ -71,9 +71,34 @@ class Install
 
 		}
 
+
+		if (function_exists('apache_get_modules'))
+		{
+			$res = in_array($module, apache_get_modules());
+
+			if ($res)
+			{
+				$result = $OK;
+			}
+			else
+			{
+				$result = $FAIL;
+				$failed['mod_rewrite'] = 'mod_rewrite';
+			}
+
+			\Cli::write("Checking for: mod_rewrite						{$result}");
+		}
+		else
+		{
+			\Cli::write();
+			\Cli::write("Could not correctly determine if mod_rewrite is enabled.");
+			\Cli::write(\Cli::color("Please make sure mod_rewrite is enabled!", 'yellow'));
+		}
+
+
 		if (!empty($failed))
 		{
-			\Cli::write("Please install the following extensions before using this installer: " . implode(', ', array_values($failed)));
+			\Cli::write("Please the following before using this installer: " . implode(', ', array_values($failed)));
 		}
 
 		\Cli::write("
