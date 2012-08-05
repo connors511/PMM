@@ -30,7 +30,7 @@ You can also shorten the last two commands to one:
 
 Run the following command to use the installation wizard
 
-    oil refine install
+    php oil refine install
 
 ##Features
 PMM is currently able to scrape basic info about movies from IMDb and TMDb.
