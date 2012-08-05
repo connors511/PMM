@@ -20,6 +20,9 @@ class Install
 	}
 	public static function run()
 	{
+		$OK = 	'[' . \Cli::color(' OK ', 'green') . ']';
+		$FAIL = '[' . \Cli::color('FAIL', 'red') . ']';
+
 		$pmm = \Cli::color('P','red') . \Cli::color('M','blue') . \Cli::color('M','green');
 		\Config::load('development/db','db');
 		\Config::load('config','base');
@@ -29,6 +32,35 @@ class Install
 			*     {$pmm} Media Manager Installation Wizard     *
 			*************************************************");
 		\Cli::write("This wizard will take you through the installation of the PHP Media Manager.");
+
+		\Cli::write("
+			*************************************************
+			*     		Checking dependencies		*
+			*************************************************");
+		$deps = array('curl' => 'cURL', 'fileinfo' => 'Fileinfo');
+		$result = "";
+		$failed = array();
+		foreach($deps as $module => $name)
+		{
+		
+			if (in_array($module, get_loaded_extensions()))
+			{
+				$result = $OK;
+			}
+			else
+			{
+				$result = $FAIL;
+				$failed[$module] = $name;
+			}
+			\Cli::write("Checking for: {$name}							{$result}");
+
+		}
+
+		if (!empty($failed))
+		{
+			\Cli::write("Please install the following extensions before using this installer: " . implode(', ', array_values($failed)));
+		}
+
 		\Cli::write("
 			*************************************************
 			*		Database installation		*
