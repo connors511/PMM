@@ -38,8 +38,23 @@ class Install
 			*     		Checking dependencies		*
 			*************************************************");
 		$deps = array('curl' => 'cURL', 'fileinfo' => 'Fileinfo');
+
 		$result = "";
 		$failed = array();
+
+		$module = 'php5.3+';
+		$name = 'php5.3+';
+		if (version_compare(PHP_VERSION, '5.3.0') >= 0)
+		{
+			$result = $OK;
+		}
+		else
+		{
+			$result = $FAIL;
+			$failed[$module] = $name;
+		}
+		\Cli::write("Checking for: {$name}							{$result}");
+
 		foreach($deps as $module => $name)
 		{
 		

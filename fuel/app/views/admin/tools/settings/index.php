@@ -9,7 +9,7 @@
 				//echo Form::input('jobs[use]', \Config::get('settings.jobs.use'), array('class' => 'span3'));
 			?>
 			<label class="checkbox" for="jobs[use]">
-				<input type="checkbox" name="jobs[use]"> Enable jobs
+				<input type="checkbox" name="jobs[use]" <?php if(\Config::get('settings.jobs.use', false)) echo 'checked="checked"'; ?>> Enable jobs
 			</label>
 			<span class="help-block">
 				Enable to use background workers for heavy tasks.<br />

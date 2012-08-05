@@ -40,7 +40,9 @@
 		</div>
 	</div>
 	<div class="container">
-		<?php echo phpinfo(); ?>
+		<?php //echo phpinfo(); ?>
+		<?php echo Html::anchor(Uri::create('/admin'),'admin'); ?>
+		<?php echo Html::anchor(Uri::create('/home'),'movies'); ?>
 	</div>
 </body>
 </html>
