@@ -26,6 +26,7 @@ class Install
 		$pmm = \Cli::color('P','red') . \Cli::color('M','blue') . \Cli::color('M','green');
 		\Config::load('development/db','db');
 		\Config::load('config','base');
+		\Config::load('settings', 'settings');
 		
 		\Cli::write("
 			*************************************************
@@ -109,10 +110,10 @@ class Install
 			*************************************************");
 		\Cli::write("NOTE: The installer currently only supports MySQL.", 'red');
 		do {
-			$host = \Cli::prompt('What is your database host?');
-			$user = \Cli::prompt('What is your database user?');
+			$host = \Cli::prompt('What is your database host?', "localhost");
+			$user = \Cli::prompt('What is your database user?', "root");
 			$pass = \Cli::prompt('What is your database password?');
-			$db_name = \Cli::prompt('What is the name of the database?');
+			$db_name = \Cli::prompt('What is the name of the database?', "pmm");
 			$mysqli = \Cli::prompt('Is MySQLi installed?', array('y','n'));
 			\Cli::write('Please confirm that the following information is correct:','yellow');
 			\Cli::write("Database host: {$host}
@@ -135,12 +136,23 @@ MySQLi: {$mysqli}");
 			*		{$pmm} installation		*
 			*************************************************");
 		do {
+			// Config
 			$pretty_url = \Cli::prompt("Do you want pretty urls? NOTE: This requires mod_rewrite module!", array('y','n'));
+
+			// Initialization
 			$scan_scrapers = \Cli::prompt("Would you like to scan for scrapers after install?", array('y','n'));
 			$default_scraper_groups = \Cli::prompt("Would you like to have default scraper groups installed?", array('y','n'));
+
+			// Settings
+			$use_jobs = \Cli::prompt("Would you like to use background workers (jobs) ?", array('y','n'));
+			$binary_ffmpeg = \Cli::prompt("What is the path to ffmpeg binary?", "ffmpeg");
 			
 			\Cli::write('Please confirm that the following information is correct:','yellow');
-			\Cli::write("Pretty url: {$pretty_url}");
+			\Cli::write("Pretty url: {$pretty_url}
+Scan for scrapers: {$scan_scrapers}
+Install default scraper groups: {$default_scraper_groups}
+Use background workers: {$use_jobs}
+ffmpeg binary: {$binary_ffmpeg}");
 			
 			$confirm = \Cli::prompt('Is the information correct?', array('y','n'));
 		} while($confirm != 'y');
@@ -148,12 +160,14 @@ MySQLi: {$mysqli}");
 		\Config::set('index_file', $pretty_url == 'y' ? false : 'index.php');
 		\Config::set('profiling',false);
 		
-		
+		\Config::set('settings.jobs.use', $use_jobs == 'y');
+		\Config::set('settings.binaries.ffmpeg', $binary_ffmpeg);
 		
 		\Cli::write('Starting installation...','green');
 		
 		\Config::save('config','base');
 		\Config::save('development/db','db');
+		\Config::save('settings', 'settings');
 		\Cli::write("Saved config files",'green');
 		
 		// Create db
