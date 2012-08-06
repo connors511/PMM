@@ -1,6 +1,14 @@
 #PMM
 PHP Media Manager is using FuelPHP as base.
 
+#Requirements
+* PHP 5.3.2+
+* mod_rewrite for pretty url (optional)
+* GD library
+* Fileinfo
+* cURL
+
+
 ##FuelPHP
 
 * Version: 1.2
