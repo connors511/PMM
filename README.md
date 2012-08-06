@@ -42,6 +42,15 @@ Enter the directory and run the following command to use the installation wizard
 After the installation has completed, you can access it at http://localhost/PMM/public
 The url can be changed by putting everything outside the web-root and the contents of public in web-root.
 
+# Background workers
+
+It is recommended to use background workers to reduce the loading time of some pages.
+The following commands will have to started in its own terminal or commandline
+
+	php oil r jobqueue scraper
+	php oil r jobqueue fanart
+	php oil r jobqueue subtitles
+
 ##Features
 PMM is currently able to scrape basic info about movies from IMDb and TMDb.
 Other features include:
