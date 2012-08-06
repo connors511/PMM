@@ -37,7 +37,7 @@ class Install
 			*************************************************
 			*     		Checking dependencies		*
 			*************************************************");
-		$php_deps = array('curl' => 'cURL', 'fileinfo' => 'Fileinfo');
+		$php_deps = array('curl' => 'cURL', 'fileinfo' => 'Fileinfo', 'gd' => 'GD');
 
 		$result = "";
 		$failed = array();
@@ -93,12 +93,14 @@ class Install
 			\Cli::write();
 			\Cli::write("Could not correctly determine if mod_rewrite is enabled.");
 			\Cli::write(\Cli::color("Please make sure mod_rewrite is enabled!", 'yellow'));
+			\Cli::write();
 		}
 
 
 		if (!empty($failed))
 		{
-			\Cli::write("Please the following before using this installer: " . implode(', ', array_values($failed)));
+			\Cli::write("Please enable the following extensions before using this installer: \n 	" . implode(', ', array_values($failed)));
+			return;
 		}
 
 		\Cli::write("
