@@ -20,7 +20,7 @@ Here is the basic usage:
 The above command is the same as running:
 
     git clone git://github.com/connors511/PMM.git
-    cd pmm/
+    cd PMM/
     git submodule init
     git submodule update
 
@@ -28,9 +28,19 @@ You can also shorten the last two commands to one:
 
     git submodule update --init
 
-Run the following command to use the installation wizard
+
+After getting the source, make sure the following directories is writeable:
+
+	fuel/app/logs
+	fuel/app/config
+	fuel/app/cache
+
+Enter the directory and run the following command to use the installation wizard
 
     php oil refine install
+
+After the installation has completed, you can access it at http://localhost/PMM/public
+The url can be changed by putting everything outside the web-root and the contents of public in web-root.
 
 ##Features
 PMM is currently able to scrape basic info about movies from IMDb and TMDb.
