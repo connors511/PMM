@@ -104,6 +104,15 @@
 				<?php echo Form::textarea('poster', Input::post('poster', isset($movie) ? $movie->poster : ''), array('class' => 'span10', 'rows' => 8)); ?>
 
 			</div>
+
+			<?php if ($movie->web_images): ?>
+			<div class="input">
+				<?php foreach($movie->web_images as $wi): ?>
+					<img src="data:image/jpeg;base64,<?php echo $wi->data; ?>" class="wi" />
+				<?php endforeach; ?>
+			</div>
+			<?php endif; ?>
+
 		</div>
 		<div class="clearfix">
 			<?php echo Form::label('File', 'file_id'); ?>
@@ -119,3 +128,17 @@
 		</div>
 	</fieldset>
 <?php echo Form::close(); ?>
+
+<style>
+.chosen {
+	border: 5px solid blue;
+}
+.wi {
+	margin: 5px
+}
+</style>
+<script>
+$(document).ready(function() {
+	$('.wi:first').addClass('chosen');
+});
+</script>

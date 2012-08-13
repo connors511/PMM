@@ -13,6 +13,7 @@ class Scraper_fanart
 		{
 			\Cli::write('Scraping fanart for '.$m->title);
 			\Scanner_Movie::parse_fanart($m);
+			//\Scanner_Movie::parse_poster($m);
 		}
 		return;
 	}

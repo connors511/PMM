@@ -38,11 +38,20 @@
 	<?php echo $movie->trailer_url; ?></p>
 <p>
 	<strong>Poster url:</strong>
-	<?php echo $movie->poster.'<br>'; 
-echo Html::img($movie->poster, array('width' => '90', 'height' => '120')); ?></p>
+	<?php //echo $movie->poster.'<br>'; 
+//echo Html::img($movie->poster, array('width' => '90', 'height' => '120')); ?>
+<img src="<?php echo $movie->poster->get_thumb_url(92, 138); ?>" style="margin: 5px"/>
+</p>
 <p>
 	<strong>File:</strong>
 	<?php echo $movie->file->path; ?></p>
+
+<p>
+	<strong>Fanart:</strong><br />
+	<?php foreach($movie->fanart as $fanart): ?>
+		<img src="<?php echo $fanart->get_thumb_url(); ?>" style="margin: 5px"/>
+	<?php endforeach; ?>
+</p>
 
 <?php echo Html::anchor('admin/movies/edit/'.$movie->id, 'Edit'); ?> |
 <?php echo Html::anchor('admin/movies', 'Back'); ?>

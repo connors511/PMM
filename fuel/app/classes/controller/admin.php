@@ -119,6 +119,10 @@ class Controller_Admin extends Controller_Base
 		\DBUtil::truncate_table('genres');
 		\DBUtil::truncate_table('genres_movies');
 		\DBUtil::truncate_table('images');
+		\DBUtil::truncate_table('web_images');
+		\DBUtil::truncate_table('queue');
+		\DBUtil::truncate_table('stream_videos');
+		\DBUtil::truncate_table('stream_audios');
 
 		\DBUtil::truncate_table('movies');
 		\DBUtil::truncate_table('people');

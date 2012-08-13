@@ -135,6 +135,10 @@ abstract class Scraper
 				$this->_movie->{$field} = $res;
 				$this->_movie->save();
 			}
+			else
+			{
+				Log::debug("Skipped field '{$field}'");
+			}
 			Log::debug("Done scraping field '{$field}'");
 		}
 		else

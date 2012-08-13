@@ -21,7 +21,7 @@
 
 			<td>
 				<?php if (!empty($movie->poster)) {
-					echo Html::img(str_replace('w500','w185',$movie->poster));
+					echo Html::img($movie->poster->get_thumb_url(92, 138));
 				} ?>
 			</td>
 			<td><?php echo $movie->title; ?></td>

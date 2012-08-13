@@ -20,7 +20,7 @@ class Model_Movie extends \Orm\Model
 	    'created_at',
 	    'updated_at',
 	    'file_id',
-	    'poster'
+	    'poster_id'
 	);
 	protected static $_has_one = array(
 	    'stream_video'
@@ -30,11 +30,35 @@ class Model_Movie extends \Orm\Model
 	    'directors',
 	    'producers',
 	    'subtitles',
-	    'images',
-	    'stream_audios'
+	    'fanart' => array(
+			'key_from' => 'id',
+	        'model_to' => 'Model_Image',
+	        'key_to' => 'movie_id',
+	        'cascade_save' => true,
+	        'cascade_delete' => false,
+	        'conditions' => array(
+	        	'where' => array(
+	        		array('type', '=', Model_Image::TYPE_FANART)
+	        	)
+	        )
+	    ),
+	    'stream_audios',
+	    'web_images'
 	);
 	protected static $_belongs_to = array(
 	    'file',
+	    'poster' => array(
+			'key_from' => 'poster_id',
+	        'model_to' => 'Model_Image',
+	        'key_to' => 'id',
+	        'cascade_save' => true,
+	        'cascade_delete' => false,
+	        'conditions' => array(
+	        	/*'where' => array(
+	        		array('type', '=', Model_Image::TYPE_POSTER)
+	        	)*/
+	        )
+	    ),
 	);
 	protected static $_many_many = array(
 	    'genres'

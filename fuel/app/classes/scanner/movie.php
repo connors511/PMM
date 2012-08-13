@@ -7,6 +7,7 @@ class Scanner_Movie implements IScanner
 	protected static $regex_movie_file = '/(?P<file>.+)\.(mkv|mp4|avi|m2ts)$/';
 	protected static $regex_subtitles = '/\.(srt|sub)$/';
 	protected static $regex_subtitles_lang = '/\.(?P<lang>[a-z]{2})\.(srt|sub)$/';
+	protected static $regex_poster_file = '/(?P<file>(cover|poster|movie)\.(tbn|jpg|jpeg|png))$/';
 	protected static $valid_image_extensions = array('png', 'jpg', 'jpeg');
 	private $_source;
 	private $_inserts = array('new'=>0,'updated'=>0);
@@ -348,11 +349,12 @@ class Scanner_Movie implements IScanner
 				Model_Scraper_Group::parse_movie($movie);
 			}
 		}
+
+		self::parse_poster($movie);
 	}
 
 	public static function parse_fanart($movie)
 	{
-
 		if (($fanart_folder = self::get_fanart_folder(dirname($movie->file->path))))
 		{
 			$fanart = File::read_dir($fanart_folder);
@@ -393,13 +395,14 @@ class Scanner_Movie implements IScanner
 					$im->file = new Model_File();
 					$im->file->path = $fanart_folder . $img;
 					$im->file->source = $movie->file->source;
+					$im->type = Model_Image::TYPE_FANART;
 
 					if (filesize($fanart_folder . $img) <= 0)
 					{
 						continue;
 					}
 
-					try
+					/*try
 					{
 						$image = Image::load($fanart_folder . $img);
 						$sizes = $image->sizes();
@@ -416,9 +419,11 @@ class Scanner_Movie implements IScanner
 					catch (Exception $e)
 					{
 						continue;
-					}
+					}*/
+					$im->set_dimensions();
 
 					$im->movie = $movie;
+					//$movie->fanart[] = $im;
 					$im->save();
 				}
 			}
@@ -480,6 +485,66 @@ class Scanner_Movie implements IScanner
 		else
 		{
 			// Scrape it?
+		}
+	}
+
+	public static function parse_poster($movie)
+	{
+		$path = dirname($movie->file->path) . DS;
+
+		foreach (File::read_dir($path) as $p => $file)
+		{
+			if (is_array($file))
+			{
+				continue;
+			}
+
+			if (preg_match(self::$regex_poster_file, $file, $match))
+			{
+				$img = $match['file'];
+				$im = Model_Image::find('all', array(
+					    'related' => array(
+						'file' => array(
+						    'where' => array(
+							array(
+							    'path', '=', $path . $img
+							)
+						    )
+						),
+						'movie'
+					    )
+					));
+
+				if (count($im) == 1)
+				{
+					$im = current($im);
+				}
+				else if (count($im) > 1)
+				{
+					// That is just fucked up
+					continue;
+				}
+
+				if ($im == null || $im->movie == null)
+				{
+					$im = new Model_Image();
+					$im->file = new Model_File();
+					$im->file->path = $path . $img;
+					$im->file->source = $movie->file->source;
+					$im->type = Model_Image::TYPE_FANART;
+
+					if (filesize($path . $img) <= 0)
+					{
+						continue;
+					}
+
+					$im->set_dimensions();
+
+					$im->poster = $movie;
+					$im->movie = $movie;
+					$im->save();
+				}
+			}
 		}
 	}
 

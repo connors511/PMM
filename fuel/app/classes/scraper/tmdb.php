@@ -10,8 +10,9 @@ class Scraper_Tmdb extends Scraper
 	    'search' => 'http://api.themoviedb.org/3/search/movie?query=%s',
 	    'main' => 'http://api.themoviedb.org/3/movie/%s',
 	    'cast' => 'http://api.themoviedb.org/3/movie/%s/casts',
+	    'images' => 'http://api.themoviedb.org/3/movie/%s/images',
 	    // TODO Get poster path from TMDb configuration via API?
-	    'poster_url' => 'http://cf2.imgobject.com/t/p/w500'
+	    'poster_url' => 'http://cf2.imgobject.com/t/p/%s'
 	);
 	protected $_fields = array(
 	    'title',
@@ -30,12 +31,12 @@ class Scraper_Tmdb extends Scraper
 	    'runtime',
 	    'producers',
 	    'actors',
-	    'poster',
+	    //'poster',
 	);
 	protected $_type = 'movies';
 	protected $_author = 'Matthias Larsen';
 	protected $_name = 'TMDb Scraper';
-	protected $_version = '0.1';
+	protected $_version = '0.2';
 
 	public function __construct()
 	{
@@ -338,10 +339,28 @@ class Scraper_Tmdb extends Scraper
 
 	public function scrape_poster()
 	{
+		$posters = $this->_return_helper('posters', false, 'images');
+		$poster_sizes = array('original'); // Other sizes includes w92, w154, w185, w342
+		/*foreach($posters as $poster)
+		{
+			foreach($poster_sizes as $size)
+			{
+				$wi = new Model_Web_Image();
+				$wi->url = sprintf($this->_urls['poster_url'], $size) . $poster['file_path'];
+				$wi->height = $poster['height'];
+				$wi->width = $poster['width'];
+				$wi->type = Model_Web_Image::TYPE_POSTER;
+				$wi->source = Model_Web_Image::SOURCE_MOVIE;
+				$wi->movie = $this->_movie;
+				$wi->save();
+			}
+		}*/
+
+
 		$poster = $this->_return_helper('poster_path');
 		if ($poster)
 		{
-			return $this->_urls['poster_url'] . $poster;
+			//return sprintf($this->_urls['poster_url'], 'w500') . $poster;
 		}
 		return false;
 	}
