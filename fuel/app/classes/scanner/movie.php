@@ -531,7 +531,7 @@ class Scanner_Movie implements IScanner
 					$im->file = new Model_File();
 					$im->file->path = $path . $img;
 					$im->file->source = $movie->file->source;
-					$im->type = Model_Image::TYPE_FANART;
+					$im->type = Model_Image::TYPE_POSTER;
 
 					if (filesize($path . $img) <= 0)
 					{

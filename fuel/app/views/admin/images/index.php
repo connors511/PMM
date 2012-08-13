@@ -8,16 +8,18 @@
     	    <th>Movie</th>
     	    <th>Height</th>
     	    <th>Width</th>
+    	    <th>Type</th>
     	    <th></th>
     	</tr>
         </thead>
         <tbody>
 	    <?php foreach ($images as $image): ?>		
 		<tr>
-		    <td><img src="<?php echo $image->get_thumb_url(); ?>" onmouseout="hiddenPic();" onmousemove="showPic(this.src);" /></td>
+		    <td><img src="<?php echo $image->get_thumb_url(92,138); ?>" onmouseout="hiddenPic();" onmousemove="showPic(this.src, '<?php echo $image->get_type(); ?>');" /></td>
 		    <td><?php echo ($image->movie == null) ? 'None' : $image->movie->title; ?></td>		
 		    <td><?php echo $image->height; ?></td>
 		    <td><?php echo $image->width; ?></td>
+		    <td><?php echo ucfirst($image->get_type()); ?></td>
 		    <td>
 			<?php echo Html::anchor('admin/images/view/' . $image->id, 'View'); ?> |
 			<?php echo Html::anchor('admin/images/edit/' . $image->id, 'Edit'); ?> |
@@ -39,16 +41,23 @@
 
 <?php // TODO: Move this its own file ?>
 <script>
-    function showPic(sUrl)
+    function showPic(sUrl, sType)
     {
-	var x,y;
+	var x,y,h,w;
 	x = event.pageX + 10;
 	y = event.pageY + 10;
+	h = 100;
+	w = 200;
+	if (sType == 'poster')
+	{
+		h = 278;
+		w = 185;
+	}
 	document.getElementById("Layer1").style.left = x+"px";
 	document.getElementById("Layer1").style.top = y+"px";
-	if (document.getElementById("Layer1").innerHTML != "<img height=200 width=400 src=\"" + sUrl.replace("_thumb","") + "\">") 
+	if (document.getElementById("Layer1").innerHTML != "<img height=500 width=336 src=\"" + sUrl.replace("-92x138","-" + w + "x" + h) + "\">") 
 	{
-	    document.getElementById("Layer1").innerHTML = "<img height=200 width=400 src=\"" + sUrl.replace("_thumb","") + "\">";
+	    document.getElementById("Layer1").innerHTML = "<img height=500 width=336 src=\"" + sUrl.replace("-92x138","-" + w + "x" + h) + "\">";
 	    document.getElementById("Layer1").style.display = "block";
 	}
     }

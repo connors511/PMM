@@ -54,9 +54,9 @@ class Model_Movie extends \Orm\Model
 	        'cascade_save' => true,
 	        'cascade_delete' => false,
 	        'conditions' => array(
-	        	/*'where' => array(
+	        	'where' => array(
 	        		array('type', '=', Model_Image::TYPE_POSTER)
-	        	)*/
+	        	)
 	        )
 	    ),
 	);

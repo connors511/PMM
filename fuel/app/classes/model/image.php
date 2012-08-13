@@ -5,6 +5,19 @@ class Model_Image extends \Orm\Model
 	const TYPE_POSTER = 1;
 	const TYPE_FANART = 2;
 
+	public function get_type($type = false)
+	{
+		$type or $type = $this->type;
+
+		$types = array(
+			'',
+			'poster',
+			'fanart'
+		);
+
+		return $types[$type];
+	}
+
 	protected static $_properties = array(
 	    'id',
 	    'file_id',
@@ -17,13 +30,7 @@ class Model_Image extends \Orm\Model
 	);
 	protected static $_belongs_to = array(
 	    'file',
-	    'movie' => array(
-	        'conditions' => array(
-	        	'where' => array(
-	        		array('type', '=', Model_Image::TYPE_FANART)
-	        	)
-	   	 	)
-	    )
+	    'movie'
 	);
 	protected static $_has_one = array(
 		'poster' => array(
@@ -74,7 +81,7 @@ class Model_Image extends \Orm\Model
 			return $url;
 		}
 
-		$this->generate_images($width, $height);
+		$this->generate_image($width, $height);
 		return Asset::get_file($this->id . "-{$width}x{$height}.jpg", 'img','cache');
 	}
 
@@ -91,11 +98,11 @@ class Model_Image extends \Orm\Model
 			return $url;
 		}
 
-		$this->generate_images();
+		$this->generate_image();
 		return Asset::get_file($this->id . '-original.jpg', 'img','cache');
 	}
 
-	public function generate_images($width = false, $height = false)
+	public function generate_image($width = false, $height = false)
 	{
 		$path = $this->file->path;
 		if (!in_array($this->file->ext(), array('jpg', 'jpeg', 'png')))
@@ -106,11 +113,11 @@ class Model_Image extends \Orm\Model
 		}
 		// Otherwise, create it
 		Image::load($path);
-		if ($width == false && $height == false)
+		if (($width == false && $height == false) || !file_exists(DOCROOT . 'assets/img/cache/' . $this->id .'-original.jpg'))
 		{
 			Image::save(DOCROOT . 'assets/img/cache/' . $this->id . '-original.jpg');
 		}
-		else
+		if ($width != false && $height != false)
 		{
 			Image::resize($width, $height, true)
 				->save(DOCROOT . 'assets/img/cache/' . $this->id . "-{$width}x{$height}.jpg");

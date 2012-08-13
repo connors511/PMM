@@ -127,4 +127,21 @@ class Controller_Admin_Images extends Controller_Admin
 		Response::redirect('admin/images');
 	}
 
+	public function action_generate($name)
+	{
+		echo $name;
+		list($id, $size) = explode("-", $name);
+		list($width, $height) = explode("x", $size);
+
+		$image = Model_Image::find($id);
+		if ($image == null)
+		{
+			throw new \HttpNotFoundException();
+		}
+
+		$url = $image->generate_image($width, $height);
+		
+		return Response::redirect(Uri::create('assets/img/cache/' . $image->id . "-{$width}x{$height}.jpg"));
+	}
+
 }
