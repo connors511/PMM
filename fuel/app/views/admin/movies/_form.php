@@ -101,7 +101,7 @@
 			<?php echo Form::label('Poster url', 'poster'); ?>
 
 			<div class="input">
-				<?php echo Form::textarea('poster', Input::post('poster', isset($movie) ? $movie->poster : ''), array('class' => 'span10', 'rows' => 8)); ?>
+				<?php //echo Form::textarea('poster', Input::post('poster', isset($movie) ? $movie->poster : ''), array('class' => 'span10', 'rows' => 8)); ?>
 
 			</div>
 

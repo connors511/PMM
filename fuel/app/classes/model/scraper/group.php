@@ -57,6 +57,7 @@ class Model_Scraper_Group extends \Orm\Model
 		{
 			$scrapers[$f->scraper->id][] = $f;
 		}
+		
 		foreach($scrapers as $id => $sgfs)
 		{
 			$fields = array();

@@ -37,10 +37,8 @@
 	<strong>Trailer url:</strong>
 	<?php echo $movie->trailer_url; ?></p>
 <p>
-	<strong>Poster url:</strong>
-	<?php //echo $movie->poster.'<br>'; 
-//echo Html::img($movie->poster, array('width' => '90', 'height' => '120')); ?>
-<img src="<?php echo $movie->poster->get_thumb_url(92, 138); ?>" style="margin: 5px"/>
+	<strong>Poster:</strong><br />
+	<img src="<?php echo $movie->poster->get_thumb_url(92, 138); ?>" style="margin: 5px"/>
 </p>
 <p>
 	<strong>File:</strong>

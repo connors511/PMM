@@ -31,12 +31,12 @@ class Scraper_Tmdb extends Scraper
 	    'runtime',
 	    'producers',
 	    'actors',
-	    //'poster',
+	    'poster',
 	);
 	protected $_type = 'movies';
 	protected $_author = 'Matthias Larsen';
 	protected $_name = 'TMDb Scraper';
-	protected $_version = '0.2';
+	protected $_version = '0.3';
 
 	public function __construct()
 	{
@@ -340,29 +340,38 @@ class Scraper_Tmdb extends Scraper
 	public function scrape_poster()
 	{
 		$posters = $this->_return_helper('posters', false, 'images');
-		$poster_sizes = array('original'); // Other sizes includes w92, w154, w185, w342
-		/*foreach($posters as $poster)
+		foreach($posters as $poster)
 		{
-			foreach($poster_sizes as $size)
+			$url = sprintf($this->_urls['poster_url'], 'original') . $poster['file_path'];
+			if (Model_Web_Image::find()->where('url', $url)->count() > 0)
 			{
-				$wi = new Model_Web_Image();
-				$wi->url = sprintf($this->_urls['poster_url'], $size) . $poster['file_path'];
-				$wi->height = $poster['height'];
-				$wi->width = $poster['width'];
-				$wi->type = Model_Web_Image::TYPE_POSTER;
-				$wi->source = Model_Web_Image::SOURCE_MOVIE;
-				$wi->movie = $this->_movie;
-				$wi->save();
+				continue;
 			}
-		}*/
+			\Log::debug("Creating Web_Image for '{$url}'");
+			$wi = new Model_Web_Image();
+			$wi->url = $url;
+			$wi->height = $poster['height'];
+			$wi->width = $poster['width'];
+			$wi->type = Model_Image::TYPE_POSTER;
+			$wi->source = Model_Web_Image::SOURCE_MOVIE;
+			$wi->movie = $this->_movie;
+			$wi->save();
+		}
+		\Log::debug("Finished finding alternative posters");
 
 
 		$poster = $this->_return_helper('poster_path');
 		if ($poster)
 		{
-			//return sprintf($this->_urls['poster_url'], 'w500') . $poster;
+			if (($p = Model_Web_Image::find('first', array(
+				'where' => array(
+					array('url', '=', sprintf($this->_urls['poster_url'], 'original') . $poster)
+				)
+			))))
+			{
+				return $p->download(true, true);
+			}
 		}
 		return false;
 	}
-
 }

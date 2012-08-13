@@ -159,9 +159,13 @@ class Model_Image extends \Orm\Model
 			$this->height = 0;
 			$this->width = 0;
 		}
-		catch (Exception $e)
+		catch (\Exception $e)
 		{
-			continue;
+			
+		}
+		catch (\ErrorException $e)
+		{
+
 		}
 
 		if ($path != $this->file->path)
