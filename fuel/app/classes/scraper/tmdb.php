@@ -361,7 +361,7 @@ class Scraper_Tmdb extends Scraper
 
 
 		$poster = $this->_return_helper('poster_path');
-		if ($poster)
+		if ($poster and !$this->_movie->poster and \Config::get('settings.scraper.poster.auto_download', false))
 		{
 			if (($p = Model_Web_Image::find('first', array(
 				'where' => array(

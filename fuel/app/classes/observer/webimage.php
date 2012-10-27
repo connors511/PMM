@@ -6,7 +6,8 @@ class Observer_Webimage extends Orm\Observer
     public function before_insert(Model_Web_Image $model)
     {
 
-		$img = APPPATH.'tmp'.DS.\Str::random().'.'.pathinfo($model->url, PATHINFO_EXTENSION);;
+		$img = APPPATH.'tmp'.DS.\Str::random().'.'.pathinfo($model->url, PATHINFO_EXTENSION);
+		\Log::debug("Downloading web image to: '{$img}'");
 
 		try
 		{
@@ -28,8 +29,8 @@ class Observer_Webimage extends Orm\Observer
 			{
 				\File::delete($img);
 			}
-			\File::create(dirname($img), basename($img), $page);
-			//file_put_contents($img, file_get_contents($model->url));
+			\File::create(dirname($img), basename($img), file_get_contents($model->url));
+			\Log::debug("Created file '{$img}'");
 
 			Image::load($img)
 				->resize(100, 200, true)

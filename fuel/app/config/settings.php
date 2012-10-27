@@ -2,7 +2,7 @@
 
 return array(
     'jobs' => array(
-		'use' => true,
+		'use' => false,
     ),
     'scanner' => array(
 		'exists' => array(
@@ -24,4 +24,9 @@ return array(
     'binaries' => array(
 		'ffmpeg' => 'ffmpeg'
     ),
+    'scraper' => array(
+    	'poster' => array(
+    		'auto_download' => false // Auto download poster to movie file location if none present
+    	)
+    )
 );

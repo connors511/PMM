@@ -216,7 +216,7 @@ class Scanner_Movie implements IScanner
 		$matches = array();
 		$new = true;
 
-		// Is the structure <movie name>/<files>
+		// Is the structure <movie name> (<year>)/<files>
 		if (($dir == 'STREAM/' && preg_match('#.*(?<=/)(?P<title>.+) \((?P<year>\d+)\)#', $fullpath, $matches)) || preg_match('/(?P<title>.+) \((?P<year>\d+)\)/', $dir, $matches))
 		{
 			// Using <title> (<year>)/<movie> structure
@@ -305,6 +305,8 @@ class Scanner_Movie implements IScanner
 
 	public static function parse_movie($movie, $new = true)
 	{
+
+		self::parse_poster($movie);
 		if ($new)
 		{
 
@@ -349,8 +351,6 @@ class Scanner_Movie implements IScanner
 				Model_Scraper_Group::parse_movie($movie);
 			}
 		}
-
-		self::parse_poster($movie);
 	}
 
 	public static function parse_fanart($movie)
